@@ -9,7 +9,7 @@ const profileSchema = new mongoose.Schema({
     items: { type: Array, required: true, default: [] },
     cooldowns: { type: Array, required: true, default: [] },
     title: { type: String, required: true, default: 'No Title' },
-    stats: { type: Array, required: true, default: [] },
+    stats: { type: Array, required: true, default: [] }
 });
 
 const model = mongoose.model('ProfileModel', profileSchema);

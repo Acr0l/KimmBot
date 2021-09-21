@@ -27,6 +27,5 @@ module.exports = {
         catch (err) {
             console.log(err);
         }
-        // await console.log(interaction);
     },
 };
