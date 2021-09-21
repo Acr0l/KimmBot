@@ -5,6 +5,6 @@ module.exports = {
         .setName('workout')
         .setDescription('Test to train your brain'),
     async execute(interaction) {
-        await interaction.reply('Still working on this command, thy another :D');
+        await interaction.reply('WIP');
     },
 };

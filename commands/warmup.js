@@ -21,7 +21,7 @@ const historyIncorrect4 = ["Una ciudad","Sint Maarten","Le pusieron los cuernos"
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('warmup')
-        .setDescription('Quick question to warm that neurons up')
+        .setDescription('Quick question to warm those neurons up.')
         .addIntegerOption(option =>
             option.setName('subject')
                 .setDescription('Subject to warm up')

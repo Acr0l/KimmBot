@@ -1,7 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
-
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('sendmsg')
@@ -10,7 +8,7 @@ module.exports = {
             option
                 .setName('message')
                 .setDescription('The message to send to the guild.')
-            ),
+        ),
     async execute(interaction) {
         const message = interaction.options.getString('message');
         await interaction.reply(`${message}`);
