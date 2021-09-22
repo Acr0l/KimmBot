@@ -3,22 +3,22 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { clientId, guildId, token } = require('./config.json');
+const path = require('path');
 
 const commands = [];
 
-let Files = [];
-function ThroughDirectory(dir, array) {
+let commandFiles = [];
+function ThroughDirectory(dir) {
     fs.readdirSync(dir)
-        // .filter(file => file.endsWith('.js'))
         .forEach(file => {
             const absolute = path.join(dir, file);
             if (fs.statSync(absolute).isDirectory()) return ThroughDirectory(absolute);
-            else return array.push(absolute);
+            else return commandFiles.push(absolute);
         });
 }
-ThroughDirectory('./commands', Files);
+ThroughDirectory('./commands', commandFiles);
 
-for (const file of Files) {
+for (const file of commandFiles) {
     const command = require(`./${file}`);
     commands.push(command.data.toJSON());
 }

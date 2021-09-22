@@ -6,8 +6,9 @@ client.on('interactionCreate', async interaction  => {
     let profileData;
     try {
         profileData = await profileModel.findOne({ userID: interaction.user.id });
-        if (!profileData && interaction.commandName != 'register') {
-            await interaction.reply('You have not set up your profile yet. Please do so by typing `/register`.');
+        if (!profileData && interaction.commandName !== 'register') {
+            await interaction.reply({ content: 'You have not set up your profile yet. Please do so by typing `/register`.', ephemeral: false });
+            return;
         }
     }
     catch (err) {
@@ -32,7 +33,7 @@ client.on('interactionCreate', async interaction  => {
         await command.execute(interaction, profileData);
     } catch (error) {
         console.error(error);
-        await interaction.reply({ content: 'Ups! Hubo un problema con ese comando...', ephemeral: true });
+        // await interaction.reply({ content: 'Ups! Hubo un problema con ese comando...', ephemeral: true });
     }
 
 });

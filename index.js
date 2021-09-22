@@ -14,19 +14,18 @@ module.exports = client;
 // Create a collection for the commands
 client.commands = new Collection();
 
-let Files = [];
-function ThroughDirectory(dir, array) {
+let commandFiles = [];
+function ThroughDirectory(dir) {
     fs.readdirSync(dir)
-        // .filter(file => file.endsWith('.js'))
         .forEach(file => {
             const absolute = path.join(dir, file);
             if (fs.statSync(absolute).isDirectory()) return ThroughDirectory(absolute);
-            else return array.push(absolute);
+            else return commandFiles.push(absolute);
         });
 }
-ThroughDirectory('./commands', Files);
+ThroughDirectory('./commands');
 
-for (const file of Files) {
+for (const file of commandFiles) {
     const command = require(`./${file}`);
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module

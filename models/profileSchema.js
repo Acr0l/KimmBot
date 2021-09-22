@@ -8,7 +8,7 @@ const profileSchema = new mongoose.Schema({
     dons: { type: Number, required: true, default: 0 },
     items: { type: Array, required: true, default: [] },
     cooldowns: { type: Array, required: true, default: [] },
-    title: { type: String, required: true, default: 'No Title' },
+    title: { type: Array, required: true, default: ['No Title'] },
     stats: { type: Array, required: true, default: [] }
 });
 

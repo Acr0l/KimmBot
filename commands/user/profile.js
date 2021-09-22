@@ -14,41 +14,29 @@ module.exports = {
         .setName('profile')
         .setDescription('See your info'),
     async execute(interaction, profileData) {
-        //Insert data fetching
-        // Learn how to use --> const profile = new profileModel ()
-
-        const profile = [     // [userID,level,experience,tier,dons,items,cooldowns,title,stats]
-            interaction.user.id,
-            "0",
-            "0",
-            "0",
-            "10",
-            "Stick",
-            "All good",
-            "No titles yet",
-            "Not available"
-        ]
-
-        const bio = randomBio[Math.trunc(Math.random()*randomBio.length)];
+        
+        let items = profileData.items.length != 0 ? profileData.items.join(',') : 'No items.';
+        let cooldowns = profileData.cooldowns.length != 0 ? profileData.cooldowns.join(',') : 'No cooldowns.';
+        let stats = profileData.stats.length != 0 ? profileData.stats.join(',') : 'No stats.';
+        const bio = randomBio[Math.trunc(Math.random() * randomBio.length)];
 
         const embed = new MessageEmbed()
-        .setColor('#34577A')
-        .setTitle("Perfil de " + interaction.member.nickname)
-        .setDescription(bio)
-        .setThumbnail("https://cdn.discordapp.com/avatars/"+ profile[0] + "/" + interaction.user.avatar +".jpeg")
-        .addFields(
-            { name: 'Level', value: profile[1], inline: true },
-            { name: 'Experience', value: profile[2], inline: true },
-            { name: 'Tier', value: profile[3], inline: true },
-            { name: 'Money', value: "Ɖ" + profile[4], inline: false },
-            { name: 'Items', value: profile[5], inline: false },
-            { name: 'Cooldowns', value: profile[6], inline: false },
-            { name: 'Title', value: profile[7], inline: true },
-            { name: 'Stats', value: profile[8], inline: true },
-        )
-        .setTimestamp();
+            .setColor('#34577A')
+            .setTitle(`${interaction.member.nickname}'s profile`)
+            .setDescription(bio)
+            .setThumbnail("https://cdn.discordapp.com/avatars/" + profileData.userID + "/" + interaction.user.avatar + ".jpeg")
+            .addFields(
+                { name: 'Level', value: profileData.level.toString(), inline: true },
+                { name: 'Experience', value: profileData.experience.toString(), inline: true },
+                { name: 'Tier', value: profileData.tier.toString(), inline: true },
+                { name: 'Money', value: `Ɖ${profileData.dons}`, inline: true },
+                { name: 'Items', value: items, inline: true },
+                { name: 'Cooldowns', value: cooldowns, inline: true },
+                { name: 'Title', value: profileData.title[0], inline: true },
+                { name: 'Stats', value: stats, inline: true },
+            )
+            .setTimestamp();
 
-        
-        await interaction.reply({embeds: [embed] });
+        await interaction.reply({ embeds: [embed] });
     },
 };
