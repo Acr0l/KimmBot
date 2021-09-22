@@ -5,10 +5,21 @@ const { Routes } = require('discord-api-types/v9');
 const { clientId, guildId, token } = require('./config.json');
 
 const commands = [];
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
+let Files = [];
+function ThroughDirectory(dir, array) {
+    fs.readdirSync(dir)
+        // .filter(file => file.endsWith('.js'))
+        .forEach(file => {
+            const absolute = path.join(dir, file);
+            if (fs.statSync(absolute).isDirectory()) return ThroughDirectory(absolute);
+            else return array.push(absolute);
+        });
+}
+ThroughDirectory('./commands', Files);
+
+for (const file of Files) {
+    const command = require(`./${file}`);
     commands.push(command.data.toJSON());
 }
 

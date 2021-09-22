@@ -4,7 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('challenge')
         .setDescription('The ultimate test'),
-    async execute(interaction) {
+    async execute(interaction, profileData) {
         await interaction.reply('Command not available yet');
     },
 };

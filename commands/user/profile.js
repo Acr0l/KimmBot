@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const profileModel = require('../models/profileSchema');
+const profileModel = require('../../models/profileSchema');
 const { MessageEmbed } = require('discord.js');
 const randomBio = [
     'Se crió en los barrios bajos y se ganó una buena reputación por su astucia y rapidez mental. En poco tiempo logró liderar varias bandas de ladrones con las que ganó mucho dinero. Le gusta la buena vida pero eso podría esta a punto de cambiar pronto. Todos saben que aborrece el mar y los ríos pero nadie sabe la razón. Uno de los jefes mas fuertes de la mafia tiene el ojo puesto en él y no parará hasta verlo muerto en el fondo del mar.',
@@ -13,7 +13,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('profile')
         .setDescription('See your info'),
-    async execute(interaction) {
+    async execute(interaction, profileData) {
         //Insert data fetching
         // Learn how to use --> const profile = new profileModel ()
 

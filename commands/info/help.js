@@ -1,11 +1,17 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
+const { readdirSync } = require('fs');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
-        .setDescription('Comandos básicos y breve descripción del bot'),
-    async execute(interaction) {
+        .setDescription('Short description about the available commands.'),
+    async execute(interaction, profileData) {
+
+        const directories = source => readdirSync(source, { withFileTypes: true })
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name);
+
         const embed = new MessageEmbed()
             .setColor('#57CC98')
             .setAuthor('Kimm Bot Team','https://i.imgur.com/dSavUpW.png')            

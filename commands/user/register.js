@@ -1,11 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const profileModel = require('../models/profileSchema');
+const profileModel = require('../../models/profileSchema');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('register')
         .setDescription('Start Kimm account.'),
-    async execute(interaction) {
+    async execute(interaction, ...args) {
 
         let profileData;
 

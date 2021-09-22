@@ -35,7 +35,7 @@ module.exports = {
                 //.addChoice('Musical Theory (highly recommended)', 7)
                 ),
 
-    async execute(interaction) {     
+    async execute(interaction, profileData) {     
             
             
             const subject = interaction.options.getInteger('subject');        
