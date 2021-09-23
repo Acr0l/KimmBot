@@ -15,20 +15,24 @@ module.exports = client;
 client.commands = new Collection();
 
 let commandFiles = [];
-function ThroughDirectory(dir) {
+function throughDirectory(dir) {
     fs.readdirSync(dir)
         .forEach(file => {
             const absolute = path.join(dir, file);
-            if (fs.statSync(absolute).isDirectory()) return ThroughDirectory(absolute);
+            if (fs.statSync(absolute).isDirectory()) return throughDirectory(absolute);
             else return commandFiles.push(absolute);
         });
 }
-ThroughDirectory('./commands');
+throughDirectory('./commands');
 
 for (const file of commandFiles) {
     const command = require(`./${file}`);
+    const splitted = file.split('\\');
+    const directory = splitted[splitted.length - 2];
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module
+    command['directory'] = directory;
+    // client.commands.set(command.directory, file);
     client.commands.set(command.data.name, command);
 }
 

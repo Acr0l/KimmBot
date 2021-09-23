@@ -8,15 +8,15 @@ const path = require('path');
 const commands = [];
 
 let commandFiles = [];
-function ThroughDirectory(dir) {
+function throughDirectory(dir) {
     fs.readdirSync(dir)
         .forEach(file => {
             const absolute = path.join(dir, file);
-            if (fs.statSync(absolute).isDirectory()) return ThroughDirectory(absolute);
+            if (fs.statSync(absolute).isDirectory()) return throughDirectory(absolute);
             else return commandFiles.push(absolute);
         });
 }
-ThroughDirectory('./commands', commandFiles);
+throughDirectory('./commands', commandFiles);
 
 for (const file of commandFiles) {
     const command = require(`./${file}`);
