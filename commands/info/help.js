@@ -62,10 +62,11 @@ module.exports = {
         collector.on('collect', (i) => {
             const [directory] = i.values;
             const category = categories.find(cat => cat.directory.toLowerCase() == directory.toLowerCase());
+            const { description } = require(`../${directory}/desc.json`) || 'No description yet';
 
             const categoryEmbed = new MessageEmbed()
                 .setTitle(`${formatString(directory)} commands`)
-                .setDescription(`Set desc.`)
+                .setDescription(description)
                 .setFields(category.commands.map(cmd => {
                     return {
                         name: `\`${cmd.name}\``,

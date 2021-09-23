@@ -17,7 +17,6 @@ client.on('interactionCreate', async interaction  => {
 
     // Select Menu Handling
     if (interaction.isSelectMenu()) {
-        // const menu = client.commands.get(interaction.customId);
         const menu = client.selectmenu.get(interaction.customId);
         if (menu) menu.run(client, interaction, profileData)
         else console.log('Menu not found.');
