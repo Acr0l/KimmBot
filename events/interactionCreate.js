@@ -17,10 +17,10 @@ client.on('interactionCreate', async interaction  => {
 
     // Select Menu Handling
     if (interaction.isSelectMenu()) {
-        // await interaction.deferReply({ ephemeral: false });
+        // const menu = client.commands.get(interaction.customId);
         const menu = client.selectmenu.get(interaction.customId);
-        if (menu) menu.run(client, interaction, profileData);
-        // console.log(command);
+        if (menu) menu.run(client, interaction, profileData)
+        else console.log('Menu not found.');
     }
 
     if (!interaction.isCommand()) return;
@@ -33,7 +33,6 @@ client.on('interactionCreate', async interaction  => {
         await command.execute(interaction, profileData);
     } catch (error) {
         console.error(error);
-        // await interaction.reply({ content: 'Ups! Hubo un problema con ese comando...', ephemeral: true });
     }
 
 });

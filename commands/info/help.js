@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { readdirSync } = require('fs');
-const client = require('../..');
+const client = require('../../index')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -49,51 +49,44 @@ module.exports = {
             ),
         ];
 
-        const initialMessage = await interaction.reply({
+        await interaction.reply({
             embeds: [embed],
-            components: components(false),
-            ephemeral: false
+            components: components(false)
         });
 
-        const filter = (interaction) => interaction.user.id == interaction.author.id;
-        
-        const collector = interaction.channel.createMessageCollector({
-            componentType: "SELECT_MENU", 
+        const collector = interaction.channel.createMessageComponentCollector({
+            componentType: "SELECT_MENU",
+            time: 20000,
         });
 
-        collector.on('collect', (interaction) => {
-            const [directory] = interaction.values;
+        collector.on('collect', (i) => {
+            const [directory] = i.values;
             const category = categories.find(cat => cat.directory.toLowerCase() == directory.toLowerCase());
 
             const categoryEmbed = new MessageEmbed()
-                .setTitle(`${directory} commands`)
+                .setTitle(`${formatString(directory)} commands`)
                 .setDescription(`Set desc.`)
                 .setFields(category.commands.map(cmd => {
                     return {
-                        name: `\`${cmd.data.name}\``,
-                        value: cmd.data.description,
+                        name: `\`${cmd.name}\``,
+                        value: cmd.description,
                         inline: true
                     };
                 }));
 
-            interaction.edit({ embeds: [categoryEmbed] });
+            i.update({ embeds: [categoryEmbed] });
         });
 
         collector.on('end', () => {
-            initialMessage.editReply({ components: components(true) });
+            interaction.editReply({ 
+                embeds: [embed], 
+                components: components(true) 
+            });
         });
             // .setColor('#57CC98')
             // .setAuthor('Kimm Bot Team','https://i.imgur.com/dSavUpW.png')            
             // .setThumbnail('https://i.imgur.com/dSavUpW.png')
-            // .setTitle("Kimm Bot")
-            // .setDescription('Kimm Bot is a Discord bot that provides a game-like experience for players to study and compete with each other.\n \n The game is played using the Application Interactions provided by Discord, where the players will have levels and experience points, many subjects to study, and a leaderboard to rank the players according to their performance in the game.\n \n They will also have a Tier system to unlock new features and unlock new questions that will provide them more experience points and other benefits. Currerncy used is **Dons (Ɖ)**.')
-            // .addFields(
-            //     {name: "Statistics commands" , value: "`/profile` `/stats` `/inv`"},
-            //     {name: "Money and Items commands" , value: "`/shop` `/buy`"},
-            //     {name: "Educational commands" , value: "`/subjects` `/warmup` `/workout` `/challenge` `/kimmtest` `/suggest`"},
-            // );
 
         // await interaction.reply({embeds: [embed] });
-        await interaction.reply({ content: 'Sup', ephemeral: true });
     },
 };

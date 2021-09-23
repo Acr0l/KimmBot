@@ -20,7 +20,7 @@ function throughDirectory(dir) {
         .forEach(file => {
             const absolute = path.join(dir, file);
             if (fs.statSync(absolute).isDirectory()) return throughDirectory(absolute);
-            else return commandFiles.push(absolute);
+            else if (absolute.endsWith('js')) return commandFiles.push(absolute);
         });
 }
 throughDirectory('./commands');
