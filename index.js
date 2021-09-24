@@ -32,8 +32,9 @@ for (const file of commandFiles) {
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module
     command['directory'] = directory;
-    console.log(command.data.name);
-    client.commands.set(command.data.name, command);
+    if (command.data.name) client.commands.set(command.data.name, command)
+    else console.log(command);
+    // client.commands.set(command.data.name, command);
 }
 
 // Create a collection for the menus

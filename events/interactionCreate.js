@@ -29,7 +29,7 @@ client.on('interactionCreate', async interaction  => {
     if (!command) return;
 
     try {
-        await command.execute(interaction, profileData);
+        await command.execute(interaction, profileData, client);
     } catch (error) {
         console.error(error);
     }

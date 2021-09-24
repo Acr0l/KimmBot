@@ -1,14 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { readdirSync } = require('fs');
-const client = require('../../index')
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('help')
         .setDescription('Short description about the available commands.'),
-    async execute(interaction, profileData) {
-
+    async execute(interaction, profileData, client) {
         const directories = readdirSync('./commands', { withFileTypes: true })
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
