@@ -17,6 +17,7 @@ const quizSchema = new mongoose.Schema({
     type: { type: String, required: true },
     // The category of the question: Warmup, Workout, etc.
     category: { type: String, required: true },
+    lang: { type: String, required: true },
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now }
 });

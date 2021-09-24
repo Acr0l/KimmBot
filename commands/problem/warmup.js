@@ -1,7 +1,9 @@
+// Required variables:
 const { MessageEmbed } = require('discord.js');
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
+// Answer examples:
 const historyQuestions = ["¿Qué es Holanda?", "¿Cuál es la capital de los Países Bajos?", "¿Qué le pasa a lupita?"];
 const historyAnswers = ["Una región histórica", "Ámsterdam", "No sé"];
 const historyIncorrect1 = ["Un país", "Holanda", "Algo terrible"];

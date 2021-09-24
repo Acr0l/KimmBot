@@ -39,10 +39,12 @@ module.exports = {
                     .setDisabled(state)
                     .addOptions(
                         categories.map((cmd) => {
+                            const { emoji } = require(`../${cmd.directory.toLowerCase()}/desc.json`) || null;
                             return {
                                 label: cmd.directory,
                                 value: cmd.directory.toLowerCase(),
-                                description: `Commands from ${cmd.directory} category.`
+                                description: `Commands from ${cmd.directory} category.`,
+                                emoji: emoji
                             };
                         })
                     )

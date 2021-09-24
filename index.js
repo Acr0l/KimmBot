@@ -32,7 +32,7 @@ for (const file of commandFiles) {
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module
     command['directory'] = directory;
-    // client.commands.set(command.directory, file);
+    console.log(command.data.name);
     client.commands.set(command.data.name, command);
 }
 
