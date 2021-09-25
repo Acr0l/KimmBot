@@ -7,6 +7,8 @@ module.exports = {
         .setName('help')
         .setDescription('Short description about the available commands.'),
     async execute(interaction, profileData, client) {
+
+        // Get the commands
         const directories = readdirSync('./commands', { withFileTypes: true })
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
