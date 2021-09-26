@@ -16,7 +16,7 @@ module.exports = {
                     userID: interaction.user.id,
                 });
                 profile.save();
-                await interaction.reply('You have successfully registered.');
+                await interaction.reply('You have successfully registered, type `tutorial` to begin!');
                 return;
             }
             else {
@@ -27,5 +27,6 @@ module.exports = {
         catch (err) {
             console.log(err);
         }
+        
     },
 };
