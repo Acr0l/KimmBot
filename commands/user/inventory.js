@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-
+const itemModel = require('../../models/itemSchema');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
@@ -12,13 +12,15 @@ module.exports = {
     * @param { Client } client
     */
     async execute(interaction, profileData, client) {
-        const inventory = profileData.items;
+        const inventory = profileData.inventory;
+        const itemNum = inventory.length != 1 ? `${inventory.length} items` : `${inventory.length} item`;
         const embed = new MessageEmbed()
-            .setTitle(`${interaction.member.nickname}'s Inventory`)
+            .setTitle(`${interaction.user.username}'s Inventory`)
             .setColor(0x00AE86)
-            .setDescription(`${inventory.length} items.`);
+            .setDescription(`${itemNum}.`);
         for (const item of inventory) {
-            embed.addField(item.name, item.description);
+            const itemData = await itemModel.findOne({ name: item });
+            embed.addField(itemData.name, itemData.description);
         }
         interaction.reply({ embeds: [embed] });
     }

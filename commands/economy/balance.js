@@ -7,7 +7,7 @@ module.exports = {
         .setDescription('Check your balance'),
     async execute(interaction, profileData) {
         const embed = new MessageEmbed()
-            .setTitle(`${interaction.member.nickname}'s balance`)
+            .setTitle(`${interaction.user.username}'s balance`)
             .setDescription(`💸 Your current balance is **Ɖ${profileData.dons}**.`);
         interaction.reply({ embeds: [embed] });
     }    

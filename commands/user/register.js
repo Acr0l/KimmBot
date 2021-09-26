@@ -14,6 +14,7 @@ module.exports = {
             if (!profileData) {
                 let profile = await profileModel.create({
                     userID: interaction.user.id,
+                    dons: 1000
                 });
                 profile.save();
                 await interaction.reply('You have successfully registered, type `tutorial` to begin!');
