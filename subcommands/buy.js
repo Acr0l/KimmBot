@@ -1,16 +1,10 @@
-const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const itemModel = require('../../models/itemSchema');
-const profile = require('../user/profile');
+const itemModel = require('../models/itemSchema');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName(`buy`)
-        .setDescription(`Buy item from shop.`)
-        .addStringOption(item => item
-                .setName(`item`)
-                .setDescription(`Enter the item name.`)
-                .setRequired(true)),
+        .setDescription(`Buy item from shop.`),
   /**
     * @param { Message } interaction
     * @param { Object } profileData
@@ -25,6 +19,9 @@ module.exports = {
             if (!currentItem) {
                  await interaction.reply(`Item not found.`);
                 return;
+            } else if (currentItem.unique && profileData.inventory.includes(currentItem.name)) {
+                await interaction.reply(`You already own this item.`);
+                return;
             } else {
                 if (currentItem.price > profileData.dons) 
                     return interaction.reply(`You don't have enough dons to buy this item.`);
@@ -35,6 +32,8 @@ module.exports = {
                     await interaction.reply(`You bought ${currentItem.name} for ${currentItem.price} dons.`);
                 }
             }
-        } catch (error) { console.log(error); }
+        } catch (error) { 
+            console.log(error); 
+        }
     }
 }

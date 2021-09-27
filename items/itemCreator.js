@@ -2,7 +2,6 @@ const readline = require("readline");
 const itemModel = require('../models/itemSchema');
 const mongoose = require('mongoose');
 const { MONGODB_URI } = require('../config.json');
-const wait = require('util').promisify(setTimeout);
 
 mongoose
     .connect(MONGODB_URI, {
@@ -35,31 +34,39 @@ startFunction = async () => {
                 rl.question("Type item use: ", function (use) {
                     console.log('Format: dir/file.js')
                     rl.question("Type item path: ", function (path) {
-                        obj = {
-                            name: name,
-                            description: description,
-                            price: parseInt(price),
-                            use: use,
-                            path: path
-                        }
-                        console.log(obj)
-                        rl.question("Is this correct? (y/n): ", async function (answer) {
-                            if (answer === 'y' && valid) {
-                                console.log('Saving...')
-                                let item = await itemModel.create({
-                                    name: obj.name,
-                                    description: obj.description,
-                                    price: obj.price,
-                                    use: obj.use,
-                                    funcPath: obj.path
-                                })
-                                item.save();
-                            } else if (answer === 'n' || !valid) {
-                                console.log('Cancelling...')
-                            } else {
-                                console.log('Invalid input')
+                        rl.question("Unique? (y/n): ", function (unique) {
+                            let uniqueBool = false;
+                            if (unique === 'y') {
+                                uniqueBool = true;
                             }
-                            rl.close();
+                            obj = {
+                                name: name,
+                                description: description,
+                                price: parseInt(price),
+                                use: use,
+                                path: path,
+                                unique: uniqueBool
+                            }
+                            console.log(obj)
+                            rl.question("Is this correct? (y/n): ", async function (answer) {
+                                if (answer === 'y' && valid) {
+                                    console.log('Saving...')
+                                    let item = await itemModel.create({
+                                        name: obj.name,
+                                        description: obj.description,
+                                        price: obj.price,
+                                        use: obj.use,
+                                        funcPath: obj.path,
+                                        unique: obj.unique
+                                    })
+                                    item.save();
+                                } else if (answer === 'n' || !valid) {
+                                    console.log('Cancelling...')
+                                } else {
+                                    console.log('Invalid input')
+                                }
+                                rl.close();
+                            });
                         });
                     });
                 });

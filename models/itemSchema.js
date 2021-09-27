@@ -6,7 +6,8 @@ const itemSchema = new mongoose.Schema({
     description: { type: String, required: true, default: '' },
     price: { type: Number, required: true, default: 0 },
     use: { type: String, default: '' },
-    funcPath: { type: String, default: '' }
+    funcPath: { type: String, default: '' },
+    unique: { type: Boolean, default: false }
 });
 
 const model = mongoose.model('ItemModel', itemSchema);

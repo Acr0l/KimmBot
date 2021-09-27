@@ -13,17 +13,21 @@ module.exports = client;
 
 // Create a collection for the commands
 client.commands = new Collection();
-
-let commandFiles = [];
+client.subcommands = new Collection();
+let tmp = [], subcommandFiles = [], commandFiles = [];
 function throughDirectory(dir) {
     fs.readdirSync(dir)
         .forEach(file => {
             const absolute = path.join(dir, file);
             if (fs.statSync(absolute).isDirectory()) return throughDirectory(absolute);
-            else if (absolute.endsWith('js')) return commandFiles.push(absolute);
+            else if (absolute.endsWith('js')) return tmp.push(absolute);
         });
 }
-throughDirectory('./commands');
+throughDirectory('./commands')
+commandFiles = [...tmp];
+tmp = [];
+throughDirectory('./subcommands');
+subcommandFiles = [...tmp];
 
 for (const file of commandFiles) {
     const command = require(`./${file}`);
@@ -33,8 +37,18 @@ for (const file of commandFiles) {
     // With the key as the command name and the value as the exported module
     command['directory'] = directory;
     if (command.data.name) client.commands.set(command.data.name, command)
-    else console.log(command);
-    // client.commands.set(command.data.name, command);
+    else console.log(`${command} not found`);
+}
+
+for (const file of subcommandFiles) {
+    const subcommand = require(`./${file}`);
+    const splitted = file.split('\\');
+    const directory = splitted[splitted.length - 2];
+    // Set a new item in the Collection
+    // With the key as the command name and the value as the exported module
+    subcommand['directory'] = directory;
+    if (subcommand.data.name) client.subcommands.set(subcommand.data.name, subcommand)
+    else console.log(`${subcommand} not found`);
 }
 
 // Create a collection for the menus

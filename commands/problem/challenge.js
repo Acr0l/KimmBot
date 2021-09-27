@@ -5,6 +5,6 @@ module.exports = {
         .setName('challenge')
         .setDescription('The ultimate test'),
     async execute(interaction, profileData) {
-        await interaction.reply('Command not available yet');
+        await interaction.reply({ content: `This command is not yet implemented.`, ephemeral: true });
     },
 };

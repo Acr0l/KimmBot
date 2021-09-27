@@ -5,6 +5,6 @@ module.exports = {
         .setName('workout')
         .setDescription('Test to train your brain'),
     async execute(interaction) {
-        await interaction.reply('WIP');
+        await interaction.reply({ content: `This command is not yet implemented.`, ephemeral: true });
     },
 };
