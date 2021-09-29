@@ -2,7 +2,7 @@
 const { MessageEmbed } = require('discord.js');
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const QuizModel = require('../../models/quizSchema');
+const quizModel = require('../../models/quizSchema');
 
 
 module.exports = {
@@ -23,7 +23,7 @@ module.exports = {
         //Question fetching
 
         //Random element is stored in "question"
-        const questionsArray = await QuizModel.aggregate([{$sample: {size: 1}}]);
+        const questionsArray = await quizModel.aggregate([ {$match: { $and: [ {subject:subject} , {category: "Warmup"} ] }} , {$sample: {size: 1}}]);
         const question = questionsArray[0];  
 
         alternativesOrdered[0] = question.correct_answer;
@@ -64,15 +64,13 @@ module.exports = {
             .setColor('#39A2A5')
             .setAuthor('Warm up...')
             .setImage(question.image)
-            .setTitle(question.question)
-            .setFooter('Cuidado con tu energía mental');
+            .setTitle(question.question);
         }
         else {
             embed = new MessageEmbed()
             .setColor('#39A2A5')
             .setAuthor('Warm up...')
-            .setTitle(question.question)
-            .setFooter('Cuidado con tu energía mental');
+            .setTitle(question.question);
         }     
         
         //Create row with select menu
@@ -87,7 +85,7 @@ module.exports = {
         );
 
         //Reply
-        await interaction.reply({ embeds: [embed], ephemeral: true, components: [row] });
+        await interaction.reply({ content: "`" + question._id + "`", embeds: [embed], ephemeral: true, components: [row] });
 
     }
 
