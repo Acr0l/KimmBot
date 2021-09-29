@@ -27,11 +27,12 @@ const createLevelUp = (user) => {
     user.level += 1;
     user.xp -= levelFormula(user.level);
     user.mentalEnergy.totalMe += meFormula(user.level);
+    user.mentalEnergy.me = user.mentalEnergy.totalMe;
     user.save();
 }
 
 const printLvlUp = (user, interaction) => {
-    interaction.followUp(`${user.user.username} has leveled up to level ${user.level}!\n**New ME**: ${user.mentalEnergy.totalMe}\n**New MR**: ${user.mentalEnergy.mr}`);
+    interaction.followUp({ content: `${interaction.user.username} has leveled up to level ${user.level}!\n**New ME**: ${user.mentalEnergy.totalMe}\n**New MR**: ${user.mentalEnergy.mr}` });
 }
 
 /**
@@ -40,11 +41,11 @@ const printLvlUp = (user, interaction) => {
  * @param { Number } exp - The amount of xp to add
  */
 const applyXp = async (user, exp, interaction) => {
-    if(addXp(user, exp)) {
+    if (addXp(user, exp)) {
         createLevelUp(user);
         printLvlUp(user, interaction);
     } else {
-        await interaction.followUp(`${user.user.username} has gained ${exp} xp!\n**New XP**: ${user.xp}\n**New ME**: ${user.mentalEnergy.totalMe}\n**New MR**: ${user.mentalEnergy.mr}`);
+        interaction.followUp({ content: `${interaction.user.username} has gained ${exp} xp!\n` });
         user.save();
     }
 }

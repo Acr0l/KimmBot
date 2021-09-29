@@ -15,7 +15,7 @@ module.exports = {
 
         const embed = new MessageEmbed()
             .setColor('#34577A')
-            .setAuthor(`${interaction.user.username}'s profile`, 'https://i.imgur.com/XyQY9qH.png')
+            .setAuthor(`${interaction.user.username}'s profile`, "https://cdn.discordapp.com/avatars/" + profileData.userID + "/" + interaction.user.avatar + ".jpeg")
             .setTitle(profileData.title[0])
             .setThumbnail("https://cdn.discordapp.com/avatars/" + profileData.userID + "/" + interaction.user.avatar + ".jpeg")
             .addFields(

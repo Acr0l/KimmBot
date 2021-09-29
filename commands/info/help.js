@@ -65,7 +65,7 @@ module.exports = {
 
         const collector = interaction.channel.createMessageComponentCollector({
             componentType: "SELECT_MENU",
-            time: 20000,
+            // time: 20000,
         });
 
         collector.on('collect', (i) => {
@@ -93,10 +93,5 @@ module.exports = {
                 components: components(true) 
             });
         });
-            // .setColor('#57CC98')
-            // .setAuthor('Kimm Bot Team','https://i.imgur.com/dSavUpW.png')            
-            // .setThumbnail('https://i.imgur.com/dSavUpW.png')
-
-        // await interaction.reply({embeds: [embed] });
     },
 };

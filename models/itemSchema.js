@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const itemSchema = new mongoose.Schema({
     name: { type: String, required: true },
     description: { type: String, required: true, default: '' },
+    tier: { type: String, required: true, default: "common" },
     price: { type: Number, required: true, default: 0 },
     use: { type: String, default: '' },
     funcPath: { type: String, default: '' },

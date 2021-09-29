@@ -18,7 +18,8 @@ module.exports = {
     */
     async execute(interaction, profileData, client) {
         const amount = interaction.options.getNumber(`amount`);
-        await interaction.reply(`Added ${amount} xp to ${interaction.user.username}`);
-        await applyXp(profileData, amount, interaction);
+        await interaction.reply(`Fetching information`);
+        await applyXp(profileData, amount, interaction)
+            .then(() => interaction.deleteReply());
     }
 }
