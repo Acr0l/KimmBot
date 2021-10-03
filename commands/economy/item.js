@@ -46,6 +46,16 @@ module.exports = {
             )
         .addSubcommand(subcommand =>
             subcommand
+                .setName(`unequip`)
+                .setDescription(`Unequip an item.`)
+                .addStringOption(item =>
+                    item
+                        .setName(`item`)
+                        .setDescription(`The item to unequip.`)
+                        .setRequired(true))
+            )
+        .addSubcommand(subcommand =>
+            subcommand
                 .setName(`use`)
                 .setDescription(`Use an item.`)
                 .addStringOption(item =>

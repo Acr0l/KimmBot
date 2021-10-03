@@ -14,6 +14,8 @@ module.exports = {
         let itemToBuy = interaction.options.getString('item');
         let currentItem;
 
+        // TODO: #1 Instead of using the item name, push object with item name and quantity to array.
+
         try {
             currentItem = await itemModel.findOne({ name: itemToBuy });
             if (!currentItem) {

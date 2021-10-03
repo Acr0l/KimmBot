@@ -4,8 +4,8 @@ const profile = require('../commands/user/profile');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName(`equip`)
-        .setDescription(`Equip selected item.`),
+        .setName(`unequip`)
+        .setDescription(`Unequip selected item.`),
   /**
     * @param { Message } interaction
     * @param { Object } profileData
@@ -26,16 +26,14 @@ module.exports = {
                 if (!currentItem) {
                     interaction.reply('Item does not exist.')
                 } else if (profileData.equipment.includes(currentItem.name)) {
-                    interaction.reply('You already have that item equipped.')
-                } else if (!profileData.inventory.includes(currentItem.name)) {
-                    interaction.reply('You don\'t have that item!')
-                } else if (currentItem && regex.test(currentItem.use)) {
-                    profileData.equipment.push(currentItem.name);
-                    profileData.inventory.splice(profileData.inventory.indexOf(currentItem.name), 1);
+                    profileData.equipment.splice(profileData.equipment.indexOf(currentItem.name), 1);
+                    profileData.inventory.push(currentItem.name);
                     profileData.save();
-                    interaction.reply(`You equipped a ${currentItem.name}!`);
+                    interaction.reply(`You have successfully unequipped a \`${currentItem.name}\`.`)
+                } else if (!profileData.equipment.includes(currentItem.name)) {
+                    interaction.reply('You don\'t have that item equipped!')
                 } else {
-                    interaction.reply('Item cannot be equipped.');
+                    interaction.reply('Something went wrong.');
                 }
         }
         catch (err) {

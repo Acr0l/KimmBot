@@ -19,7 +19,8 @@ const profileSchema = new mongoose.Schema({
     },
     stats: { type: Array, required: true, default: [] },
     // Areas = Subjects { subject: String, level: Number }
-    areas: { type: Array, required: true, default: [] }
+    areas: { type: Array, required: true, default: [] },
+    equipment: { type: Array, required: true, default: [] }
 });
 
 const model = mongoose.model('ProfileModel', profileSchema);

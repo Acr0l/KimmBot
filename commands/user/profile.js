@@ -14,6 +14,7 @@ module.exports = {
         let lvlPercentage = ((profileData.xp / levelFormula(profileData.level)) * 100).toFixed(2);
         let progress = `**Level**: ${profileData.level} (${lvlPercentage}%)\n**XP**: ${profileData.xp}\n**Tier**:${profileData.tier}`
         let stats = `**ME**: ${profileData.mentalEnergy.totalMe}\n**MR**: ${profileData.mentalEnergy.mr}`;
+        let equipped = profileData.equipment != 0 ? profileData.equipment.map(e => `-  **${e}**`).join('\n') : 'No items equipped.';
 
         const embed = new MessageEmbed()
             .setColor('#34577A')
@@ -22,8 +23,9 @@ module.exports = {
             .setThumbnail("https://cdn.discordapp.com/avatars/" + profileData.userID + "/" + interaction.user.avatar + ".jpeg")
             .addFields(
                 { name: 'Progress', value: progress, inline: false },
+                { name: 'Stats', value: stats, inline: false },
+                { name: 'Equipment', value: equipped, inline: true },
                 { name: 'Money', value: `Ɖ${profileData.dons}`, inline: true },
-                { name: 'Stats', value: stats, inline: true },
             )
             .setTimestamp();
 

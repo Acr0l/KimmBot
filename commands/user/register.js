@@ -18,9 +18,6 @@ module.exports = {
                 });
                 profile.save();
                 await interaction.reply('You have successfully registered, type `tutorial` to begin!');
-                await interaction.fetchReply()
-                    .then(reply => console.log(reply.content))
-                    .catch(err => console.log(err));
                 return;
             }
             else {
