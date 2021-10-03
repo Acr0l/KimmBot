@@ -51,7 +51,7 @@ const applyXp = async (user, exp, interaction) => {
 }
 
 rl.question("", function (level) {
-    console.log(meFormula(parseInt(level)));
+    console.log(levelFormula(parseInt(level)));
     rl.close();
 });
 
@@ -59,4 +59,4 @@ rl.on('close', function () {
     process.exit(0);
 });
 
-module.exports = applyXp;
+module.exports = { applyXp, levelFormula };

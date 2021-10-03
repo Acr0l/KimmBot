@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const profileModel = require('../../models/profileSchema');
 const { MessageEmbed } = require('discord.js');
+const { levelFormula } = require('../../util/userfuncs');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,7 +11,8 @@ module.exports = {
         
         //let inventory = profileData.inventory.length != 0 ? profileData.items.join(',') : 'The inventory is empty.';
         // let levelPercent = Math.floor((profileData.level / profileData.maxLevel) * 100);
-        let progress = `**Level**: ${profileData.level}(INSERT STATS)\n**XP**: ${profileData.xp}\n**Tier**:${profileData.tier}`
+        let lvlPercentage = ((profileData.xp / levelFormula(profileData.level)) * 100).toFixed(2);
+        let progress = `**Level**: ${profileData.level} (${lvlPercentage}%)\n**XP**: ${profileData.xp}\n**Tier**:${profileData.tier}`
         let stats = `**ME**: ${profileData.mentalEnergy.totalMe}\n**MR**: ${profileData.mentalEnergy.mr}`;
 
         const embed = new MessageEmbed()
