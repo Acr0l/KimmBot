@@ -12,13 +12,14 @@ module.exports = {
     */
     async execute(interaction, profileData, client) {
         let itemToSell = interaction.options.getString('item');
-        if (profileData.inventory.includes(itemToSell)) {
+        let owned = profileData.inventory.findIndex(item => item.name === itemToSell);
+        if (owned != -1) {
             itemModel.findOne({ name: itemToSell }, (err, item) => {
                 if (err) {
                     interaction.reply('An error occurred while trying to sell item.');
                 } else if (item) {
                     profileData.dons += item.price;
-                    profileData.inventory.splice(profileData.inventory.indexOf(itemToSell), 1);
+                    profileData.inventory.splice(owned, 1);
                     profileData.save();
                     interaction.reply(`You sold ${itemToSell} for ${item.price} dons.`);
                 }

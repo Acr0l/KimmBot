@@ -19,7 +19,7 @@ module.exports = {
 
         if (value) {
             // Correct answer
-            let xp = Math.floor(Math.random() * (question.difficulty * 2)) + 3;
+            let xp = Math.floor(Math.random() * (question.difficulty * 2)) + 3 * question.difficulty;
             color = '#80EA98';
             title = `${interaction.user.username} ha respondido correctamente`;
             description = `¡Felicidades ${interaction.user.username}, ganaste **${xp}** de experiencia!`;

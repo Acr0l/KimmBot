@@ -27,7 +27,10 @@ module.exports = {
                     interaction.reply('Item does not exist.')
                 } else if (profileData.equipment.includes(currentItem.name)) {
                     profileData.equipment.splice(profileData.equipment.indexOf(currentItem.name), 1);
-                    profileData.inventory.push(currentItem.name);
+                    profileData.inventory.push({
+                        name: currentItem.name,
+                        quantity: 1
+                    });
                     profileData.save();
                     interaction.reply(`You have successfully unequipped a \`${currentItem.name}\`.`)
                 } else if (!profileData.equipment.includes(currentItem.name)) {

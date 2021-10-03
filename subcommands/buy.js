@@ -5,13 +5,14 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName(`buy`)
         .setDescription(`Buy item from shop.`),
-  /**
-    * @param { Message } interaction
-    * @param { Object } profileData
-    * @param { Client } client
-    */
+    /**
+      * @param { Message } interaction
+      * @param { Object } profileData
+      * @param { Client } client
+      */
     async execute(interaction, profileData, client) {
-        let itemToBuy = interaction.options.getString('item');
+        const itemToBuy = interaction.options.getString('item');
+        const amount = parseInt(interaction.option.getNumber('amount')) || 1;
         let currentItem;
 
         // TODO: #1 Instead of using the item name, push object with item name and quantity to array.
@@ -19,23 +20,36 @@ module.exports = {
         try {
             currentItem = await itemModel.findOne({ name: itemToBuy });
             if (!currentItem) {
-                 await interaction.reply(`Item not found.`);
+                await interaction.reply(`Item not found.`);
                 return;
-            } else if (currentItem.unique && profileData.inventory.includes(currentItem.name)) {
+            }
+            const owned = profileData.inventory.findIndex(e => e.name == currentItem.name);
+            const exist = owned != -1 || profileData.equipment.includes(item.name);
+            if (currentItem.unique && exist) {
                 await interaction.reply(`You already own this item.`);
                 return;
+            } else if (currentItem.unique && amount > 1) {
+                await interaction.reply(`You can only buy one ${currentItem.name}.`);
+                return;
             } else {
-                if (currentItem.price > profileData.dons) 
-                    return interaction.reply(`You don't have enough dons to buy this item.`);
-                if (currentItem.price <= profileData.dons) {
-                    profileData.dons -= currentItem.price;
-                    profileData.inventory.push(currentItem.name);
+                if (currentItem.price * amount > profileData.dons)
+                    return interaction.reply(`You don't have enough dons to buy that.`);
+                if (currentItem.price * amount <= profileData.dons) {
+                    if (owned !== -1) {
+                        profileData.inventory[owned].quantity += amount;
+                    } else {
+                        profileData.inventory.push({
+                            name: currentItem.name,
+                            quantity: amount
+                        });
+                    }
+                    profileData.dons -= currentItem.price * amount;
                     profileData.save();
-                    await interaction.reply(`You bought ${currentItem.name} for ${currentItem.price} dons.`);
+                    await interaction.reply(`You bought ${amount} ${currentItem.name}s for ${currentItem.price * amount} dons.`);
                 }
             }
-        } catch (error) { 
-            console.log(error); 
+        } catch (error) {
+            console.log(error);
         }
     }
 }
