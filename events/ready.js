@@ -1,6 +1,16 @@
 const client = require('../index');
 
-client.once('ready', () => {
+client.on('ready', () => {
 	console.log(`Ready! Logged in as ${client.user.tag}`);
-	client.user.setActivity('with Acrol.');
+	let status = [
+		`with slash commands!`,
+		`and developing.`,
+		`with JavaScript`
+	];
+	let index = 0;
+
+	setInterval(() => {
+		client.user.setActivity(status[index], { type: 'WATCHING' });
+		index = (index + 1) % status.length;
+	}, 50000);
 });

@@ -1,7 +1,7 @@
 const client = require('../index');
 const profileModel = require('../models/profileSchema');
 
-client.on('interactionCreate', async interaction  => {
+client.on('interactionCreate', async interaction => {
     // Get user from db.
     let profileData;
     try {
@@ -21,11 +21,11 @@ client.on('interactionCreate', async interaction  => {
         if (menu) menu.run(client, interaction, profileData)
         else console.log('Menu not found.');
     }
-    
+
     // Command Handling
-    
+
     if (!interaction.isCommand()) return;
-    
+
     // Cooldown Handling
     let justRegistered = false;
     if (!profileData.cooldowns.has(interaction.commandName)) {
@@ -38,13 +38,13 @@ client.on('interactionCreate', async interaction  => {
     const timeStamp = profileData.cooldowns.get(interaction.commandName).getTime();
     const cmdCooldown = client.commands.get(interaction.commandName).cooldown * 1000;
     if (currentTime < timeStamp + cmdCooldown && !justRegistered) {
-        await interaction.reply('You are on cooldown for this command. Please wait ' + Math.round((cmdCooldown - (currentTime - timeStamp)) / 1000) + ' seconds.');
+        await interaction.reply(`You are on cooldown for this command. Please wait ${secondsToDhms((cmdCooldown - (currentTime - timeStamp)) / 1000)}.`);
         return;
     }
 
     profileData.cooldowns.set(interaction.commandName, currentTime);
     profileData.save();
-    
+
     const command = client.commands.get(interaction.commandName);
 
     if (!command) return;
@@ -56,3 +56,16 @@ client.on('interactionCreate', async interaction  => {
     }
 
 });
+function secondsToDhms(seconds) {
+    seconds = Number(seconds);
+    let d = Math.floor(seconds / (3600 * 24));
+    let h = Math.floor(seconds % (3600 * 24) / 3600);
+    let m = Math.floor(seconds % 3600 / 60);
+    let s = Math.floor(seconds % 60);
+
+    let dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
+    let hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+    let mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+    let sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+    return dDisplay + hDisplay + mDisplay + sDisplay;
+}

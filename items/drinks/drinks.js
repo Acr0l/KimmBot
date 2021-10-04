@@ -5,7 +5,10 @@ module.exports = {
         const itemEffects = {
             Water: {
                 me: 0,
-                mr: 1
+                mr: {
+                    effect: 1,
+                    duration: 1800,
+                }
             },
             Gatorade: {
                 me: 10,

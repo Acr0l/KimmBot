@@ -23,11 +23,12 @@ function addXp(user, exp) {
     return (readyToLevelUp(user, user.level));
 }
 
-const createLevelUp = (user) => {
+const createLevelUp = async (user) => {
     user.level += 1;
     user.xp -= levelFormula(user.level);
     user.mentalEnergy.totalMe += meFormula(user.level);
     user.mentalEnergy.me = user.mentalEnergy.totalMe;
+    await user.save();
 }
 
 const printLvlUp = (user, interaction) => {
@@ -41,10 +42,11 @@ const printLvlUp = (user, interaction) => {
  */
 const applyXp = async (user, exp, interaction) => {
     if (addXp(user, exp)) {
-        createLevelUp(user);
+        await createLevelUp(user);
         printLvlUp(user, interaction);
+        return applyXp(user, 0, interaction);
     } 
-    user.save();
+    await user.save();
 }
 
 rl.question("", function (level) {

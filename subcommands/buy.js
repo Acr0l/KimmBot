@@ -42,6 +42,9 @@ module.exports = {
                             name: currentItem.name,
                             quantity: amount
                         });
+                        if (currentItem.effect) {
+                            profileData.inventory[profileData.inventory.length - 1].effect = currentItem.effect;
+                        }
                     }
                     profileData.dons -= currentItem.price * amount;
                     profileData.save();
