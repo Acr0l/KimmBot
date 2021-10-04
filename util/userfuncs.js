@@ -28,7 +28,6 @@ const createLevelUp = (user) => {
     user.xp -= levelFormula(user.level);
     user.mentalEnergy.totalMe += meFormula(user.level);
     user.mentalEnergy.me = user.mentalEnergy.totalMe;
-    user.save();
 }
 
 const printLvlUp = (user, interaction) => {
@@ -44,10 +43,8 @@ const applyXp = async (user, exp, interaction) => {
     if (addXp(user, exp)) {
         createLevelUp(user);
         printLvlUp(user, interaction);
-    } else {
-        interaction.followUp({ content: `${interaction.user.username} has gained ${exp} xp!\n` });
-        user.save();
-    }
+    } 
+    user.save();
 }
 
 rl.question("", function (level) {

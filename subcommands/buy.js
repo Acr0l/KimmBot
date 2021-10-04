@@ -12,10 +12,10 @@ module.exports = {
       */
     async execute(interaction, profileData, client) {
         const itemToBuy = interaction.options.getString('item');
-        const amount = parseInt(interaction.option.getNumber('amount')) || 1;
+        const amount = parseInt(interaction.options.getNumber('amount')) || 1;
         let currentItem;
 
-        // TODO: #1 Instead of using the item name, push object with item name and quantity to array.
+    // TODO: #1 Instead of using the item name, push object with item name and quantity to array.
 
         try {
             currentItem = await itemModel.findOne({ name: itemToBuy });
@@ -24,7 +24,7 @@ module.exports = {
                 return;
             }
             const owned = profileData.inventory.findIndex(e => e.name == currentItem.name);
-            const exist = owned != -1 || profileData.equipment.includes(item.name);
+            const exist = owned != -1 || profileData.equipment.includes(currentItem.name);
             if (currentItem.unique && exist) {
                 await interaction.reply(`You already own this item.`);
                 return;
@@ -45,7 +45,7 @@ module.exports = {
                     }
                     profileData.dons -= currentItem.price * amount;
                     profileData.save();
-                    await interaction.reply(`You bought ${amount} ${currentItem.name}s for ${currentItem.price * amount} dons.`);
+                    await interaction.reply(`You bought ${amount} ${currentItem.name}s for Ɖ${currentItem.price * amount}.`);
                 }
             }
         } catch (error) {

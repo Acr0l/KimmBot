@@ -8,7 +8,12 @@ const profileSchema = new mongoose.Schema({
     tier: { type: Number, required: true, default: 0 },
     dons: { type: Number, required: true, default: 0 },
     inventory: { type: Array, required: true, default: [] },
-    cooldowns: { type: Array, required: true, default: [] },
+    cooldowns: {
+        type: Map,
+        of: Date,
+        required: true,
+        default: new Map()
+    },
     title: { type: Array, required: true, default: ['No Title'] },
     // 0 = ME 1 = MR
     // ME = Mental Energy, MR = Mental Recovery

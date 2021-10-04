@@ -36,6 +36,7 @@ for (const file of commandFiles) {
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module
     command['directory'] = directory;
+    command['cooldown'] = command.cooldown || 0;
     if (command.data.name) client.commands.set(command.data.name, command)
     else console.log(`${command} not found`);
 }

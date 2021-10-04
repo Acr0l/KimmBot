@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
+    cooldown: 3600,
     data: new SlashCommandBuilder()
         .setName('workout')
         .setDescription('Test to train your brain'),

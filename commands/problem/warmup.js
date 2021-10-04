@@ -6,6 +6,7 @@ const quizModel = require('../../models/quizSchema');
 
 
 module.exports = {
+    cooldown: 120,
     data: new SlashCommandBuilder()
         .setName('warmup')
         .setDescription('Quick question to warm those neurons up.')

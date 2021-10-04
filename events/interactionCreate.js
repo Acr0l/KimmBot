@@ -21,9 +21,30 @@ client.on('interactionCreate', async interaction  => {
         if (menu) menu.run(client, interaction, profileData)
         else console.log('Menu not found.');
     }
-
+    
+    // Command Handling
+    
     if (!interaction.isCommand()) return;
+    
+    // Cooldown Handling
+    let justRegistered = false;
+    if (!profileData.cooldowns.has(interaction.commandName)) {
+        justRegistered = true;
+        profileData.cooldowns.set(interaction.commandName, Date.now());
+    }
 
+    // Cooldown Check
+    const currentTime = Date.now();
+    const timeStamp = profileData.cooldowns.get(interaction.commandName).getTime();
+    const cmdCooldown = client.commands.get(interaction.commandName).cooldown * 1000;
+    if (currentTime < timeStamp + cmdCooldown && !justRegistered) {
+        await interaction.reply('You are on cooldown for this command. Please wait ' + Math.round((cmdCooldown - (currentTime - timeStamp)) / 1000) + ' seconds.');
+        return;
+    }
+
+    profileData.cooldowns.set(interaction.commandName, currentTime);
+    profileData.save();
+    
     const command = client.commands.get(interaction.commandName);
 
     if (!command) return;
