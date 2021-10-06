@@ -3,3 +3,4 @@ node_modules
 connect.js
 insert-data.js
 .env
+.eslintrc.json

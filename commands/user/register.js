@@ -1,3 +1,4 @@
+const { MessageActionRow, MessageButton } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const profileModel = require('../../models/profileSchema');
 
@@ -5,7 +6,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('register')
         .setDescription('Start Kimm account.'),
-    async execute(interaction, ...args) {
+    async execute(interaction, noData, client) {
+
 
         let profileData;
 
@@ -17,7 +19,15 @@ module.exports = {
                     dons: 0
                 });
                 profile.save();
-                await interaction.reply('You have successfully registered, type `tutorial` to begin!');
+                const row = new MessageActionRow()
+                .addComponents(
+                    new MessageButton()
+                        .setCustomId('tutorial')
+                        .setLabel('Tutorial')
+                        .setStyle('SUCCESS')
+                        .setEmoji('📖')
+                )
+                await interaction.reply({ content: 'You have successfully registered, click the button to begin the tutorial!', components: [row] });
                 return;
             }
             else {
@@ -27,7 +37,6 @@ module.exports = {
         }
         catch (err) {
             console.log(err);
-        }
-        
+        }        
     },
 };

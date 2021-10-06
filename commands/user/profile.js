@@ -13,7 +13,7 @@ module.exports = {
         // let levelPercent = Math.floor((profileData.level / profileData.maxLevel) * 100);
         let lvlPercentage = ((profileData.xp / levelFormula(profileData.level)) * 100).toFixed(2);
         let progress = `**Level**: ${profileData.level} (${lvlPercentage}%)\n**XP**: ${profileData.xp}\n**Tier**:${profileData.tier}`
-        let stats = `**ME**: ${profileData.mentalEnergy.totalMe}\n**MR**: ${profileData.mentalEnergy.mr}`;
+        let stats = `**ME**: ${profileData.mentalEnergy.me}/${profileData.mentalEnergy.totalMe}\n**MR**: ${profileData.mentalEnergy.mr}`;
         let equipped = profileData.equipment != 0 ? profileData.equipment.map(e => `-  **${e}**`).join('\n') : 'No items equipped.';
 
         const embed = new MessageEmbed()

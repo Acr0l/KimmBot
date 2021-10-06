@@ -1,5 +1,6 @@
 const client = require('../index');
 const profileModel = require('../models/profileSchema');
+const RECOVERYTIME = 5;
 
 client.on('interactionCreate', async interaction => {
     // Get user from db.
@@ -26,24 +27,38 @@ client.on('interactionCreate', async interaction => {
 
     if (!interaction.isCommand()) return;
 
-    // Cooldown Handling
-    let justRegistered = false;
-    if (!profileData.cooldowns.has(interaction.commandName)) {
-        justRegistered = true;
-        profileData.cooldowns.set(interaction.commandName, Date.now());
-    }
+    if (interaction.commandName !== 'register' && profileData) {
+        const currentTime = Date.now();
 
-    // Cooldown Check
-    const currentTime = Date.now();
-    const timeStamp = profileData.cooldowns.get(interaction.commandName).getTime();
-    const cmdCooldown = client.commands.get(interaction.commandName).cooldown * 1000;
-    if (currentTime < timeStamp + cmdCooldown && !justRegistered) {
-        await interaction.reply(`You are on cooldown for this command. Please wait ${secondsToDhms((cmdCooldown - (currentTime - timeStamp)) / 1000)}.`);
-        return;
-    }
+        // Mental Energy Handling
+        
+        if (profileData.mentalEnergy.lastRecovery < currentTime - RECOVERYTIME * 1000 * 60) {
+            console.log('Recovering mental energy.');
+            let recoveryAmount = Math.floor((currentTime - profileData.mentalEnergy.lastRecovery) / (RECOVERYTIME * 1000 * 60));
+            profileData.mentalEnergy.me = Math.min(profileData.mentalEnergy.me + profileData.mentalEnergy.mr * recoveryAmount, profileData.mentalEnergy.totalMe);
+            profileData.mentalEnergy.lastRecovery += recoveryAmount * RECOVERYTIME * 1000 * 60;
+            await profileData.save();
+        }
 
-    profileData.cooldowns.set(interaction.commandName, currentTime);
-    profileData.save();
+        // Cooldown Handling
+        let justRegistered = false;
+        if (!profileData.cooldowns.has(interaction.commandName)) {
+            justRegistered = true;
+            profileData.cooldowns.set(interaction.commandName, Date.now());
+        }
+
+        // Cooldown Check
+        
+        const timeStamp = profileData.cooldowns.get(interaction.commandName).getTime();
+        const cmdCooldown = client.commands.get(interaction.commandName).cooldown * 1000;
+        if (currentTime < timeStamp + cmdCooldown && !justRegistered) {
+            await interaction.reply(`You are on cooldown for this command. Please wait ${secondsToDhms((cmdCooldown - (currentTime - timeStamp)) / 1000)}.`);
+            return;
+        }
+
+        profileData.cooldowns.set(interaction.commandName, currentTime);
+        profileData.save();
+    }
 
     const command = client.commands.get(interaction.commandName);
 

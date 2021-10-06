@@ -6,10 +6,10 @@ const quizModel = require('../../models/quizSchema');
 
 
 module.exports = {
-    cooldown: 300,
+    cooldown: 10,
     data: new SlashCommandBuilder()
         .setName('warmup')
-        .setDescription('Quick question to warm those neurons up.')
+        .setDescription('Quick question to warm up those neurons.')
         .addStringOption(option =>
             option.setName('subject')
                 .setDescription('Subject to warm up')
@@ -18,6 +18,11 @@ module.exports = {
         ),
 
     async execute(interaction, profileData) {
+
+        if (profileData.mentalEnergy.me <= 10) {
+            interaction.reply('You need to rest before you can do that.');
+            return;
+        }
 
         // Constants
         const N = 5;

@@ -20,7 +20,8 @@ const profileSchema = new mongoose.Schema({
     mentalEnergy: {
         me: { type: Number, required: true, default: 100 },
         totalMe: { type: Number, required: true, default: 100 },
-        mr: { type: Number, required: true, default: 1 }
+        mr: { type: Number, required: true, default: 1 },
+        lastRecovery: { type: Date, required: true, default: Date.now() },
     },
     stats: { type: Array, required: true, default: [] },
     // Areas = Subjects { subject: String, level: Number }

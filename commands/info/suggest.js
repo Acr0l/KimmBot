@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed } = require('discord.js');
 const { subjects } = require('../../util/subjects');
 
 let subjectsArr = [];
@@ -47,8 +48,17 @@ module.exports = {
         const correctAnswer = interaction.options.getString('correctans');
         const incorrectAnswers = interaction.options.getString('incorrectans').split(',');
 
-        client.channels.cache.get('894728345235914802')
-            .send(`**Suggestion**\nUser: ${interaction.user.tag}, User ID \`${interaction.user.id}\`\n${suggestionSubject}: ${suggestion}\n**Correct:** ${correctAnswer}\n**Incorrect:** ${incorrectAnswers}`);
+        const embed = new MessageEmbed()
+            .setTitle(`Suggestion from ${interaction.user.username}`)
+            .setDescription(`Subject: ${suggestionSubject}`)
+            .addField('Suggestion', suggestion)
+            .addField('Correct answer', correctAnswer)
+            .addField('Incorrect answers', incorrectAnswers.join(', '))
+            .setFooter('User ID: ' + interaction.user.id)
+            .setTimestamp()
+            .setColor('#0099ff');
+
+        client.channels.cache.get('894728345235914802').send({ embeds: [embed] });
         interaction.reply(`Your suggestion has been sent to the bot, thanks for your support!`);
     }
 }

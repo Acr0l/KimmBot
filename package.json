@@ -17,6 +17,8 @@
     "@discordjs/rest": "^0.1.0-canary.0",
     "discord-api-types": "^0.20.2",
     "discord.js": "^13.1.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
     "mongodb": "^4.1.2",
     "mongoose": "^6.0.7",
     "node-fetch": "^3.0.0",
