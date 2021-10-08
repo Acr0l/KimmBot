@@ -2,6 +2,10 @@ const client = require('../index');
 const profileModel = require('../models/profileSchema');
 const RECOVERYTIME = 5;
 
+let AntiSpam = {};
+const timeAntiSpam = 40;
+const msgAntiSpam = 5;
+
 client.on('interactionCreate', async interaction => {
     // Get user from db.
     let profileData;
@@ -15,6 +19,12 @@ client.on('interactionCreate', async interaction => {
     catch (err) {
         console.log(err);
     }
+
+    // Check if user is spamming.
+    if (!AntiSpam[interaction.user.id]) AntiSpam[interaction.user.id] = 1, setTimeout(() => { delete AntiSpam[interaction.user.id] }, timeAntiSpam * 1000);
+    else if (AntiSpam[interaction.user.id] < msgAntiSpam) AntiSpam[interaction.user.id]++;
+    else if (AntiSpam[interaction.user.id >= msgAntiSpam]) return /* Send interaction to check it's not farming */
+    else AntiSpam[interaction.user.id] = {}, AntiSpam[interaction.user.id] = 1;
 
     // Select Menu Handling
     if (interaction.isSelectMenu()) {
@@ -31,18 +41,17 @@ client.on('interactionCreate', async interaction => {
         const currentTime = Date.now();
 
         // Mental Energy Handling
-        
-        if (profileData.mentalEnergy.lastRecovery < currentTime - RECOVERYTIME * 1000 * 60) {
-            console.log('Recovering mental energy.');
-            let recoveryAmount = Math.floor((currentTime - profileData.mentalEnergy.lastRecovery) / (RECOVERYTIME * 1000 * 60));
+        ;
+        if (profileData.mentalEnergy.lastRecovery < currentTime - (RECOVERYTIME * 1000 * 60)) {
+            let recoveryAmount = Math.floor((currentTime - profileData.mentalEnergy.lastRecovery.getTime()) / (RECOVERYTIME * 1000 * 60));
             profileData.mentalEnergy.me = Math.min(profileData.mentalEnergy.me + profileData.mentalEnergy.mr * recoveryAmount, profileData.mentalEnergy.totalMe);
-            profileData.mentalEnergy.lastRecovery += recoveryAmount * RECOVERYTIME * 1000 * 60;
+            profileData.mentalEnergy.lastRecovery = Date.now();
             await profileData.save();
         }
 
         // Cooldown Handling
         let justRegistered = false;
-        if (!profileData.cooldowns.has(interaction.commandName)) {
+        if ((!profileData.cooldowns.has(interaction.commandName) && client.commands.get(interaction.commandName).cooldown !== 0)) {
             justRegistered = true;
             profileData.cooldowns.set(interaction.commandName, Date.now());
         }
@@ -57,7 +66,7 @@ client.on('interactionCreate', async interaction => {
         }
 
         profileData.cooldowns.set(interaction.commandName, currentTime);
-        profileData.save();
+        await profileData.save();
     }
 
     const command = client.commands.get(interaction.commandName);

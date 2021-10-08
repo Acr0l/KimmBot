@@ -1,6 +1,5 @@
 const itemModel = require('../models/itemSchema');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const profile = require('../commands/user/profile');
 
 module.exports = {
     data: new SlashCommandBuilder()

@@ -37,6 +37,22 @@ module.exports = {
         }
         catch (err) {
             console.log(err);
-        }        
+        }
+
+        const collector = interaction.channel.createMessageComponentCollector({
+            componentType: MessageButton,
+            time: 20000
+        });
+
+        collector.on('collect', async (i) => {
+            if(!i.customId === 'tutorial') return;
+            if(!i.user.id === interaction.user.id) return;
+
+            await interaction.reply('Starting tutorial...');
+        });
+
+        collector.on('end', async () => {
+            await interaction.editReply('You have finished the tutorial.');
+        });
     },
 };

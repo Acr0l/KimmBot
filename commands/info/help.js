@@ -20,6 +20,11 @@ module.exports = {
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
 
+        directories.move(directories.indexOf('info'), 0);
+        directories.move(directories.indexOf('statistics'), 1);
+        directories.move(directories.indexOf('problem'), 2);
+        directories.move(directories.indexOf('economy'), 3);
+
         const formatString = str => `${str[0].toUpperCase()}${str.slice(1).toLowerCase()}`;
         const categories = directories.map((dir) => {
             const getCommands = client.commands
@@ -36,6 +41,8 @@ module.exports = {
             };
         });
         const embed = new MessageEmbed()
+            .setTitle('Available commands')
+            .setColor('#C7F8CB')
             .setDescription('Please choose a category in the dropdown menu.');
 
         const components = (state) => [
@@ -62,13 +69,15 @@ module.exports = {
             embeds: [embed],
             components: components(false)
         });
-
+        const filter = (i) => i.customId == "help-menu";
         const collector = interaction.channel.createMessageComponentCollector({
+            filter,
             componentType: "SELECT_MENU",
-            // time: 20000,
+            time: 40000,
         });
 
         collector.on('collect', (i) => {
+            if(!i.customId == "help-menu") return;
             const [directory] = i.values;
             const category = categories.find(cat => cat.directory.toLowerCase() == directory.toLowerCase());
             const { description } = require(`../${directory}/desc.json`) || 'No description yet';
@@ -76,6 +85,7 @@ module.exports = {
             const categoryEmbed = new MessageEmbed()
                 .setTitle(`${formatString(directory)} commands`)
                 .setDescription(description)
+                .setColor('#80EA98')
                 .setFields(category.commands.map(cmd => {
                     return {
                         name: `\`${cmd.name}\``,
@@ -94,4 +104,8 @@ module.exports = {
             });
         });
     },
+};
+
+Array.prototype.move = function (from, to) {
+    this.splice(to, 0, this.splice(from, 1)[0]);
 };

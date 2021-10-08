@@ -12,23 +12,44 @@ module.exports = {
         
         // Get if the answer is correct.
         const value = interaction.values[0].startsWith('x');
-        const [question] = await quizModel.find({ _id: interaction.values[0].substring(1) });
+        let [subject, warmupId] = interaction.values[0].split('-');
+        subject = subject.slice(1);
+        const question = await quizModel.findOne({ _id: warmupId });
         const answerTime = Math.floor((Date.now() - SnowflakeUtil.deconstruct(interaction.message.id).timestamp) / 1000);
         const meSpent = Math.floor(answerTime * 2) + 3;
         
         
         // Apply ME changes.
-        if (profileData.mentalEnergy.me - meSpent >= 0) {
-
-            profileData.mentalEnergy.me -= meSpent;
-            await profileData.save();
-
-        } else {
-            // Not enough ME
-            await interaction.followUp(`You need at least ${meSpent} ME to answer this question.`)
+        if (answerTime >= 60) {
+            await interaction.followUp('No puedes seguir respondiendo.')
             return;
         }
 
+        if (profileData.mentalEnergy.me - meSpent >= 0) {
+            if (!profileData.stats.find(stat => stat.subject === subject)) {
+                profileData.stats.push({
+                    subject: subject,
+                    tier: 0,
+                    correct: value ? 1 : 0,
+                    incorrect: value ? 0 : 1,
+                });
+            } else {
+                const stat = await profileData.stats.findIndex(stat => stat.subject === subject);
+                profileData.stats[stat].correct += value ? 1 : 0;
+                profileData.stats[stat].incorrect += value ? 0 : 1;
+            }
+
+            profileData.mentalEnergy.me -= meSpent;
+
+        } else {
+            // Not enough ME
+            profileData.mentalEnergy.me = 0;
+            await interaction.followUp(`You need at least ${meSpent} ME to answer this question. Your ME has been set to \`0\``)
+            await profileData.save();
+            return;
+        }
+
+        await profileData.save();
         // Variables
         let color, title, description, image, footer;
         

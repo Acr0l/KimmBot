@@ -3,7 +3,14 @@ const { MessageEmbed } = require('discord.js');
 const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const quizModel = require('../../models/quizSchema');
+const { subjects } = require('../../util/subjects');
 
+let subjectsArr = [];
+
+for (const subject of subjects)
+{
+    subjectsArr.push([subject.name, subject.name])
+}
 
 module.exports = {
     cooldown: 10,
@@ -14,7 +21,7 @@ module.exports = {
             option.setName('subject')
                 .setDescription('Subject to warm up')
                 .setRequired(true)
-                .addChoice('Math', 'Math')
+                .addChoices(subjectsArr)
         ),
 
     async execute(interaction, profileData) {
@@ -29,6 +36,11 @@ module.exports = {
 
         // Get the subject
         const subject = interaction.options.getString('subject');
+
+        if (subject !== 'Math') {
+            interaction.reply('Only Math is currently supported.');
+            return;
+        }
 
         //First must be the correct one
         let alternativesOrdered = [];
@@ -70,7 +82,7 @@ module.exports = {
         for (let i = 0; i < warmupAlternatives.length; i++) {
             options[i] = {
                 label: warmupAlternatives[i],
-                value: warmupAlternatives[i] == question.correct_answer ? `x${question._id}` : `${i}${question._id}`
+                value: warmupAlternatives[i] == question.correct_answer ? `x${subject}-${question._id}` : `${i}${subject}-${question._id}`
             };
         }
 
@@ -98,6 +110,20 @@ module.exports = {
 
         //Reply
         await interaction.reply({ embeds: [embed], ephemeral: true, components: [row] });
+
+        const filter = (i) => i.customId === 'warmupSelect';
+        const collector = interaction.channel.createMessageComponentCollector({
+            filter,
+            componentType: "SELECT_MENU",
+            time: 60000,
+        })
+
+        collector.on('end', async collected => {
+            if (collected.size != 0) return;
+            profileData.mentalEnergy.me = Math.max(0, profileData.mentalEnergy.me - (60 * 2 + 3));
+            await interaction.followUp(`Tiempo expirado, tu nuevo ME es \`${profileData.mentalEnergy.me}\`.`);
+            await profileData.save();
+        })
 
     }
 
