@@ -1,0 +1,117 @@
+{
+    "languages": [
+        "en",
+        "es"
+    ],
+    "locale": "es",
+    "translations": {
+        "SUCCESSFULL_REGISTER": {
+            "en": "You have successfully registered, click the button to begin the tutorial!",
+            "es": "¡Te has registrado con éxito, haz clic en el botón para comenzar el tutorial!"
+        },
+        "UNSUCCESSFULL_REGISTER": {
+            "en": "You already have a Kimm account.",
+            "es": "Ya tienes una cuenta de Kimm."
+        },
+        "TUTORIAL": {
+            "en": "Starting tutorial...:INSERT TUTORIAL:You have finished the tutorial.",
+            "es": "Comenzando tutorial...:INSERT TUTORIAL:Has terminado el tutorial."
+        },
+        "PROFILE_AUTHOR": {
+            "en": "{{user}}'s profile",
+            "es": "Perfil de {{user}}"
+        },
+        "PROFILE_FIELDS": {
+            "en": "Progress,Stats,Equipment,Money",
+            "es": "Progreso,Estadísticas,Equipamiento,Dinero"
+        },
+        "PROFILE_PROGRESS": {
+            "en": "Level: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Tier**: {{tier}}",
+            "es": "Nivel: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Tier**: {{tier}}"
+        },
+        "PROFILE_EQUIPMENT": {
+            "en": "No items equipped.",
+            "es": "No hay objetos equipados."
+        },
+        "INVENTORY_TITLE": {
+            "en": "{{user}}'s inventory",
+            "es": "Inventario de {{user}}"
+        },
+        "INVENTORY_EMPTY": {
+            "en": "Your inventory is empty.",
+            "es": "Tu inventario está vacío."
+        },
+        "INVENTORY_QUANTITY": {
+            "en": "{{quantity}} items:1 item",
+            "es": "{{quantity}} objetos:1 objeto"
+        },
+        "PROBLEM_REST": {
+            "en": "You need to rest before you can do that.",
+            "es": "Tienes que descansar antes de hacer eso."
+        },
+        "PROBLEM_SUBJECT_NOT_SUPPORTED": {
+            "en": "This subject is not supported.",
+            "es": "Este tema no está soportado."
+        },
+        "PROBLEM_DESCRIPTION": {
+            "en": "Choose the correct answer.",
+            "es": "Elige la respuesta correcta."
+        },
+        "PROBLEM_SELECT_ALTERNATIVE": {
+            "en": "Select an alternative.",
+            "es": "Elige una alternativa."
+        },
+        "PROBLEM_TIME_EXPIRED": {
+            "en": "Time expired, your new ME is `{{me}}`.",
+            "es": "Tiempo expirado, tu nuevo ME es `{{me}}`."
+        },
+        "PROBLEM_SELECT_TIME_EXPIRED": {
+            "en": "You can't answer anymore.",
+            "es": "No puedes seguir responiendo."
+        },
+        "PROBLEM_SELECT_NOT_ENOUGH_ME": {
+            "en": "You don't have enough ME to answer.",
+            "es": "No tienes suficiente ME para responder."
+        },
+        "PROBLEM_SELECT_CORRECT_TITLE": {
+            "en": "{{user}} has answered correctly",
+            "es": "{{user}} ha respondido correctamente"
+        },
+        "PROBLEM_SELECT_CORRECT_DESC": {
+            "en": "Congratulations {{user}}! You won {{xp}} XP points\nYou spent {{meSpent}} ME points.",
+            "es": "¡Felicidades {{user}}, has ganado {{xp}} puntos de XP!\nHas gastado {{meSpent}} puntos de ME."
+        },
+        "PROBLEM_SELECT_INCORRECT_TITLE": {
+            "en": "{{user}} has answered incorrectly",
+            "es": "{{user}} ha respondido incorrectamente"
+        },
+        "PROBLEM_SELECT_INCORRECT_DESC": {
+            "en": "That wasn't the correct answer...\nYou spent {{meSpent}} ME points.",
+            "es": "Esa no era la respuesta correcta...\nHas gastado {{meSpent}} puntos de ME."
+        },
+        "PROBLEM_SELECT_INCORRECT_ANS": {
+            "en": "Incorrect answer!",
+            "es": "¡Respuesta incorrecta!"
+        },
+        "HELP_TITLE_CHOOSE": {
+            "en": "Available commands",
+            "es": "Comandos disponibles"
+        },
+        "HELP_CHOOSE_CAT": {
+            "en": "Please choose a category in the dropdown menu.",
+            "es": "Por favor, elige una categoría del menú."
+        },
+        "HELP_PLACEHOLDER": {
+            "en": "Select a category",
+            "es": "Elige una categoría"
+        },
+        "HELP_DIRECTORIES": {
+            "en": "Economy:Guild:Info:Problem:Statistics:Tmp",
+            "es": "Economía:Servidor:Información:Problemas:Estadísticas:Tmp"
+        },
+        "HELP_ROW_DESC": {
+            "en": "Commands from the {{category}} category.",
+            "es": "Comandos de la categoría {{category}}."
+        }
+    }
+}
