@@ -2,15 +2,15 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const profileModel = require('../../models/profileSchema');
 const { MessageEmbed } = require('discord.js');
 const { levelFormula } = require('../../util/userfuncs');
+const language = require('../../handlers/language');
+const mustache = require('mustache');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('profile')
         .setDescription('See your info'),
     async execute(interaction, profileData) {
-        
-        //let inventory = profileData.inventory.length != 0 ? profileData.items.join(',') : 'The inventory is empty.';
-        // let levelPercent = Math.floor((profileData.level / profileData.maxLevel) * 100);
+
         let lvlPercentage = ((profileData.xp / levelFormula(profileData.level)) * 100).toFixed(2);
         let progress = `**Level**: ${profileData.level} (${lvlPercentage}%)\n**XP**: ${profileData.xp}\n**Tier**: ${profileData.tier}`
         let stats = `**ME**: ${profileData.mentalEnergy.me}/${profileData.mentalEnergy.totalMe}\n**MR**: ${profileData.mentalEnergy.mr}`;
