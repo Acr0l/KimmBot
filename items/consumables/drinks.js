@@ -8,13 +8,13 @@ module.exports = {
                 mr: {
                     effect: 1,
                     duration: 1800,
-                }
+                },
             },
             Gatorade: {
                 me: 10,
-                mr: 0
+                mr: 0,
             },
-        }
+        };
         const effect = itemEffects[item];
         if (currentME + effect.me > maxME) {
             profileData.mentalEnergy.me = maxME;
@@ -24,5 +24,5 @@ module.exports = {
         // TODO: Work with timers for MR.
         // profileData.mentalEnergy.mr += effect.mr;
         profileData.save();
-    }
-}
+    },
+};

@@ -17,7 +17,6 @@ mongoose
     })
     .then(() => {
         console.log('MongoDB Connected')
-        startFunction();
     })
     .catch(err => console.log(err));
 

@@ -1,15 +1,12 @@
 {
-    "languages": [
-        "en",
-        "es"
-    ],
+    "languages": ["en", "es"],
     "locale": "es",
     "translations": {
-        "SUCCESSFULL_REGISTER": {
+        "SUCCESSFUL_REGISTER": {
             "en": "You have successfully registered, click the button to begin the tutorial!",
             "es": "¡Te has registrado con éxito, haz clic en el botón para comenzar el tutorial!"
         },
-        "UNSUCCESSFULL_REGISTER": {
+        "UNSUCCESSFUL_REGISTER": {
             "en": "You already have a Kimm account.",
             "es": "Ya tienes una cuenta de Kimm."
         },
@@ -26,10 +23,10 @@
             "es": "Progreso,Estadísticas,Equipamiento,Dinero"
         },
         "PROFILE_PROGRESS": {
-            "en": "Level: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Tier**: {{tier}}",
-            "es": "Nivel: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Tier**: {{tier}}"
+            "en": "**Level**: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Tier**: {{tier}}",
+            "es": "**Nivel**: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Rango**: {{tier}}"
         },
-        "PROFILE_EQUIPMENT": {
+        "PROFILE_NO_EQUIPMENT": {
             "en": "No items equipped.",
             "es": "No hay objetos equipados."
         },
@@ -112,6 +109,10 @@
         "HELP_ROW_DESC": {
             "en": "Commands from the {{category}} category.",
             "es": "Comandos de la categoría {{category}}."
+        },
+        "SETLANG_REPLY": {
+            "en": "Language set to English.",
+            "es": "Idioma establecido a Español."
         }
     }
 }

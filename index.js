@@ -1,60 +1,75 @@
 // Require the necessary classes
-const { Client, Collection, Intents, MessageEmbed } = require('discord.js');
-const { token } = require('./config.json');
-const { MONGODB_URI } = require('./config.json');
-const fs = require('fs');
-const mongoose = require('mongoose');
-const path = require('path');
+const { Client, Collection, Intents, MessageEmbed } = require("discord.js");
+const { token } = require("./config.json");
+const { MONGODB_URI } = require("./config.json");
+const fs = require("fs");
+const mongoose = require("mongoose");
+const path = require("path");
+const { loadLanguages } = require("./handlers/language");
 
 // Create client
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
+const client = new Client({
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    ],
+});
 
 module.exports = client;
+
+// Load saved languages
+loadLanguages(client);
 
 // Create a collection for the commands
 client.commands = new Collection();
 client.subcommands = new Collection();
-let tmp = [], subcommandFiles = [], commandFiles = [];
+let tmp = [],
+    subcommandFiles = [],
+    commandFiles = [];
 function throughDirectory(dir) {
-    fs.readdirSync(dir)
-        .forEach(file => {
-            const absolute = path.join(dir, file);
-            if (fs.statSync(absolute).isDirectory()) return throughDirectory(absolute);
-            else if (absolute.endsWith('js')) return tmp.push(absolute);
-        });
+    fs.readdirSync(dir).forEach((file) => {
+        const absolute = path.join(dir, file);
+        if (fs.statSync(absolute).isDirectory())
+            return throughDirectory(absolute);
+        else if (absolute.endsWith("js")) return tmp.push(absolute);
+    });
 }
-throughDirectory('./commands')
+throughDirectory("./commands");
 commandFiles = [...tmp];
 tmp = [];
-throughDirectory('./subcommands');
+throughDirectory("./subcommands");
 subcommandFiles = [...tmp];
 
 for (const file of commandFiles) {
     const command = require(`./${file}`);
-    const splitted = file.split('\\');
+    const splitted = file.split("\\");
     const directory = splitted[splitted.length - 2];
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module
-    command['directory'] = directory;
-    command['cooldown'] = command.cooldown || 0;
-    if (command.data.name) client.commands.set(command.data.name, command)
+    command["directory"] = directory;
+    if (command.cooldown) command["cooldown"] = command.cooldown;
+    if (command.data.name) client.commands.set(command.data.name, command);
     else console.log(`${command} not found`);
 }
 
 for (const file of subcommandFiles) {
     const subcommand = require(`./${file}`);
-    const splitted = file.split('\\');
+    const splitted = file.split("\\");
     const directory = splitted[splitted.length - 2];
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module
-    subcommand['directory'] = directory;
-    if (subcommand.data.name) client.subcommands.set(subcommand.data.name, subcommand)
+    subcommand["directory"] = directory;
+    if (subcommand.data.name)
+        client.subcommands.set(subcommand.data.name, subcommand);
     else console.log(`${subcommand} not found`);
 }
 
 // Create a collection for the menus
 client.selectmenu = new Collection();
-const menuFiles = fs.readdirSync('./selectmenus').filter(file => file.endsWith('.js'));
+const menuFiles = fs
+    .readdirSync("./selectmenus")
+    .filter((file) => file.endsWith(".js"));
 
 for (const file of menuFiles) {
     const menu = require(`./selectmenus/${file}`);
@@ -64,7 +79,9 @@ for (const file of menuFiles) {
 }
 
 // Create a collection for the events
-const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
+const eventFiles = fs
+    .readdirSync("./events")
+    .filter((file) => file.endsWith(".js"));
 
 for (const file of eventFiles) {
     const event = require(`./events/${file}`);
@@ -74,11 +91,10 @@ for (const file of eventFiles) {
 mongoose
     .connect(MONGODB_URI, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
     })
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log(err));
+    .then(() => console.log("MongoDB Connected"))
+    .catch((err) => console.log(err));
 
 // Login to Discord (token)
 client.login(token);
-

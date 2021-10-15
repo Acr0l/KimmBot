@@ -22,13 +22,12 @@ const setLanguage = async (guildId, language) => {
     guildLanguages[guildId] = language;
 }
 
-module.exports = (guild, textKey) => {
+const translate = (guild, textKey) => {
     if (!lang.translations[textKey]) {
         throw new Error(`Language key ${textKey} does not exist.`);
     }
-
     const selectedLanguage = guildLanguages[guild.id] || 'en';
 
     return lang.translations[textKey][selectedLanguage];
 };
-module.exports = { loadLanguages, setLanguage };
+module.exports = { loadLanguages, setLanguage, translate };
