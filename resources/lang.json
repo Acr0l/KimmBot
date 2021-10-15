@@ -113,6 +113,23 @@
         "SETLANG_REPLY": {
             "en": "Language set to English.",
             "es": "Idioma establecido a Español."
-        }
+        },
+        "INVALID_ITEM": {
+            "en": "Invalid item.",
+            "es": "Objeto inválido."
+        },
+        "UNOWNED_ITEM": {
+            "en": "You don't have that item.",
+            "es": "No tienes ese objeto."
+        },
+        "DRINK_ME_ALL": {
+            "en": "You have recovered all of your ME.",
+            "es": "Has recuperado todo tu ME."
+        },
+        "DRINK_ME_AMOUNT": {
+            "en": "You have recovered `{{amount}}` ME.",
+            "es": "Has recuperado `{{amount}}` ME."
+        },
+        ""
     }
 }

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const itemDatabase = require("../models/itemSchema");
+const { translate } = require('../handlers/language');
 
 module.exports = {
     data: new SlashCommandBuilder().setName(`use`).setDescription(`Use item.`),
@@ -11,6 +12,7 @@ module.exports = {
     async execute(interaction, profileData, client) {
         const itemAction = interaction.options.getString("item");
         const amount = interaction.options.getNumber("amount") || 1;
+        const { guild } = interaction;
         
         try {
             let currentItem = await itemDatabase.findOne({ name: itemAction });
@@ -19,9 +21,9 @@ module.exports = {
             );
             console.log(profileData.inventory[ownedIndex])
             if (!currentItem) {
-                interaction.reply("Item does not exist.");
+                interaction.reply(translate(guild, "INVALID_ITEM"));
             } else if (ownedIndex === -1) {
-                interaction.reply("You don't have that item!");
+                interaction.reply(translate(guild, "UNOWNED_ITEM"));
             } else if (
                 currentItem &&
                 amount <= profileData.inventory[ownedIndex].quantity &&
@@ -34,20 +36,15 @@ module.exports = {
                 } else {
                     profileData.inventory[ownedIndex].quantity = finalAmount;
                 }
+                await profileData.save();
                 const itemUse = require(`../items/${currentItem.funcPath}`);
                 if (itemUse) await itemUse.use(interaction, profileData, currentItem, amount);
-                profileData.save();
-                interaction.reply(`You equipped a ${currentItem.name}!`);
             } else {
-                interaction.reply("Item cannot be used.");
+                interaction.reply(translate(guild, "INVALID_ITEM"));
             }
         } catch (err) {
             console.log(err);
-            interaction.reply("Item does not exist.");
+            interaction.reply(translate(guild, "INVALID_ITEM"));
         }
-        // await interaction.reply({
-        //     content: `This command is not yet implemented.`,
-        //     ephemeral: true,
-        // });
     },
 };
