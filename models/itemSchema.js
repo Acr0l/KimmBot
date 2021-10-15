@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const itemSchema = new mongoose.Schema({
     name: { type: String, required: true },
     description: { type: String, required: true, default: '' },
+    // 0: Equipment , 1: Consumable
+    iType: { type: Number, required: true, default: 1 },
     tier: { type: String, required: true, default: "common" },
     price: { type: Number, required: true, default: 0 },
     use: { type: String, default: '' },

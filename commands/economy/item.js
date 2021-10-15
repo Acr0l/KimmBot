@@ -68,6 +68,12 @@ module.exports = {
                         .setDescription(`The item to use.`)
                         .setRequired(true)
                 )
+                .addNumberOption((amount) =>
+                    amount
+                        .setName(`amount`)
+                        .setDescription(`The amount of the item to use.`)
+                        .setRequired(false)
+                )
         ),
 
     /**

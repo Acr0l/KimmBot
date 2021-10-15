@@ -1,15 +1,15 @@
-const itemModel = require('../models/itemSchema');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const itemModel = require("../models/itemSchema");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName(`equip`)
         .setDescription(`Equip selected item.`),
-  /**
-    * @param { Message } interaction
-    * @param { Object } profileData
-    * @param { Client } client
-    */
+    /**
+     * @param { Message } interaction
+     * @param { Object } profileData
+     * @param { Client } client
+     */
     async execute(interaction, profileData, client) {
         /*
         TODO:
@@ -17,30 +17,31 @@ module.exports = {
         - Get item from db
         - Add item to equipped items
         */
-        let itemAction = interaction.options.getString('item');
+        let itemAction = interaction.options.getString("item");
         const regex = /equip/;
-        
+
         try {
             let currentItem = await itemModel.findOne({ name: itemAction });
-            let owned = profileData.inventory.findIndex(item => item.name === currentItem.name);
+            let owned = profileData.inventory.findIndex(
+                (item) => item.name === currentItem.name
+            );
             if (!currentItem) {
-                interaction.reply('Item does not exist.')
+                interaction.reply("Item does not exist.");
             } else if (profileData.equipment.includes(currentItem.name)) {
-                interaction.reply('You already have that item equipped.')
+                interaction.reply("You already have that item equipped.");
             } else if (owned === -1) {
-                interaction.reply('You don\'t have that item!')
+                interaction.reply("You don't have that item!");
             } else if (currentItem && regex.test(currentItem.use)) {
                 profileData.equipment.push(currentItem.name);
                 profileData.inventory.splice(owned, 1);
                 profileData.save();
                 interaction.reply(`You equipped a ${currentItem.name}!`);
             } else {
-                interaction.reply('Item cannot be equipped.');
+                interaction.reply("Item cannot be equipped.");
             }
-        }
-        catch (err) {
+        } catch (err) {
             console.log(err);
-            interaction.reply('Item does not exist.');
+            interaction.reply("Item does not exist.");
         }
-    }
-}
+    },
+};
