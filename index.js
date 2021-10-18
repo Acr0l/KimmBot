@@ -1,11 +1,10 @@
 // Require the necessary classes
-const { Client, Collection, Intents, MessageEmbed } = require("discord.js");
-const { token } = require("./config.json");
-const { MONGODB_URI } = require("./config.json");
-const fs = require("fs");
-const mongoose = require("mongoose");
-const path = require("path");
-const { loadLanguages } = require("./handlers/language");
+const { Client, Collection, Intents, MessageEmbed } = require("discord.js"),
+    { token } = require("./config.json"),
+    { MONGODB_URI } = require("./config.json"),
+    fs = require("fs"),
+    mongoose = require("mongoose"),
+    path = require("path");
 
 // Create client
 const client = new Client({
@@ -18,12 +17,10 @@ const client = new Client({
 
 module.exports = client;
 
-// Load saved languages
-loadLanguages(client);
-
 // Create a collection for the commands
 client.commands = new Collection();
 client.subcommands = new Collection();
+
 let tmp = [],
     subcommandFiles = [],
     commandFiles = [];

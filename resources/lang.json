@@ -1,126 +1,41 @@
 {
     "languages": ["en", "es"],
-    "locale": "es",
     "translations": {
-        "SUCCESSFUL_REGISTER": {
-            "en": "You have successfully registered, click the button to begin the tutorial!",
-            "es": "¡Te has registrado con éxito, haz clic en el botón para comenzar el tutorial!"
+        "BUY_ITEM_AMOUNT_UNIQUE": {
+            "en": "You can buy that item only once.",
+            "es": "Solo puedes comprar ese objeto una vez."
         },
-        "UNSUCCESSFUL_REGISTER": {
-            "en": "You already have a Kimm account.",
-            "es": "Ya tienes una cuenta de Kimm."
+        "BUY_OWNED": {
+            "en": "You already own that item.",
+            "es": "Ya tienes ese objeto."
         },
-        "TUTORIAL": {
-            "en": "Starting tutorial...:INSERT TUTORIAL:You have finished the tutorial.",
-            "es": "Comenzando tutorial...:INSERT TUTORIAL:Has terminado el tutorial."
+        "BUY_SUCCESS": {
+            "en": "You bought one {{item}} for Ɖ{{price}}.:You bought {{amount}} {{item}}s for Ɖ{{price}}.",
+            "es": "Has comprado un {{item}} por Ɖ{{price}}.:Has comprado {{amount}} {{item}}s por Ɖ{{price}}."
         },
-        "PROFILE_AUTHOR": {
-            "en": "{{user}}'s profile",
-            "es": "Perfil de {{user}}"
+        "DESCRIPTION_ECONOMY": {
+            "en": "Commands used to interact with the shop and currency system.",
+            "es": "Comandos usados para interactuar con la tienda y el sistema de monedas."
         },
-        "PROFILE_FIELDS": {
-            "en": "Progress,Stats,Equipment,Money",
-            "es": "Progreso,Estadísticas,Equipamiento,Dinero"
+        "DESCRIPTION_GUILD": {
+            "en": "Server-pertaining commands.",
+            "es": "Comandos relacionados con el servidor."
         },
-        "PROFILE_PROGRESS": {
-            "en": "**Level**: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Tier**: {{tier}}",
-            "es": "**Nivel**: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Rango**: {{tier}}"
+        "DESCRIPTION_INFO": {
+            "en": "Commands that provide information about the bot.",
+            "es": "Comandos que proporcionan información sobre el bot."
         },
-        "PROFILE_NO_EQUIPMENT": {
-            "en": "No items equipped.",
-            "es": "No hay objetos equipados."
+        "DESCRIPTION_PROBLEMS": {
+            "en": "Commands to challenge yourself and prove your knowledge.",
+            "es": "Comandos para desafiarte y demostrar tu conocimiento."
         },
-        "INVENTORY_TITLE": {
-            "en": "{{user}}'s inventory",
-            "es": "Inventario de {{user}}"
+        "DESCRIPTION_STATISTICS": {
+            "en": "Get more information about your current status, available titles and more!",
+            "es": "¡Obtén más información sobre tu estado actual, títulos disponibles y más!"
         },
-        "INVENTORY_EMPTY": {
-            "en": "Your inventory is empty.",
-            "es": "Tu inventario está vacío."
-        },
-        "INVENTORY_QUANTITY": {
-            "en": "{{quantity}} items:1 item",
-            "es": "{{quantity}} objetos:1 objeto"
-        },
-        "PROBLEM_REST": {
-            "en": "You need to rest before you can do that.",
-            "es": "Tienes que descansar antes de hacer eso."
-        },
-        "PROBLEM_SUBJECT_NOT_SUPPORTED": {
-            "en": "This subject is not supported.",
-            "es": "Este tema no está soportado."
-        },
-        "PROBLEM_DESCRIPTION": {
-            "en": "Choose the correct answer.",
-            "es": "Elige la respuesta correcta."
-        },
-        "PROBLEM_SELECT_ALTERNATIVE": {
-            "en": "Select an alternative.",
-            "es": "Elige una alternativa."
-        },
-        "PROBLEM_TIME_EXPIRED": {
-            "en": "Time expired, your new ME is `{{me}}`.",
-            "es": "Tiempo expirado, tu nuevo ME es `{{me}}`."
-        },
-        "PROBLEM_SELECT_TIME_EXPIRED": {
-            "en": "You can't answer anymore.",
-            "es": "No puedes seguir responiendo."
-        },
-        "PROBLEM_SELECT_NOT_ENOUGH_ME": {
-            "en": "You don't have enough ME to answer.",
-            "es": "No tienes suficiente ME para responder."
-        },
-        "PROBLEM_SELECT_CORRECT_TITLE": {
-            "en": "{{user}} has answered correctly",
-            "es": "{{user}} ha respondido correctamente"
-        },
-        "PROBLEM_SELECT_CORRECT_DESC": {
-            "en": "Congratulations {{user}}! You won {{xp}} XP points\nYou spent {{meSpent}} ME points.",
-            "es": "¡Felicidades {{user}}, has ganado {{xp}} puntos de XP!\nHas gastado {{meSpent}} puntos de ME."
-        },
-        "PROBLEM_SELECT_INCORRECT_TITLE": {
-            "en": "{{user}} has answered incorrectly",
-            "es": "{{user}} ha respondido incorrectamente"
-        },
-        "PROBLEM_SELECT_INCORRECT_DESC": {
-            "en": "That wasn't the correct answer...\nYou spent {{meSpent}} ME points.",
-            "es": "Esa no era la respuesta correcta...\nHas gastado {{meSpent}} puntos de ME."
-        },
-        "PROBLEM_SELECT_INCORRECT_ANS": {
-            "en": "Incorrect answer!",
-            "es": "¡Respuesta incorrecta!"
-        },
-        "HELP_TITLE_CHOOSE": {
-            "en": "Available commands",
-            "es": "Comandos disponibles"
-        },
-        "HELP_CHOOSE_CAT": {
-            "en": "Please choose a category in the dropdown menu.",
-            "es": "Por favor, elige una categoría del menú."
-        },
-        "HELP_PLACEHOLDER": {
-            "en": "Select a category",
-            "es": "Elige una categoría"
-        },
-        "HELP_DIRECTORIES": {
-            "en": "Economy:Guild:Info:Problem:Statistics:Tmp",
-            "es": "Economía:Servidor:Información:Problemas:Estadísticas:Tmp"
-        },
-        "HELP_ROW_DESC": {
-            "en": "Commands from the {{category}} category.",
-            "es": "Comandos de la categoría {{category}}."
-        },
-        "SETLANG_REPLY": {
-            "en": "Language set to English.",
-            "es": "Idioma establecido a Español."
-        },
-        "INVALID_ITEM": {
-            "en": "Invalid item.",
-            "es": "Objeto inválido."
-        },
-        "UNOWNED_ITEM": {
-            "en": "You don't have that item.",
-            "es": "No tienes ese objeto."
+        "DESCRIPTION_TMP": {
+            "en": "Temporal commands, not available for public use.",
+            "es": "Comandos temporales, no disponibles para uso público."
         },
         "DRINK_ME_ALL": {
             "en": "You have recovered all of your ME.",
@@ -130,6 +45,293 @@
             "en": "You have recovered `{{amount}}` ME.",
             "es": "Has recuperado `{{amount}}` ME."
         },
-        ""
+        "EQUIP_ALREADY_EQUIPPED": {
+            "en": "You already have that item equipped.",
+            "es": "Ya tienes ese objeto equipado."
+        },
+        "EQUIP_SUCCESS": {
+            "en": "You equipped a {{item}}!",
+            "es": "¡Has equipado un {{item}}!"
+        },
+        "ERROR": {
+            "en": "Something went wrong.",
+            "es": "Algo salió mal."
+        },
+        "HELP_CAT_EMBED_TITLE": {
+            "en": "{{category}} commands",
+            "es": "Comandos de {{category}}"
+        },
+        "HELP_CHOOSE_CAT": {
+            "en": "Please choose a category in the dropdown menu.",
+            "es": "Por favor, elige una categoría del menú."
+        },
+        "HELP_DIRECTORIES": {
+            "en": "Info:Statistics:Problems:Economy:Guild:Tmp",
+            "es": "Información:Estadísticas:Problemas:Economía:Servidor:Tmp"
+        },
+        "HELP_PLACEHOLDER": {
+            "en": "Select a category",
+            "es": "Elige una categoría"
+        },
+        "HELP_ROW_DESC": {
+            "en": "Commands from the {{category}} category.",
+            "es": "Comandos de la categoría {{category}}."
+        },
+        "HELP_TITLE_CHOOSE": {
+            "en": "Available commands",
+            "es": "Comandos disponibles"
+        },
+        "HINT_AFK": {
+            "en": "You do not have a problem ongoing.",
+            "es": "No tienes un problema en curso."
+        },
+        "HINT_NO_QUIZ": {
+            "en": "ERROR ||reported||\nProblem not found.",
+            "es": "ERROR ||reportado||\nProblema no encontrado."
+        },
+        "HINT_SUCCESSFUL_REPLY": {
+            "en": "New alternatives:",
+            "es": "Nuevas alternativas:"
+        },
+        "INSUFFICIENT_MONEY": {
+            "en": "You don't have enough money.",
+            "es": "No tienes suficiente dinero."
+        },
+        "INVALID_AMOUNT": {
+            "en": "Invalid amount.",
+            "es": "Cantidad inválida."
+        },
+        "INVALID_INPUT": {
+            "en": "Invalid input.",
+            "es": "Entrada inválida."
+        },
+        "INVALID_ITEM": {
+            "en": "Invalid item.",
+            "es": "Objeto inválido."
+        },
+        "INVENTORY_EMPTY": {
+            "en": "Your inventory is empty.",
+            "es": "Tu inventario está vacío."
+        },
+        "INVENTORY_QUANTITY": {
+            "en": "{{quantity}} items:1 item",
+            "es": "{{quantity}} objetos:1 objeto"
+        },
+        "INVENTORY_TITLE": {
+            "en": "{{user}}'s inventory",
+            "es": "Inventario de {{user}}"
+        },
+        "ITEM_GATORADE": {
+            "en": "Energy drink that recovers 10 ME points.",
+            "es": "Gatorade que recupera 10 ME."
+        },
+        "ITEM_HELMET": {
+            "en": "Temporal testing item.",
+            "es": "Objeto de prueba temporal."
+        },
+        "ITEM_HINT": {
+            "en": "Item that eliminates alternatives from an active quiz.",
+            "es": "Objeto que elimina alternativas de un quiz activo."
+        },
+        "NOT_EQUIPPED": {
+            "en": "You don't have that item equipped.",
+            "es": "No tienes ese objeto equipado."
+        },
+        "PROBLEM_DESCRIPTION": {
+            "en": "Choose the correct answer.",
+            "es": "Elige la respuesta correcta."
+        },
+        "PROBLEM_REST": {
+            "en": "You need to rest before you can do that.",
+            "es": "Tienes que descansar antes de hacer eso."
+        },
+        "PROBLEM_SELECT_ALTERNATIVE": {
+            "en": "Select an alternative.",
+            "es": "Elige una alternativa."
+        },
+        "PROBLEM_SELECT_CORRECT_DESCRIPTION": {
+            "en": "Congratulations {{user}}! You won {{xp}} XP points\nYou spent {{meSpent}} ME points.",
+            "es": "¡Felicidades {{user}}, has ganado {{xp}} puntos de XP!\nHas gastado {{meSpent}} puntos de ME."
+        },
+        "PROBLEM_SELECT_CORRECT_TITLE": {
+            "en": "{{user}} has answered correctly",
+            "es": "{{user}} ha respondido correctamente"
+        },
+        "PROBLEM_SELECT_INCORRECT_DESCRIPTION": {
+            "en": "That wasn't the correct answer...\nYou spent {{meSpent}} ME points.",
+            "es": "Esa no era la respuesta correcta...\nHas gastado {{meSpent}} puntos de ME."
+        },
+        "PROBLEM_SELECT_INCORRECT_TITLE": {
+            "en": "{{user}} has answered incorrectly",
+            "es": "{{user}} ha respondido incorrectamente"
+        },
+        "PROBLEM_SELECT_NOT_ENOUGH_ME": {
+            "en": "You need at least {{meSpent}} ME to answer this question. Your ME has been set to `0`",
+            "es": "Necesitas al menos {{meSpent}} ME para responder esta pregunta. Tu ME ha sido establecido a `0`"
+        },
+        "PROBLEM_SELECT_ROW_PLACEHOLDER": {
+            "en": "Correct!:Incorrect answer!",
+            "es": "¡Correcto!:¡Respuesta incorrecta!"
+        },
+        "PROBLEM_SELECT_TIME_EXPIRED": {
+            "en": "You can't answer anymore.",
+            "es": "No puedes seguir responiendo."
+        },
+        "PROBLEM_SUBJECT_NOT_SUPPORTED": {
+            "en": "This subject is not supported.",
+            "es": "Este tema no está soportado."
+        },
+        "PROBLEM_TIME_EXPIRED": {
+            "en": "Time expired, your new ME is `{{me}}`.",
+            "es": "Tiempo expirado, tu nuevo ME es `{{me}}`."
+        },
+        "PROFILE_AUTHOR": {
+            "en": "{{user}}'s profile",
+            "es": "Perfil de {{user}}"
+        },
+        "PROFILE_FIELDS": {
+            "en": "Progress,Stats,Equipment,Money",
+            "es": "Progreso,Estadísticas,Equipamiento,Dinero"
+        },
+        "PROFILE_NO_EQUIPMENT": {
+            "en": "No items equipped.",
+            "es": "No hay objetos equipados."
+        },
+        "PROFILE_PROGRESS": {
+            "en": "**Level**: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Tier**: {{tier}}",
+            "es": "**Nivel**: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Rango**: {{tier}}"
+        },
+        "SETLANG_REPLY": {
+            "en": "Language set to English.",
+            "es": "Idioma establecido a Español."
+        },
+        "SHOP_DESCRIPTION": {
+            "en": "Buy items and upgrades to improve your skills.",
+            "es": "Compra objetos y mejoras para mejorar tus habilidades."
+        },
+        "SHOP_TITLE": {
+            "en": "Shop",
+            "es": "Tienda"
+        },
+        "STATS_DESCRIPTION": {
+            "en": "Your current statistics.",
+            "es": "Tus estadísticas actuales."
+        },
+        "STATS_FIELD_DATA": {
+            "en": "Tier: {{tier}}\nAccuracy: {{accuracy}}% ({{totalAnswered}})",
+            "es": "Tier: {{tier}}\nPrecisión: {{accuracy}}% ({{totalAnswered}})"
+        },
+        "STATS_TITLE": {
+            "en": "Statistics",
+            "es": "Estadísticas"
+        },
+        "SUBJECT_COMPUTER_SCIENCE": {
+            "en": "Computer Science",
+            "es": "Ciencia de la Computación"
+        },
+        "SUBJECT_HISTORY": {
+            "en": "History and Geography",
+            "es": "Historia y Geografía"
+        },
+        "SUBJECT_LANGUAGE": {
+            "en": "Language",
+            "es": "Lenguaje"
+        },
+        "SUBJECT_LIFE_SKILLS": {
+            "en": "Life Skills",
+            "es": "Habilidades para la vida"
+        },
+        "SUBJECT_MATH": {
+            "en": "Math",
+            "es": "Matemáticas"
+        },
+        "SUBJECT_MUSIC_THEORY": {
+            "en": "Music Theory",
+            "es": "Teoría Musical"
+        },
+        "SUBJECT_SCIENCE": {
+            "en": "Science",
+            "es": "Ciencia"
+        },
+        "SUCCESSFUL_REGISTER": {
+            "en": "You have successfully registered, click the button to begin the tutorial!",
+            "es": "¡Te has registrado con éxito, haz clic en el botón para comenzar el tutorial!"
+        },
+        "TUTORIAL": {
+            "en": "Starting tutorial...:INSERT TUTORIAL:You have finished the tutorial.",
+            "es": "Comenzando tutorial...:INSERT TUTORIAL:Has terminado el tutorial."
+        },
+        "UNEQUIPPED_SUCCESSFULLY": {
+            "en": "You unequipped the {{item}}.",
+            "es": "Has desequipado el {{item}}."
+        },
+        "UNOWNED_ITEM": {
+            "en": "You don't have that item.",
+            "es": "No tienes ese objeto."
+        },
+        "UNSUCCESSFUL_REGISTER": {
+            "en": "You already have a Kimm account.",
+            "es": "Ya tienes una cuenta de Kimm."
+        },
+        "WAIT_FOR_REPLY": {
+            "en": "Fetching data...",
+            "es": "Obteniendo datos..."
+        },
+        "CMD_HELP": {
+            "en": "Short description about the available commands.",
+            "es": "Descripción breve sobre los comandos disponibles."
+        },
+        "CMD_SUGGEST": {
+            "en": "Suggest questions to the bot, you may get a title after getting many questions approved.",
+            "es": "Sugerencia de preguntas al bot, puedes obtener un título después de obtener muchas preguntas aprobadas."
+        },
+        "CMD_INVENTORY": {
+            "en": "Display current user items.",
+            "es": "Muestra los objetos actuales del usuario."
+        },
+        "CMD_PROFILE": {
+            "en": "See your information.",
+            "es": "Ver tu información."
+        },
+        "CMD_REGISTER": {
+            "en": "Create your Kimm account.",
+            "es": "Create tu cuenta de Kimm."
+        },
+        "CMD_STATS": {
+            "en": "Shows the user specific stats in different subjects.",
+            "es": "Muestra las estadísticas del usuario en diferentes temas."
+        },
+        "CMD_BALANCE": {
+            "en": "Shows the user balance.",
+            "es": "Muestra el saldo del usuario."
+        },
+        "CMD_ITEM": {
+            "en": "Command group to interact with the items.",
+            "es": "Grupo de comandos para interactuar con los objetos."
+        },
+        "CMD_SHOP": {
+            "en": "Display available items.",
+            "es": "Muestra los objetos disponibles."
+        },
+        "CMD_SETLANG": {
+            "en": "Change the language of the bot.",
+            "es": "Cambia el idioma del bot."
+        },
+        "CMD_CHALLENGE": {
+            "en": "The ultimate test.",
+            "es": "El desafío."
+        },
+        "CMD_WORKOUT": {
+            "en": "Test to train your brain and gain experience.",
+            "es": "Prueba para entrenar tu cerebro y ganar experiencia."
+        },
+        "CMD_WARMUP": {
+            "en": "Quick question to warm up those neurons.",
+            "es": "Pregunta rápida para calentar esos neuronas."
+        },
+        "CMD_XPADD":{
+            "en": "Temporal command, not available for public use.",
+            "es": "Comando temporal, no disponible para uso público."
+        }
     }
 }

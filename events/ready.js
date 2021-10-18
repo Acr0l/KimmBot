@@ -1,16 +1,17 @@
-const client = require('../index');
+const client = require("../index"),
+    { loadLanguages } = require("../handlers/language"),
+    { loadDifficulties } = require("../handlers/difficulty"),
+    { loadItems } = require('../handlers/itemInventory');
 
-client.on('ready', () => {
-	console.log(`Ready! Logged in as ${client.user.tag}`);
-	let status = [
-		`slash commands!`,
-		`and developing.`,
-		`JavaScript and Discord.js`
-	];
-	let index = 0;
+client.once("ready", () => {
+    console.log(`Ready! Logged in as ${client.user.tag}`);
 
-	setInterval(() => {
-		client.user.setActivity(status[index], { type: 'WATCHING', buttons: [{ name: 'EloquentJavascript', url: 'https://eloquentjavascript.net'}] });
-		index = (index + 1) % status.length;
-	}, 50000);
+    // Load saved languages
+    loadLanguages(client);
+	// Load saved difficulties
+	loadDifficulties(client);
+    // Load saved items
+    loadItems();
+	
+    client.user.setActivity("slash commands.", { type: "WATCHING" });
 });

@@ -1,35 +1,47 @@
-const { MessageEmbed } = require('discord.js');
-const itemModel = require('../../models/itemSchema');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed } = require("discord.js"),
+    { SlashCommandBuilder } = require("@discordjs/builders"),
+    mustache = require("mustache"),
+    { translate } = require("../../handlers/language"),
+    { getItem } = require("../../handlers/itemInventory");
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName(`inventory`)
         .setDescription(`Display current user items.`),
-  /**
-    * @param { Message } interaction
-    * @param { Object } profileData
-    * @param { Client } client
-    */
+    /**
+     * @param { Message } interaction
+     * @param { Object } profileData
+     * @param { Client } client
+     */
     async execute(interaction, profileData, client) {
+        const { guild } = interaction;
         const inventory = profileData.inventory;
         let itemQuantity = 0;
         if (inventory.length === 0) {
-            interaction.reply(`You have no items.`);
+            interaction.reply(translate(guild, "INVENTORY_EMPTY"));
             return;
         }
-        inventory.forEach(item => {
+        inventory.forEach((item) => {
             itemQuantity += item.quantity;
         });
-        const itemNum = itemQuantity != 1 ? `${itemQuantity} items` : `1 item`;
+        const n = itemQuantity != 1 ? 0 : 1;
+        const itemNum = mustache
+            .render(translate(guild, "INVENTORY_QUANTITY"), {
+                quantity: itemQuantity,
+            })
+            .split(":")[n];
         const embed = new MessageEmbed()
-            .setTitle(`${interaction.user.username}'s Inventory`)
-            .setColor(0x00AE86)
+            .setTitle(
+                mustache.render(translate(guild, "INVENTORY_TITLE"), {
+                    user: interaction.user.username,
+                })
+            )
+            .setColor(0x00ae86)
             .setDescription(`${itemNum}.`);
         for (const item of inventory) {
-            const itemData = await itemModel.findOne({ name: item.name });
-            embed.addField(itemData.name, itemData.description);
+            const itemData = await getItem(item.id);
+            embed.addField(`${itemData.name} ${item.quantity != 1 ? `\`[${item.quantity}]\`` : ''}`, translate(guild, itemData.description));
         }
         interaction.reply({ embeds: [embed] });
-    }
-}
+    },
+};

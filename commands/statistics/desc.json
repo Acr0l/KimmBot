@@ -1,7 +1,4 @@
 {
-    "description": {
-        "en": "Get more information about your current status, available titles and more!",
-        "es": "Obtén más información sobre tu estado actual, títulos disponibles y más!"
-    },
+    "description": "DESCRIPTION_STATISTICS",
     "emoji": "👤"
 }

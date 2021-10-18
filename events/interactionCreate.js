@@ -8,6 +8,7 @@ const msgAntiSpam = 5;
 
 client.on("interactionCreate", async (interaction) => {
     // Get user from db.
+    
     let profileData;
     try {
         profileData = await profileModel.findOne({

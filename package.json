@@ -1,33 +1,36 @@
 {
-  "name": "kimm-bot",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "discord",
-    "bot",
-    "kimm"
-  ],
-  "author": "Acrol, Oscar",
-  "license": "ISC",
-  "dependencies": {
-    "@discordjs/builders": "^0.6.0",
-    "@discordjs/rest": "^0.1.0-canary.0",
-    "discord-api-types": "^0.20.2",
-    "discord.js": "^13.1.0",
-    "ejs": "^3.1.6",
-    "express": "^4.17.1",
-    "mongodb": "^4.1.2",
-    "mongoose": "^6.0.7",
-    "mustache": "^4.2.0",
-    "node-fetch": "^3.0.0",
-    "path": "^0.12.7"
-  },
-  "description": "",
-  "prettier": {
-    "tabWidth": 4,
-    "quoteProps": "as-needed"
-  }
+    "name": "kimm-bot",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "discord",
+        "bot",
+        "kimm"
+    ],
+    "author": "Acrol, Oscar",
+    "license": "ISC",
+    "dependencies": {
+        "@discordjs/builders": "^0.6.0",
+        "@discordjs/rest": "^0.1.0-canary.0",
+        "discord-api-types": "^0.20.2",
+        "discord.js": "^13.1.0",
+        "ejs": "^3.1.6",
+        "express": "^4.17.1",
+        "mongodb": "^4.1.2",
+        "mongoose": "^6.0.7",
+        "mustache": "^4.2.0",
+        "node-fetch": "^3.0.0",
+        "path": "^0.12.7"
+    },
+    "description": "",
+    "prettier": {
+        "tabWidth": 4,
+        "quoteProps": "as-needed",
+        "singleQuote": true,
+        "trailingComma": "all",
+        "bracketSpacing": true
+    }
 }

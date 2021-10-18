@@ -5,7 +5,7 @@ const profileModel = require("../../models/profileSchema");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("register")
-        .setDescription("Start Kimm account."),
+        .setDescription("Create your Kimm account."),
     async execute(interaction, noData, client) {
         let profileData;
 

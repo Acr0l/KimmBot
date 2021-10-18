@@ -25,7 +25,7 @@ module.exports = {
             description: 'This subject includes life skills and self-development, for further explanation visit the guide.'
         },
         {
-            name: 'Musical Theory',
+            name: 'Musical Theory (Strongly recommended)',
             description: 'This is a highly recommended subject that includes musical theory (scales) and music in general.'
         }
     ]

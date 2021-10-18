@@ -1,7 +1,4 @@
 {
-    "description": {
-        "en": "Commands to challenge yourself and prove your knowledge.",
-        "es": "Comandos para desafiarte a ti mismo y demostrar tu conocimiento."
-    },
+    "description": "DESCRIPTION_PROBLEMS",
     "emoji": "📚"
 }

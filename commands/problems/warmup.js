@@ -1,44 +1,49 @@
 // Required variables:
-const { MessageEmbed } = require('discord.js');
-const { MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const quizModel = require('../../models/quizSchema');
-const { subjects } = require('../../util/subjects');
+const { MessageEmbed } = require("discord.js"),
+    {
+        MessageActionRow,
+        MessageButton,
+        MessageSelectMenu,
+    } = require("discord.js"),
+    { SlashCommandBuilder } = require("@discordjs/builders"),
+    quizModel = require("../../models/quizSchema"),
+    { subjects } = require("../../util/subjects"),
+    subjectsArr = [],
+    { setActivity, deleteActivity } = require("../../handlers/activity"),
+    mustache = require("mustache"),
+    { translate } = require("../../handlers/language");
 
-let subjectsArr = [];
-
-for (const subject of subjects)
-{
-    subjectsArr.push([subject.name, subject.name])
+for (const subject of subjects) {
+    subjectsArr.push([subject.name, subject.name]);
 }
 
 module.exports = {
     cooldown: 10,
     data: new SlashCommandBuilder()
-        .setName('warmup')
-        .setDescription('Quick question to warm up those neurons.')
-        .addStringOption(option =>
-            option.setName('subject')
-                .setDescription('Subject to warm up')
+        .setName("warmup")
+        .setDescription("Quick question to warm up those neurons.")
+        .addStringOption((option) =>
+            option
+                .setName("subject")
+                .setDescription("Subject to warm up")
                 .setRequired(true)
                 .addChoices(subjectsArr)
         ),
 
     async execute(interaction, profileData) {
-
+        const { guild } = interaction;
         if (profileData.mentalEnergy.me <= 10) {
-            interaction.reply('You need to rest before you can do that.');
+            interaction.reply(translate(guild, "PROBLEM_REST"));
             return;
         }
-
         // Constants
         const N = 5;
 
         // Get the subject
-        const subject = interaction.options.getString('subject');
+        const subject = interaction.options.getString("subject");
 
-        if (subject !== 'Math') {
-            interaction.reply('Only Math is currently supported.');
+        if (subject !== "Math") {
+            interaction.reply(translate(guild, "PROBLEM_SUBJECT_NOT_SUPPORTED"));
             return;
         }
 
@@ -48,32 +53,34 @@ module.exports = {
         // Random element is stored in "question"
         // match is to filter possible questions, sample is to pick a random one.
         // [] around a variable means it is the first element of the array.
-        const [question] = await quizModel.aggregate([{ $match: { $and: [{ subject: subject }, { category: "Warmup" }] } }, { $sample: { size: 1 } }]);
+        const [question] = await quizModel.aggregate([
+            {
+                $match: {
+                    $and: [{ subject: subject }, { category: "Warmup" }],
+                },
+            },
+            { $sample: { size: 1 } },
+        ]);
+        // Set activity
+        setActivity(interaction.user.id, question._id);
 
         // Set number of alternatives (+ correct answer)
-        const altNum = question.incorrect_answers.length >= N - 1 ? N : question.incorrect_answers.length + 1;
-        
+        const altNum =
+            question.incorrect_answers.length >= N - 1
+                ? N
+                : question.incorrect_answers.length + 1;
+
         // Randomize the alternatives.
-        let warmupAlternatives = [question.correct_answer, ...question.incorrect_answers].slice(0, altNum).sort(() => Math.random() - 0.5);
+        let warmupAlternatives = [
+            question.correct_answer,
+            ...question.incorrect_answers,
+        ]
+            .slice(0, altNum)
+            .sort(() => Math.random() - 0.5);
 
         alternativesOrdered[0] = question.correct_answer;
         for (const alt of question.incorrect_answers) {
             alternativesOrdered.push(alt);
-        }
-
-        //Random order
-        let alternatives = [];
-        let answers = [];
-        for (let i = 0; i < alternativesOrdered.length; i++) {
-
-            let randomAlt = alternativesOrdered[Math.trunc(Math.random() * alternativesOrdered.length)];
-
-            while (alternatives.includes(randomAlt)) {
-                randomAlt = alternativesOrdered[Math.trunc(Math.random() * alternativesOrdered.length)];
-            }
-
-            alternatives[i] = randomAlt;
-            answers[i] = alternativesOrdered.indexOf(randomAlt).toString();
         }
 
         //Create options as array of objects
@@ -82,49 +89,64 @@ module.exports = {
         for (let i = 0; i < warmupAlternatives.length; i++) {
             options[i] = {
                 label: warmupAlternatives[i],
-                value: warmupAlternatives[i] == question.correct_answer ? `x${subject}-${question._id}` : `${i}${subject}-${question._id}`
+                value:
+                    warmupAlternatives[i] == question.correct_answer
+                        ? `x${subject}-${question._id}`
+                        : `${i}${subject}-${question._id}`,
             };
         }
 
         //Create embed with the question
         let embed = new MessageEmbed()
             .setTitle(question.question)
-            .setColor('#39A2A5')
-            .setDescription('Elige la respuesta correcta.')
-            .setFooter(`Warmup id: \`${question._id}\``)
+            .setColor("#39A2A5")
+            .setDescription(translate(guild, "PROBLEM_DESCRIPTION"))
+            .setFooter(`Warmup id: \`${question._id}\``);
 
         if (question.image) {
-            embed.setImage(question.image)
+            embed.setImage(question.image);
         }
 
         //Create row with select menu
-        const row = new MessageActionRow()
-            .addComponents(
-                new MessageSelectMenu()
-                    .setCustomId('warmupSelect')
-                    .setPlaceholder('Selecciona una alternativa')
-                    .setMinValues(1)
-                    .setMaxValues(1)
-                    .addOptions(options),
-            );
+        const row = new MessageActionRow().addComponents(
+            new MessageSelectMenu()
+                .setCustomId("warmupSelect")
+                .setPlaceholder(translate(guild, "PROBLEM_SELECT_ALTERNATIVE"))
+                .setMinValues(1)
+                .setMaxValues(1)
+                .addOptions(options)
+        );
 
         //Reply
-        await interaction.reply({ embeds: [embed], ephemeral: true, components: [row] });
+        await interaction.reply({
+            embeds: [embed],
+            ephemeral: true,
+            components: [row],
+        });
 
-        const filter = (i) => i.customId === 'warmupSelect';
+        const filter = (i) => i.customId === "warmupSelect";
         const collector = interaction.channel.createMessageComponentCollector({
             filter,
             componentType: "SELECT_MENU",
             time: 60000,
-        })
+        });
 
-        collector.on('end', async collected => {
+        collector.on("end", async (collected) => {
+            // Delete activity
+            deleteActivity(interaction.user.id);
+
+            // Check if the user answered the question
             if (collected.size != 0) return;
-            profileData.mentalEnergy.me = Math.max(0, profileData.mentalEnergy.me - (60 * 2 + 3));
-            await interaction.followUp(`Tiempo expirado, tu nuevo ME es \`${profileData.mentalEnergy.me}\`.`);
+            profileData.mentalEnergy.me = Math.max(
+                0,
+                profileData.mentalEnergy.me - (60 * 2 + 3)
+            );
+            await interaction.followUp(
+                mustache.render(translate(guild, "PROBLEM_TIME_EXPIRED"), {
+                    me: profileData.mentalEnergy.me,
+                })
+            );
             await profileData.save();
-        })
-
-    }
-
+        });
+    },
 };

@@ -1,15 +1,17 @@
-const itemModel = require('../models/itemSchema');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const itemModel = require("../models/itemSchema");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { translate } = require("../handlers/language");
+const mustache = require("mustache");
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName(`unequip`)
         .setDescription(`Unequip selected item.`),
-  /**
-    * @param { Message } interaction
-    * @param { Object } profileData
-    * @param { Client } client
-    */
+    /**
+     * @param { Message } interaction
+     * @param { Object } profileData
+     * @param { Client } client
+     */
     async execute(interaction, profileData, client) {
         /*
         TODO:
@@ -17,30 +19,37 @@ module.exports = {
         - Get item from db
         - Add item to equipped items
         */
-        let itemAction = interaction.options.getString('item');
+        let itemAction = interaction.options.getString("item");
         const regex = /equip/;
-        
+        const { guild } = interaction;
         try {
             let currentItem = await itemModel.findOne({ name: itemAction });
-                if (!currentItem) {
-                    interaction.reply('Item does not exist.')
-                } else if (profileData.equipment.includes(currentItem.name)) {
-                    profileData.equipment.splice(profileData.equipment.indexOf(currentItem.name), 1);
-                    profileData.inventory.push({
-                        name: currentItem.name,
-                        quantity: 1
-                    });
-                    profileData.save();
-                    interaction.reply(`You have successfully unequipped a \`${currentItem.name}\`.`)
-                } else if (!profileData.equipment.includes(currentItem.name)) {
-                    interaction.reply('You don\'t have that item equipped!')
-                } else {
-                    interaction.reply('Something went wrong.');
-                }
-        }
-        catch (err) {
+            if (!currentItem) {
+                interaction.reply(translate(guild, "INVALID_ITEM"));
+            } else if (profileData.equipment.includes(currentItem.name)) {
+                profileData.equipment.splice(
+                    profileData.equipment.indexOf(currentItem.name),
+                    1
+                );
+                profileData.inventory.push({
+                    name: currentItem.name,
+                    quantity: 1,
+                });
+                profileData.save();
+                interaction.reply(
+                    mustache.render(
+                        translate(guild, "UNEQUIPPED_SUCCESSFULLY"),
+                        { item: currentItem.name }
+                    )
+                );
+            } else if (!profileData.equipment.includes(currentItem.name)) {
+                interaction.reply(translate(guild, "NOT_EQUIPPED"));
+            } else {
+                interaction.reply(translate(guild, "ERROR"));
+            }
+        } catch (err) {
             console.log(err);
-            interaction.reply('Item does not exist.');
+            interaction.reply(translate(guild, "ERROR"));
         }
-    }
-}
+    },
+};

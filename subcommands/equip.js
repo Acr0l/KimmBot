@@ -1,5 +1,9 @@
-const itemModel = require("../models/itemSchema");
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const itemModel = require('../models/itemSchema'),
+    { SlashCommandBuilder } = require('@discordjs/builders'),
+    { getItemList } = require('../handlers/itemInventory'),
+    { checkItemInfo } = require('../util/userfuncs'),
+    { translate } = require('../handlers/language'),
+    mustache = require('mustache');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,40 +12,34 @@ module.exports = {
     /**
      * @param { Message } interaction
      * @param { Object } profileData
-     * @param { Client } client
      */
-    async execute(interaction, profileData, client) {
-        /*
-        TODO:
-        - Check if item is in inventory
-        - Get item from db
-        - Add item to equipped items
-        */
-        let itemAction = interaction.options.getString("item");
-        const regex = /equip/;
+    async execute(interaction, profileData) {
+        const { guild } = interaction,
+            itemAction = interaction.options.getString('item'),
+            regex = /equip/;
 
         try {
-            let currentItem = await itemModel.findOne({ name: itemAction });
+            let currentItem = checkItemInfo(await getItemList(), itemAction);
             let owned = profileData.inventory.findIndex(
-                (item) => item.name === currentItem.name
+                (item) => item.id === currentItem.id,
             );
             if (!currentItem) {
-                interaction.reply("Item does not exist.");
-            } else if (profileData.equipment.includes(currentItem.name)) {
-                interaction.reply("You already have that item equipped.");
+                interaction.reply(translate(guild, 'INVALID_ITEM'));
+            } else if (profileData.equipment.includes(currentItem.id)) {
+                interaction.reply(translate(guild, 'EQUIP_ALREADY_EQUIPPED'));
             } else if (owned === -1) {
-                interaction.reply("You don't have that item!");
+                interaction.reply(translate(guild, 'UNOWNED_ITEM'));
             } else if (currentItem && regex.test(currentItem.use)) {
-                profileData.equipment.push(currentItem.name);
+                profileData.equipment.push(currentItem.id);
                 profileData.inventory.splice(owned, 1);
                 profileData.save();
-                interaction.reply(`You equipped a ${currentItem.name}!`);
+                interaction.reply(mustache.render(translate(guild, 'EQUIP_SUCCESS'), { item: currentItem.name }));
             } else {
-                interaction.reply("Item cannot be equipped.");
+                interaction.reply(translate(guild, 'INVALID_ITEM'));
             }
         } catch (err) {
             console.log(err);
-            interaction.reply("Item does not exist.");
+            interaction.reply(translate(guild, 'ERROR'));
         }
     },
 };

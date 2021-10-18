@@ -1,36 +1,42 @@
 const {
-    Client,
-    CommandInteraction,
-    MessageEmbed,
-    MessageActionRow,
-    MessageSelectMenu,
-    SnowflakeUtil,
-} = require("discord.js");
-const quizModel = require("../models/quizSchema");
-const profileModel = require("../models/profileSchema");
-const { applyXp } = require("../util/userfuncs");
+        MessageEmbed,
+        MessageActionRow,
+        MessageSelectMenu,
+        SnowflakeUtil,
+    } = require("discord.js"),
+    profileModel = require("../models/profileSchema"),
+    { applyXp } = require("../util/userfuncs"),
+    { translate } = require("../handlers/language"),
+    { getDifficulty } = require("../handlers/difficulty"),
+    mustache = require("mustache");
 
 module.exports = {
     name: "warmupSelect",
     description: "Selects a warmup",
     run: async (client, interaction, profileData) => {
+        const { guild } = interaction;
+
         let embed;
 
         // Get if the answer is correct.
         const value = interaction.values[0].startsWith("x");
+        // Get the warmup id and subject.
         let [subject, warmupId] = interaction.values[0].split("-");
         subject = subject.slice(1);
-        const question = await quizModel.findOne({ _id: warmupId });
+        // Get the warmup data.
+        const difficulty = await getDifficulty(warmupId);
         const answerTime = Math.floor(
             (Date.now() -
                 SnowflakeUtil.deconstruct(interaction.message.id).timestamp) /
                 1000
         );
-        const meSpent = Math.floor(answerTime * 2) + 3;
+        const meSpent = Math.ceil(Math.log(answerTime)) * difficulty + 2;
 
         // Apply ME changes.
         if (answerTime >= 60) {
-            await interaction.followUp("No puedes seguir respondiendo.");
+            await interaction.followUp(
+                translate(guild, "PROBLEM_SELECT_TIME_EXPIRED")
+            );
             return;
         }
 
@@ -51,16 +57,22 @@ module.exports = {
             }
 
             profileData.mentalEnergy.me -= meSpent;
+            await profileModel.findOneAndUpdate(
+                { _id: profileData._id },
+                profileData
+            );
         } else {
             // Not enough ME
             profileData.mentalEnergy.me = 0;
             await interaction.followUp(
-                `You need at least ${meSpent} ME to answer this question. Your ME has been set to \`0\``
+                mustache.render(
+                    translate(guild, "PROBLEM_SELECT_NOT_ENOUGH_ME"),
+                    { meSpent }
+                )
             );
             await profileData.save();
             return;
         }
-
         await profileData.save();
         // Variables
         let color, title, description, image, footer;
@@ -68,23 +80,38 @@ module.exports = {
         if (value) {
             // Correct answer
             let xp =
-                Math.floor(Math.random() * (question.difficulty * 2)) +
-                3 * question.difficulty;
+                Math.floor(Math.random() * (difficulty * 2)) + 3 * difficulty;
             color = "#80EA98";
-            title = `${interaction.user.username} ha respondido correctamente`;
-            description = `¡Felicidades ${interaction.user.username}, ganaste **${xp}** de experiencia!\nGastaste ${meSpent} puntos de ME`;
+            title = mustache.render(
+                translate(guild, "PROBLEM_SELECT_CORRECT_TITLE"),
+                { user: interaction.user.username }
+            );
+            description = mustache.render(
+                translate(guild, "PROBLEM_SELECT_CORRECT_DESCRIPTION"),
+                {
+                    user: interaction.user.username,
+                    xp,
+                    meSpent,
+                }
+            );
             image =
                 "https://freepikpsd.com/media/2019/10/correcto-incorrecto-png-7-Transparent-Images.png";
-            footer = `Id: ${question._id}`;
+            footer = `Id: ${warmupId}`;
             // Update the user's xp
             await applyXp(profileData, xp, interaction);
         } else {
             color = "#eb3434";
-            title = `${interaction.user.username} ha respondido incorrectamente`;
-            description = `No era esa la respuesta 😔...\nGastaste ${meSpent} puntos de ME`;
+            title = mustache.render(
+                translate(guild, "PROBLEM_SELECT_INCORRECT_TITLE"),
+                { user: interaction.user.username }
+            );
+            description = mustache.render(
+                translate(guild, "PROBLEM_SELECT_INCORRECT_DESCRIPTION"),
+                { meSpent }
+            );
             image =
                 "https://cdn.pixabay.com/photo/2012/04/12/20/12/x-30465_960_720.png";
-            footer = `Id: ${question._id}`;
+            footer = `Id: ${warmupId}`;
         }
 
         // Create the embed
@@ -95,7 +122,8 @@ module.exports = {
             .setThumbnail(image)
             .setFooter(footer);
 
-        let rowPH = value ? question.correct_answer : "¡Respuesta incorrecta!";
+        const rowPlaceholderAnswers = translate(guild, "PROBLEM_SELECT_ROW_PLACEHOLDER").split(':');
+        let rowPH = value ? rowPlaceholderAnswers[0] : rowPlaceholderAnswers[1];
         const row = new MessageActionRow().addComponents(
             new MessageSelectMenu()
                 .setCustomId("warmupSelect")

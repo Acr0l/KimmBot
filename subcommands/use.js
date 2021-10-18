@@ -19,7 +19,6 @@ module.exports = {
             let ownedIndex = await profileData.inventory.findIndex(
                 (item) => item.name === currentItem.name
             );
-            console.log(profileData.inventory[ownedIndex])
             if (!currentItem) {
                 interaction.reply(translate(guild, "INVALID_ITEM"));
             } else if (ownedIndex === -1) {

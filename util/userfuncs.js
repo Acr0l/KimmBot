@@ -49,6 +49,21 @@ const applyXp = async (user, exp, interaction) => {
     await user.save();
 }
 
+/**
+ * 
+ * @param { Object } itemList - The list of items in the database.
+ * @param { String } itemName - The name of the item to search for.
+ * @returns - The item object that matches the name.
+ */
+const checkItemInfo = (itemList, itemName) => {
+    for(key in itemList) {
+        if (itemList[key].name === itemName) {
+            return itemList[key];
+        }
+    }
+    return null;
+}
+
 rl.question("", function (level) {
     console.log(levelFormula(parseInt(level)));
     rl.close();
@@ -58,4 +73,4 @@ rl.on('close', function () {
     process.exit(0);
 });
 
-module.exports = { applyXp, levelFormula };
+module.exports = { applyXp, levelFormula, checkItemInfo };
