@@ -1,0 +1,145 @@
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+div {
+    display: block;
+}
+
+body {
+    background-color: #c7f8cb;
+    font-family: monospace;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+form {
+    margin: 0;
+    box-sizing: border-box;
+}
+input[type=button], input[type=submit], input[type=reset] {
+    background-color: #F0F0F0;
+    border: none;
+    color: #34577A;
+    padding: 16px 32px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+
+main {
+    overflow-x: auto;
+    text-align: center;
+    display: flex;
+}
+
+main.menu {
+    height: 100vh;
+}
+
+footer {
+    background-color: #39A2A5;
+    display: block;
+    margin-top: 30px;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+}
+img {
+    display: block;
+    margin: 0 auto;
+    width: 2rem;
+    height: auto;
+}
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+    vertical-align: middle;
+}
+
+/* Links inside the navbar */
+.navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+/* Change background on mouse-over */
+.navbar a:hover {
+    background: #ddd;
+    color: black;
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+}
+
+.p-5 {
+    padding: 3rem !important;
+}
+
+.form-group {
+    margin: 1rem;
+    justify-content: end;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control {
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.form-control#itemUnique {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+}
+
+button {
+    font-family: monospace;
+    display: inline-block;
+    width: 100%;
+}
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 15px;
+    height: max-content;
+}
+.center {
+    margin: 10em auto;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    padding: 10px;
+}
+.form-group {
+    margin-bottom: 15px;
+}

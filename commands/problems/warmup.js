@@ -1,49 +1,51 @@
 // Required variables:
-const { MessageEmbed } = require("discord.js"),
+const { MessageEmbed } = require('discord.js'),
     {
         MessageActionRow,
         MessageButton,
         MessageSelectMenu,
-    } = require("discord.js"),
-    { SlashCommandBuilder } = require("@discordjs/builders"),
-    quizModel = require("../../models/quizSchema"),
-    { subjects } = require("../../util/subjects"),
+    } = require('discord.js'),
+    { SlashCommandBuilder } = require('@discordjs/builders'),
+    quizModel = require('../../models/quizSchema'),
+    subjects = require('../../util/subjects.json'),
     subjectsArr = [],
-    { setActivity, deleteActivity } = require("../../handlers/activity"),
-    mustache = require("mustache"),
-    { translate } = require("../../handlers/language");
+    { setActivity, deleteActivity } = require('../../handlers/activity'),
+    mustache = require('mustache'),
+    { translate } = require('../../handlers/language');
 
-for (const subject of subjects) {
-    subjectsArr.push([subject.name, subject.name]);
+for (const subject of Object.keys(subjects)) {
+    subjectsArr.push([subject, subject]);
 }
 
 module.exports = {
     cooldown: 10,
     data: new SlashCommandBuilder()
-        .setName("warmup")
-        .setDescription("Quick question to warm up those neurons.")
+        .setName('warmup')
+        .setDescription('Quick question to warm up those neurons.')
         .addStringOption((option) =>
             option
-                .setName("subject")
-                .setDescription("Subject to warm up")
+                .setName('subject')
+                .setDescription('Subject to warm up')
                 .setRequired(true)
-                .addChoices(subjectsArr)
+                .addChoices(subjectsArr),
         ),
 
     async execute(interaction, profileData) {
         const { guild } = interaction;
         if (profileData.mentalEnergy.me <= 10) {
-            interaction.reply(translate(guild, "PROBLEM_REST"));
+            interaction.reply(translate(guild, 'PROBLEM_REST'));
             return;
         }
         // Constants
         const N = 5;
 
         // Get the subject
-        const subject = interaction.options.getString("subject");
+        const subject = interaction.options.getString('subject');
 
-        if (subject !== "Math") {
-            interaction.reply(translate(guild, "PROBLEM_SUBJECT_NOT_SUPPORTED"));
+        if (subject !== 'Math') {
+            interaction.reply(
+                translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'),
+            );
             return;
         }
 
@@ -56,7 +58,7 @@ module.exports = {
         const [question] = await quizModel.aggregate([
             {
                 $match: {
-                    $and: [{ subject: subject }, { category: "Warmup" }],
+                    $and: [{ subject: subject }, { category: 'Warmup' }],
                 },
             },
             { $sample: { size: 1 } },
@@ -99,8 +101,8 @@ module.exports = {
         //Create embed with the question
         let embed = new MessageEmbed()
             .setTitle(question.question)
-            .setColor("#39A2A5")
-            .setDescription(translate(guild, "PROBLEM_DESCRIPTION"))
+            .setColor('#39A2A5')
+            .setDescription(translate(guild, 'PROBLEM_DESCRIPTION'))
             .setFooter(`Warmup id: \`${question._id}\``);
 
         if (question.image) {
@@ -110,11 +112,11 @@ module.exports = {
         //Create row with select menu
         const row = new MessageActionRow().addComponents(
             new MessageSelectMenu()
-                .setCustomId("warmupSelect")
-                .setPlaceholder(translate(guild, "PROBLEM_SELECT_ALTERNATIVE"))
+                .setCustomId('warmupSelect')
+                .setPlaceholder(translate(guild, 'PROBLEM_SELECT_ALTERNATIVE'))
                 .setMinValues(1)
                 .setMaxValues(1)
-                .addOptions(options)
+                .addOptions(options),
         );
 
         //Reply
@@ -124,14 +126,14 @@ module.exports = {
             components: [row],
         });
 
-        const filter = (i) => i.customId === "warmupSelect";
+        const filter = (i) => i.customId === 'warmupSelect';
         const collector = interaction.channel.createMessageComponentCollector({
             filter,
-            componentType: "SELECT_MENU",
+            componentType: 'SELECT_MENU',
             time: 60000,
         });
 
-        collector.on("end", async (collected) => {
+        collector.on('end', async (collected) => {
             // Delete activity
             deleteActivity(interaction.user.id);
 
@@ -139,12 +141,12 @@ module.exports = {
             if (collected.size != 0) return;
             profileData.mentalEnergy.me = Math.max(
                 0,
-                profileData.mentalEnergy.me - (60 * 2 + 3)
+                profileData.mentalEnergy.me - (60 * 2 + 3),
             );
             await interaction.followUp(
-                mustache.render(translate(guild, "PROBLEM_TIME_EXPIRED"), {
+                mustache.render(translate(guild, 'PROBLEM_TIME_EXPIRED'), {
                     me: profileData.mentalEnergy.me,
-                })
+                }),
             );
             await profileData.save();
         });

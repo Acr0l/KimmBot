@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Confirm Selection</title>
+        <link rel="stylesheet" href="/css/styles.css" type="text/css">
+    </head>
+
+    <body>
+        <%- include('partials/navbar') %>
+        <main style="margin-top: 60px; text-align: left;">
+            <div class="container">
+                <div class="center">
+                    <div class="header">
+                        <h1>Confirm Selection</h1>
+                    </div>
+                    <div class="content">
+                        <p>You have selected the following:</p>
+                        <ol>
+                            <% Object.keys(values).forEach((value) => { %>
+                                <li>
+                                    <%= value %>
+                                    <br \>
+                                    <b><%= values[value] %></b>
+                                </li>
+                            <% }) %>
+                        </ol>
+        
+                        <p>Are you sure you want to add this to the database?</p>
+                        <form method="GET" action="/">
+                            <input type="submit" name="submit" value="Yes">
+                            <input type="submit" name="submit" value="No">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <%- include('partials/footer') %>
+        </main>
+    </body>
+
+</html>

@@ -1,0 +1,3 @@
+subject,difficulty,question,correct_answer,incorrect_answers,image,type,category,lang
+Math,1.2,1+1,2,"3,4,5,6",,MC,Warmup,es
+History and Geography,2,Where is Chile?,South America,"Oceania, Europe, Asia, North America, Antartica",,MC,Warmup,en

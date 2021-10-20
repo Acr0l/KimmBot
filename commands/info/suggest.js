@@ -1,52 +1,66 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
-const { subjects } = require('../../util/subjects');
+const { SlashCommandBuilder } = require('@discordjs/builders'),
+    { MessageEmbed } = require('discord.js'),
+    subjects = require('../../util/subjects.json'),
+    { translate } = require('../../handlers/language');
 
 let subjectsArr = [];
 
-for (const subject of subjects)
-{
-    subjectsArr.push([subject.name, subject.name])
+for (const subject of Object.keys(subjects)) {
+    subjectsArr.push([subject, subject]);
 }
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName(`suggest`)
-        .setDescription(`Suggest questions to the bot, you may get a title after getting many questions approved.`)
-        .addStringOption(option => 
-            option.setName(`subject`)
+        .setDescription(
+            `Suggest questions to the bot, you may get a title after getting many questions approved.`,
+        )
+        .addStringOption((option) =>
+            option
+                .setName(`subject`)
                 .setDescription(`The subject of the suggestion.`)
                 .setRequired(true)
-                .addChoices(subjectsArr)
+                .addChoices(subjectsArr),
         )
-        .addStringOption(option =>
-            option.setName('suggestion')
-                .setDescription('Write here the question you would like to suggest.')
-                .setRequired(true)
+        .addStringOption((option) =>
+            option
+                .setName('suggestion')
+                .setDescription(
+                    'Write here the question you would like to suggest.',
+                )
+                .setRequired(true),
         )
-        .addStringOption(option =>
-            option.setName('correctans')
-                .setDescription('Write here the correct answer to your question.')
-                .setRequired(true)
+        .addStringOption((option) =>
+            option
+                .setName('correctans')
+                .setDescription(
+                    'Write here the correct answer to your question.',
+                )
+                .setRequired(true),
         )
-        .addStringOption(option =>
-            option.setName('incorrectans')
-                .setDescription('Write here the incorrect answers, separated by a coma (,).')
-                .setRequired(true)
+        .addStringOption((option) =>
+            option
+                .setName('incorrectans')
+                .setDescription(
+                    'Write here the incorrect answers, separated by a coma (,).',
+                )
+                .setRequired(true),
         ),
 
-  /**
-    * @param { Object } interaction - Object with the interaction data sent by the user.
-    * @param { Object } profileData - Object from the database with the user profile data.
-    * @param { Object } client - The discord.js client object.
-    */
+    /**
+     * @param { Object } interaction - Object with the interaction data sent by the user.
+     * @param { Object } profileData - Object from the database with the user profile data.
+     * @param { Object } client - The discord.js client object.
+     */
     async execute(interaction, profileData, client) {
         // if (await DBLIST.findOne(interaction.user.id)) return interaction.reply('You are not allowed to use this command.')
         // Build embed (TODO)
         const suggestionSubject = interaction.options.getString('subject');
         const suggestion = interaction.options.getString('suggestion');
         const correctAnswer = interaction.options.getString('correctans');
-        const incorrectAnswers = interaction.options.getString('incorrectans').split(',');
+        const incorrectAnswers = interaction.options
+            .getString('incorrectans')
+            .split(',');
 
         const embed = new MessageEmbed()
             .setTitle(`Suggestion from ${interaction.user.username}`)
@@ -58,7 +72,11 @@ module.exports = {
             .setTimestamp()
             .setColor('#0099ff');
 
-        client.channels.cache.get('894728345235914802').send({ embeds: [embed] });
-        interaction.reply(`Your suggestion has been sent to the bot, thanks for your support!`);
-    }
-}
+        client.channels.cache
+            .get('894728345235914802')
+            .send({ embeds: [embed] });
+        interaction.reply(
+            `Your suggestion has been sent to the bot, thanks for your support!`,
+        );
+    },
+};

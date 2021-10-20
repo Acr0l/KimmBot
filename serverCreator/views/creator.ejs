@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Item Creator</title>
+        <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+        <%- include('partials/navbar') %>
+        <main>
+            <div class="container p-5">
+                <div class="header">
+                    <h1><%= title %></h1>
+                </div>
+    
+                <form class="form" action="/create" method="GET" autocomplete="off">
+                    <% items.forEach((item) => { %>
+                        <% if (item.dropdown) { %>
+                            <div class="form-group">
+                                <label for="<%= item.name %>"><%= item.label %></label>
+                                <select class="form-control" id="<%= item.name %>" name="<%= item.name %>">
+                                    <option value="" selected disabled>Select an option</option>
+                                    <% item.options.forEach((option) => { %>
+                                        <option value="<%= option.name %>" name="<%= option.name %>"><%= option.value %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        <% } else { %>
+                            <div class="form-group">
+                                <label for="<%= item.name %>"><%- item.name %>:</label>
+                                <input
+                                    type="<%= item.type %>"
+                                    class="form-control"
+                                    id="<%= item.name %>"
+                                    name="<%= item.name %>"
+                                    placeholder="<%= item.placeholder %>"
+                                    value="<%= item.value %>"
+                                    <% if (item.min) { %> min="<%= item.min %>" <% } %>
+                                    <% if(item.step) { %> step="<%= item.step %>" <% } %>
+                                    <% if(item.required) { %> required <% } %>
+                                />
+                            </div>
+                        <% } %>
+                    <% }) %>
+                    <input type="submit" name="<%- type %>" />
+                    <input type="reset" />
+                </form>
+            </div>
+            <%- include('partials/footer') %>
+        </main>
+    </body>
+</html>
