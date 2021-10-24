@@ -27,8 +27,8 @@ module.exports = {
                             translate(guild, `STATS_FIELD_DATA`),
                             {
                                 tier: stat.tier,
-                                accuracy: (stat.correct / (stat.correct + stat.incorrect) * 100).toFixed(2),
-                                totalAnswered: stat.correct + stat.incorrect
+                                accuracy: stat.accuracy,
+                                totalAnswered: stat.totalAns
                             }
                         )
                     }

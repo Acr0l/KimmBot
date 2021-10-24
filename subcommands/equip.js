@@ -1,7 +1,7 @@
 const itemModel = require('../models/itemSchema'),
     { SlashCommandBuilder } = require('@discordjs/builders'),
     { getItemList } = require('../handlers/itemInventory'),
-    { checkItemInfo } = require('../util/userfuncs'),
+    { checkItemInfo } = require('../util/levelFunctions'),
     { translate } = require('../handlers/language'),
     mustache = require('mustache');
 
@@ -32,10 +32,10 @@ module.exports = {
             } else if (currentItem && regex.test(currentItem.use)) {
                 profileData.equipment.push(currentItem.id);
                 profileData.inventory.splice(owned, 1);
-                profileData.save();
-                interaction.reply(mustache.render(translate(guild, 'EQUIP_SUCCESS'), { item: currentItem.name }));
+                await profileData.save();
+                await interaction.reply(mustache.render(translate(guild, 'EQUIP_SUCCESS'), { item: currentItem.name }));
             } else {
-                interaction.reply(translate(guild, 'INVALID_ITEM'));
+                await interaction.reply(translate(guild, 'INVALID_ITEM'));
             }
         } catch (err) {
             console.log(err);

@@ -9,9 +9,10 @@ const loadItems = async () => {
             const itemId = item._id;
 
             items[itemId] = {
-                id: itemId,
+                id: itemId.toString(),
                 name: item.name,
                 description: item.description,
+                type: item.iType,
                 tier: item.tier,
                 price: item.price,
                 use: item.use,
@@ -26,12 +27,16 @@ const loadItems = async () => {
 
 /**
  * @param { String } itemId - The id of the quiz.
+ * @returns { Object } - The quiz object.
+ * @description Gets a quiz by id.
+ * @example
+ * getItem('5e9f8f8f8f8f8f8f8f8f8f8');
  */
 const getItem = (itemId) => {
     return items[itemId];
 };
 
-const getItemList = async () => {
+const getItemList = () => {
     return items;
 };
 

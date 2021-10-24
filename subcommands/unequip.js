@@ -32,11 +32,11 @@ module.exports = {
                     1
                 );
                 profileData.inventory.push({
-                    name: currentItem.name,
+                    id: currentItem.id,
                     quantity: 1,
                 });
-                profileData.save();
-                interaction.reply(
+                await profileData.save();
+                await interaction.reply(
                     mustache.render(
                         translate(guild, "UNEQUIPPED_SUCCESSFULLY"),
                         { item: currentItem.name }

@@ -5,3 +5,4 @@ insert-data.js
 .env
 .eslintrc.json
 custom-dictionary-workspace.txt
+/random/

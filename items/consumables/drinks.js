@@ -1,5 +1,5 @@
-const { translate } = require("../../handlers/language");
-const mustache = require("mustache");
+const { translate } = require('../../handlers/language'),
+    mustache = require('mustache');
 
 module.exports = {
     async use(interaction, profileData, item, amount) {
@@ -8,10 +8,8 @@ module.exports = {
         const itemEffects = {
             Water: {
                 me: 0,
-                mr: {
-                    effect: 1,
-                    duration: 1800,
-                },
+                mr: 1,
+                duration: 1800, // 30 minutes
             },
             Gatorade: {
                 me: 10,
@@ -20,19 +18,65 @@ module.exports = {
         };
         const { guild } = interaction;
         const effect = itemEffects[item.name];
-        if (currentME + effect.me * amount > maxME) {
-            profileData.mentalEnergy.me = maxME;
-            interaction.followUp(translate(guild, "DRINK_ME_ALL"));
-        } else {
-            profileData.mentalEnergy.me += effect.me * amount;
-            interaction.followUp(
-                mustache.render(translate(guild, "DRINK_ME_AMOUNT"), {
-                    amount: effect.me * amount,
-                })
+
+        // Check if effect is temporary or permanent
+        if (effect.duration) {
+            // Check if effect is already active
+            if (profileData.effects.find((e) => e.name === item.name)) {
+                return await interaction.reply(
+                    translate(guild, 'DRINK_ALREADY_ACTIVE'),
+                );
+            } else {
+                // Add effect to profile
+                profileData.effects.push({
+                    name: item.name,
+                    duration: effect.duration,
+                    meBoost: effect.me,
+                    mrBoost: effect.mr,
+                });
+                profileData.effects.find(
+                    (e) => e.name === item.name,
+                ).durationLeft = effect.duration;
+            }
+            interaction.reply(
+                mustache.render(
+                    translate(guild, 'DRINK_ACTIVATED', {
+                        item: item.name,
+                        duration: secondsToDhms(effect.duration),
+                    }),
+                ),
             );
+        } else {
+            // Add effect to profile
+            if (currentME + effect.me * amount > maxME) {
+                profileData.mentalEnergy.me = maxME;
+                interaction.reply(translate(guild, 'DRINK_ME_ALL'));
+            } else {
+                profileData.mentalEnergy.me += effect.me * amount;
+                interaction.reply(
+                    mustache.render(translate(guild, 'DRINK_ME_AMOUNT'), {
+                        amount: effect.me * amount,
+                    }),
+                );
+            }
+            profileData.mentalEnergy.mr += effect.mr * amount;
         }
         // TODO: Work with timers for MR.
         // profileData.mentalEnergy.mr += effect.mr;
         await profileData.save();
     },
 };
+
+function secondsToDhms(seconds) {
+    seconds = Number(seconds);
+    let d = Math.floor(seconds / (3600 * 24));
+    let h = Math.floor((seconds % (3600 * 24)) / 3600);
+    let m = Math.floor((seconds % 3600) / 60);
+    let s = Math.floor(seconds % 60);
+
+    let dDisplay = d > 0 ? d + (d == 1 ? ' day, ' : ' days, ') : '';
+    let hDisplay = h > 0 ? h + (h == 1 ? ' hour, ' : ' hours, ') : '';
+    let mDisplay = m > 0 ? m + (m == 1 ? ' minute, ' : ' minutes, ') : '';
+    let sDisplay = s > 0 ? s + (s == 1 ? ' second' : ' seconds') : '';
+    return dDisplay + hDisplay + mDisplay + sDisplay;
+}

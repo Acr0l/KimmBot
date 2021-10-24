@@ -13,6 +13,10 @@
             "en": "You bought one {{item}} for Ɖ{{price}}.:You bought {{amount}} {{item}}s for Ɖ{{price}}.",
             "es": "Has comprado un {{item}} por Ɖ{{price}}.:Has comprado {{amount}} {{item}}s por Ɖ{{price}}."
         },
+        "COOLDOWN": {
+            "en": "You are on cooldown for this command. Please wait {{time}}.",
+            "es": "Este comando está en reposo. Por favor espera {{time}}."
+        },
         "DESCRIPTION_ECONOMY": {
             "en": "Commands used to interact with the shop and currency system.",
             "es": "Comandos usados para interactuar con la tienda y el sistema de monedas."
@@ -36,6 +40,14 @@
         "DESCRIPTION_TMP": {
             "en": "Temporal commands, not available for public use.",
             "es": "Comandos temporales, no disponibles para uso público."
+        },
+        "DRINK_ACTIVATED": {
+            "en": "You drank a {{item}} bottle, the effect lasts {{duration}}.",
+            "es": "Has bebido una botella de {{item}}, el efecto dura {{duration}}."
+        },
+        "DRINK_ALREADY_ACTIVE": {
+            "en": "That effect is already active.",
+            "es": "Ese efecto ya está activo."
         },
         "DRINK_ME_ALL": {
             "en": "You have recovered all of your ME.",
@@ -133,6 +145,14 @@
             "en": "Item that eliminates alternatives from an active quiz.",
             "es": "Objeto que elimina alternativas de un quiz activo."
         },
+        "ITEM_NOTEBOOK": {
+            "en": "Boosts your ME capacity by 10.",
+            "es": "Aumenta tu capacidad de ME en 10."
+        },
+        "ITEM_WATER": {
+            "en": "Drink that boosts your MR by 1 for one hour.",
+            "es": "Bebestible que aumenta tu MR por 1 durante una hora."
+        },
         "NOT_EQUIPPED": {
             "en": "You don't have that item equipped.",
             "es": "No tienes ese objeto equipado."
@@ -201,9 +221,17 @@
             "en": "**Level**: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Tier**: {{tier}}",
             "es": "**Nivel**: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Rango**: {{tier}}"
         },
+        "SELL_SUCCESS": {
+            "en": "You sold {{quantity}} {{item}} for Ɖ{{price}}.",
+            "es": "Has vendido {{quantity}} {{item}} por Ɖ{{price}}."
+        },
         "SETLANG_REPLY": {
             "en": "Language set to English.",
             "es": "Idioma establecido a Español."
+        },
+        "CREATE_PROFILE": {
+            "en": "You have not created your profile yet. Please do so by typing `/register`.",
+            "es": "Todavía no has creado tu perfil. Por favor, hazlo escribiendo `/register`."
         },
         "SHOP_DESCRIPTION": {
             "en": "Buy items and upgrades to improve your skills.",

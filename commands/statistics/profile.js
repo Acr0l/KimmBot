@@ -1,58 +1,68 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const profileModel = require("../../models/profileSchema");
-const { MessageEmbed } = require("discord.js");
-const { levelFormula } = require("../../util/userfuncs");
-const { translate } = require("../../handlers/language");
-const mustache = require("mustache");
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const profileModel = require('../../models/profileSchema');
+const { MessageEmbed } = require('discord.js');
+const { levelFormula } = require('../../util/levelFunctions');
+const { translate } = require('../../handlers/language');
+const mustache = require('mustache');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("profile")
-        .setDescription("See your info"),
+        .setName('profile')
+        .setDescription('See your info'),
     async execute(interaction, profileData) {
         const { guild } = interaction;
         let lvlPercentage = (
-            (profileData.xp / levelFormula(profileData.level)) *
-            100
-        ).toFixed(2);
-        let fieldTitles = translate(guild, "PROFILE_FIELDS").split(",");
-        let stats = `**ME**: ${profileData.mentalEnergy.me}/${profileData.mentalEnergy.totalMe}\n**MR**: ${profileData.mentalEnergy.mr}`;
+                (profileData.xp / levelFormula(profileData.level)) *
+                100
+            ).toFixed(2),
+            effectMr = profileData.effects
+                .map((effect) => effect.mrBoost)
+                .reduce((a, b) => a + b, 0),
+            effectMe = profileData.effects
+                .map((effect) => effect.meBoost)
+                .reduce((a, b) => a + b, 0),
+            fieldTitles = translate(guild, 'PROFILE_FIELDS').split(','),
+            stats = `**ME**: ${profileData.mentalEnergy.me}/${
+                profileData.mentalEnergy.totalMe
+            }${effectMe !== 0 ? ` (+${effectMe})` : ''}\n**MR**: ${
+                profileData.mentalEnergy.mr
+            }${effectMr !== 0 ? ` (+${effectMr})` : ''}`;
         let equipped =
             profileData.equipment != 0
-                ? profileData.equipment.map((e) => `-  **${e}**`).join("\n")
-                : translate(guild, "PROFILE_NO_EQUIPMENT");
+                ? profileData.equipment.map((e) => `-  **${e}**`).join('\n')
+                : translate(guild, 'PROFILE_NO_EQUIPMENT');
 
         const embed = new MessageEmbed()
-            .setColor("#34577A")
+            .setColor('#34577A')
             .setAuthor(
-                mustache.render(translate(guild, "PROFILE_AUTHOR"), {
+                mustache.render(translate(guild, 'PROFILE_AUTHOR'), {
                     user: interaction.user.username,
                 }),
-                "https://cdn.discordapp.com/avatars/" +
+                'https://cdn.discordapp.com/avatars/' +
                     profileData.userID +
-                    "/" +
+                    '/' +
                     interaction.user.avatar +
-                    ".jpeg"
+                    '.jpeg',
             )
             .setTitle(profileData.title[0])
             .setThumbnail(
-                "https://cdn.discordapp.com/avatars/" +
+                'https://cdn.discordapp.com/avatars/' +
                     profileData.userID +
-                    "/" +
+                    '/' +
                     interaction.user.avatar +
-                    ".jpeg"
+                    '.jpeg',
             )
             .addFields(
                 {
                     name: fieldTitles[0],
                     value: mustache.render(
-                        translate(guild, "PROFILE_PROGRESS"),
+                        translate(guild, 'PROFILE_PROGRESS'),
                         {
                             level: profileData.level,
                             percentage: lvlPercentage,
                             experience: profileData.xp,
                             tier: profileData.tier,
-                        }
+                        },
                     ),
                     inline: false,
                 },
@@ -62,7 +72,7 @@ module.exports = {
                     name: fieldTitles[3],
                     value: `Ɖ${profileData.dons}`,
                     inline: true,
-                }
+                },
             )
             .setTimestamp();
 
