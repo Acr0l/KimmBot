@@ -4,10 +4,10 @@ const {
         MessageSelectMenu,
         SnowflakeUtil,
     } = require('discord.js'),
-    profileModel = require('../models/profileSchema'),
     { applyXp } = require('../util/levelFunctions'),
     { translate } = require('../handlers/language'),
     { getDifficulty } = require('../handlers/difficulty'),
+    { applyStatChanges } = require('../util/tierFunctions'),
     mustache = require('mustache');
 
 module.exports = {
@@ -41,26 +41,11 @@ module.exports = {
         }
 
         if (profileData.mentalEnergy.me - meSpent >= 0) {
-            if (!profileData.stats.find((stat) => stat.subject == subject)) {
-                profileData.stats.push({
-                    subject: subject,
-                    tier: 0,
-                    correct: value ? 1 : 0,
-                    incorrect: value ? 0 : 1,
-                });
-            } else {
-                const stat = await profileData.stats.findIndex(
-                    (stat) => stat.subject === subject,
-                );
-                profileData.stats[stat].correct += value ? 1 : 0;
-                profileData.stats[stat].incorrect += value ? 0 : 1;
-            }
-
             profileData.mentalEnergy.me -= meSpent;
-            await profileModel.findOneAndUpdate(
-                { _id: profileData._id },
-                profileData,
-            );
+            await applyStatChanges(profileData, {
+                name: subject,
+                correct: value,
+            }, interaction);
         } else {
             // Not enough ME
             profileData.mentalEnergy.me = 0;

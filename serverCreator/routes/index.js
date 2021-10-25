@@ -261,7 +261,8 @@ router.get('/quiz', async (req, res) => {
 router.get('/create', (req, res) => {
     obj = req.query;
     if (obj.item) {
-        obj['itemDescription'] = `ITEM_${obj['itemName'].toUpperCase()}`;
+        let nameToDesc = obj.itemName.replace(/\s/g, '_');
+        obj['itemDescription'] = `ITEM_${nameToDesc.toUpperCase()}`;
         if (obj['itemUnique']) {
             obj['itemUnique'] = true;
         } else {

@@ -13,6 +13,10 @@
             "en": "You bought one {{item}} for Ɖ{{price}}.:You bought {{amount}} {{item}}s for Ɖ{{price}}.",
             "es": "Has comprado un {{item}} por Ɖ{{price}}.:Has comprado {{amount}} {{item}}s por Ɖ{{price}}."
         },
+        "CONFIRM": {
+            "en": "Do you wish to confirm this action?",
+            "es": "¿Quieres confirmar esta acción?"
+        },
         "COOLDOWN": {
             "en": "You are on cooldown for this command. Please wait {{time}}.",
             "es": "Este comando está en reposo. Por favor espera {{time}}."
@@ -137,8 +141,8 @@
             "en": "Energy drink that recovers 10 ME points.",
             "es": "Gatorade que recupera 10 ME."
         },
-        "ITEM_HELMET": {
-            "en": "Temporal testing item.",
+        "ITEM_CHALLENGE_KEY": {
+            "en": "Item required to challenge.",
             "es": "Objeto de prueba temporal."
         },
         "ITEM_HINT": {
@@ -160,6 +164,10 @@
         "PROBLEM_DESCRIPTION": {
             "en": "Choose the correct answer.",
             "es": "Elige la respuesta correcta."
+        },
+        "PROBLEM_REQ_NOT_MET": {
+            "en": "You don't have the required items or tiers.",
+            "es": "No tienes los objetos o niveles requeridos."
         },
         "PROBLEM_REST": {
             "en": "You need to rest before you can do that.",
@@ -253,6 +261,10 @@
             "en": "Statistics",
             "es": "Estadísticas"
         },
+        "STAT_ADVANCE": {
+            "en": "Congratulations!{{subject}} is now tier **{{tier}}**.",
+            "es": "¡Felicidades!{{subject}} ahora es tier **{{tier}}**."
+        },
         "SUBJECT_COMPUTER_SCIENCE": {
             "en": "Computer Science",
             "es": "Ciencia de la Computación"
@@ -284,6 +296,10 @@
         "SUCCESSFUL_REGISTER": {
             "en": "You have successfully registered, click the button to begin the tutorial!",
             "es": "¡Te has registrado con éxito, haz clic en el botón para comenzar el tutorial!"
+        },
+        "TIER_ADVANCE": {
+            "en": "Congratulations! You have advanced to tier **{{tier}}**.",
+            "es": "¡Felicidades! Has subido al tier **{{tier}}**."
         },
         "TUTORIAL": {
             "en": "Starting tutorial...:INSERT TUTORIAL:You have finished the tutorial.",
@@ -360,6 +376,10 @@
         "CMD_XPADD":{
             "en": "Temporal command, not available for public use.",
             "es": "Comando temporal, no disponible para uso público."
+        },
+        "YES": {
+            "en": "Yes",
+            "es": "Sí"
         }
     }
 }

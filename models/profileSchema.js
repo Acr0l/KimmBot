@@ -58,7 +58,8 @@ statsSchema.virtual('accuracy').get(function () {
     return ((this.correct / this.totalAns) * 100).toFixed(2);
 });
 
-effectsData.virtual('durationLeft')
+effectsData
+    .virtual('durationLeft')
     .get(function () {
         return (this.durationEnd - Date.now()) / 1000;
     })

@@ -1,5 +1,5 @@
-const langModel = require("../models/languageSchema");
-const lang = require("../resources/lang.json");
+const langModel = require('../models/languageSchema');
+const lang = require('../resources/lang.json');
 
 const guildLanguages = {};
 
@@ -10,7 +10,7 @@ const loadLanguages = async (client) => {
 
             const result = await langModel.findOne({ _id: guildId });
 
-            guildLanguages[guildId] = result ? result.language : "en";
+            guildLanguages[guildId] = result ? result.language : 'en';
         }
     } catch (err) {
         console.log(err);
@@ -23,9 +23,9 @@ const setLanguage = async (guildId, language) => {
 
 const translate = (guild, textKey) => {
     if (!lang.translations[textKey]) {
-        throw new Error(`Language key ${textKey} does not exist.`);
+        throw new Error(`Language key ` + textKey + ` does not exist.`);
     }
-    const selectedLanguage = guildLanguages[guild.id] || "en";
+    const selectedLanguage = guildLanguages[guild.id] || 'en';
 
     return lang.translations[textKey][selectedLanguage];
 };

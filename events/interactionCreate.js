@@ -3,10 +3,6 @@ const client = require('../index'),
     { translate } = require('../handlers/language'),
     mustache = require('mustache'),
     RECOVERYTIME = 5;
-// Anti self-bots.
-let ASB = {};
-const timeASB = 40;
-const cmdASB = 5;
 
 client.on('interactionCreate', async (interaction) => {
     // Get guild.
@@ -27,16 +23,6 @@ client.on('interactionCreate', async (interaction) => {
     } catch (err) {
         console.log(err);
     }
-
-    // Check user is not self-bot.
-    if (!ASB[interaction.user.id])
-        (ASB[interaction.user.id] = 1),
-            setTimeout(() => {
-                delete ASB[interaction.user.id];
-            }, timeASB * 1000);
-    else if (ASB[interaction.user.id] < cmdASB) ASB[interaction.user.id]++;
-    else if (ASB[interaction.user.id >= cmdASB]) return;
-    /* Send interaction to check it's not farming */
 
     // Select Menu Handling
     if (interaction.isSelectMenu()) {

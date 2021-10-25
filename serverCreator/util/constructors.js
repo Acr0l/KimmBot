@@ -88,7 +88,7 @@ const itemVerifier = async (item) => {
     if (typeof item.itemName !== 'string') throw 'itemName is not a string'
     if (typeof item.itemDescription !== 'string') {
         throw 'itemDescription is not a string'
-    } else if (item.itemDescription !== `ITEM_${item.name}`) throw 'itemDescription is not valid (!= ITEM_NAME)'
+    } else if (item.itemDescription !== `ITEM_${item.itemName.replace(/\s/g, '_').toUpperCase()}`) throw 'itemDescription is not valid (!= ITEM_NAME)'
     if (typeof parseInt(item.itemType) !== 'number') throw 'itemType is not a number'
     if (typeof parseInt(item.itemTier) !== 'number') throw 'itemTier is not a number'
     if (typeof parseInt(item.itemPrice) !== 'number') throw 'itemPrice is not a number'
