@@ -38,7 +38,8 @@ module.exports = {
         });
 
         collector.on('collect', (i) => {
-            i.reply('Holap')
+            interaction.editReply({content:'In progress...', components: []});
+            i.reply({ephemeral: true, content: 'Fight me!'});
         });
 
         // collector.on('end', () => {

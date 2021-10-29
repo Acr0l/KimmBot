@@ -39,7 +39,7 @@ module.exports = {
             .setColor(0x00ae86)
             .setDescription(`${itemNum}.`);
         for (const item of inventory) {
-            const itemData = await getItem(item.id);
+            const itemData = await getItem(item._id);
             embed.addField(`${itemData.name} ${item.quantity != 1 ? `\`[${item.quantity}]\`` : ''}`, translate(guild, itemData.description));
         }
         interaction.reply({ embeds: [embed] });

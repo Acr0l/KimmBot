@@ -1,3 +1,4 @@
+const { MessageEmbed } = require('discord.js');
 const tierRequirements = {
         0: {},
         1: {
@@ -25,24 +26,20 @@ const tierRequirements = {
         },
     },
     statTierRequirements = {
-        0: {
-            correct: 10,
-            accuracy: 40,
-        },
         1: {
             correct: 40,
             accuracy: 60,
         },
         2: {
-            correct: 80,
+            correct: 95,
             accuracy: 65,
         },
         3: {
-            correct: 130,
+            correct: 150,
             accuracy: 70,
         },
         4: {
-            correct: 200,
+            correct: 230,
             accuracy: 75,
         },
         5: {
@@ -75,7 +72,7 @@ const readyToAdvance = (user) => {
             tierMap[stat.tier] = 1;
         }
     });
-    for (key in tierRequirements[user.level + 1]) {
+    for (key in tierRequirements[user.tier + 1]) {
         if (tierMap[key] < tierRequirements[user.tier + 1][key]) {
             return false;
         }
@@ -96,7 +93,7 @@ const readyToAdvanceStat = (user, statName) => {
     if (stat.tier === 7) {
         return false;
     }
-    let tier = statTierRequirements[stat.tier];
+    let tier = statTierRequirements[stat.tier + 1];
     if (stat.correct >= tier.correct && stat.accuracy >= tier.accuracy) {
         return true;
     }
@@ -153,9 +150,12 @@ const updateStat = (user, statName, correct) => {
  * @param { Object } objectStatus - Object with optional text to replace in the template.
  */
 const printStatus = (interaction, status, objectStatus = {}) => {
-    interaction.followUp(
-        mustache.render(translate(interaction.guild, status), objectStatus),
-    );
+    let [ embedTitle, embedDescription ] = mustache.render(translate(interaction.guild, status), objectStatus).split(':');
+    let embed = new MessageEmbed()
+        .setColor(objectStatus.color || '#34577A')
+        .setTitle(embedTitle)
+        .setDescription(embedDescription);
+    interaction.followUp({ embeds: [embed] });
 };
 
 /**
@@ -168,11 +168,16 @@ const printStatus = (interaction, status, objectStatus = {}) => {
  */
 const applyStatChanges = async (user, stat, interaction) => {
     if (updateStat(user, stat.name, stat.correct)) {
-        advanceStatTier(user, stat.name);
+        if (advanceStatTier(user, stat.name))
+            printStatus(interaction, 'TIER_READY', { tier: user.tier + 1, user: interaction.user.username, color: '#F0F0F0' });
         const subjectTier = user.stats.find(
-            (stat) => stat.subject == subject,
+            (uStat) => uStat.subject == stat.name,
         ).tier;
-        printStatus(interaction, 'STAT_ADVANCE', { subject: stat.name, tier: subjectTier });
+        printStatus(interaction, 'STAT_ADVANCE', {
+            subject: stat.name,
+            tier: subjectTier,
+            color: '#39A2A5',
+        });
     }
     await user.save();
 };
@@ -180,7 +185,7 @@ const applyStatChanges = async (user, stat, interaction) => {
 const applyTierChanges = async (user, interaction) => {
     if (readyToAdvance(user)) {
         advanceTier(user);
-        printStatus(interaction, 'TIER_ADVANCE', { tier: user.tier });
+        printStatus(interaction, 'TIER_ADVANCE', { tier: user.tier, color: 'F0F0F0' });
     }
     await user.save();
 };

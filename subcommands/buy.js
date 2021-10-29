@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders'),
-    itemModel = require('../models/itemSchema'),
     { translate } = require('../handlers/language'),
     mustache = require('mustache'),
     { getItemList } = require('../handlers/itemInventory');
@@ -32,7 +31,7 @@ module.exports = {
             return;
         }
         const owned = profileData.inventory.findIndex(
-            (e) => e.id == currentItem.id,
+            (e) => e._id == currentItem.id,
         );
         const exist =
             owned != -1 || profileData.equipment.includes(currentItem.id);
@@ -54,7 +53,7 @@ module.exports = {
                     await profileData.save();
                 } else {
                     profileData.inventory.push({
-                        id: currentItem.id,
+                        _id: currentItem.id,
                         quantity: amount,
                     });
                     profileData.dons -= currentItem.price * amount;

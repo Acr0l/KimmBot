@@ -62,18 +62,6 @@ for (const file of subcommandFiles) {
     else console.log(`${subcommand} not found`);
 }
 
-// Create a collection for the menus
-client.selectmenu = new Collection();
-const menuFiles = fs
-    .readdirSync("./selectmenus")
-    .filter((file) => file.endsWith(".js"));
-
-for (const file of menuFiles) {
-    const menu = require(`./selectmenus/${file}`);
-    // Set a new item in the Collection
-    // With the key as the command name and the value as the exported module
-    client.selectmenu.set(menu.name, menu);
-}
 
 // Create a collection for the events
 const eventFiles = fs

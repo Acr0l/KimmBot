@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName(`item`)
-        .setDescription(`Iteraction with items.`)
+        .setDescription(`Interaction with items.`)
         .addSubcommand((subcommand) =>
             subcommand
                 .setName(`buy`)

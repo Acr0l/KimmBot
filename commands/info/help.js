@@ -97,8 +97,7 @@ module.exports = {
         });
 
         collector.on('collect', (i) => {
-            if (!i.customId == 'help-menu') return;
-            const [directory] = i.values;
+            const [ directory ] = i.values;
             const category = categories.find(
                 (cat) => cat.directory.toLowerCase() == directory.toLowerCase(),
             );

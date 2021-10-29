@@ -19,9 +19,9 @@ module.exports = {
             regex = /equip/;
 
         try {
-            let currentItem = checkItemInfo(await getItemList(), itemAction);
+            let currentItem = checkItemInfo(getItemList(), itemAction);
             let owned = profileData.inventory.findIndex(
-                (item) => item.id === currentItem.id,
+                (item) => item._id === currentItem.id,
             );
             if (!currentItem) {
                 interaction.reply(translate(guild, 'INVALID_ITEM'));

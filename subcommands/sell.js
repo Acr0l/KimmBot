@@ -23,7 +23,7 @@ module.exports = {
                     )
                 ],
             ownedIndex = profileData.inventory.findIndex(
-                (item) => item.id === currentItem.id,
+                (item) => item._id === currentItem.id,
             ),
             finalAmount =
                 profileData.inventory[ownedIndex].quantity - amount;

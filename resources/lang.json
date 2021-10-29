@@ -13,6 +13,62 @@
             "en": "You bought one {{item}} for Ɖ{{price}}.:You bought {{amount}} {{item}}s for Ɖ{{price}}.",
             "es": "Has comprado un {{item}} por Ɖ{{price}}.:Has comprado {{amount}} {{item}}s por Ɖ{{price}}."
         },
+        "CMD_BALANCE": {
+            "en": "Shows the user balance.",
+            "es": "Muestra el saldo del usuario."
+        },
+        "CMD_CHALLENGE": {
+            "en": "The ultimate test.",
+            "es": "El desafío."
+        },
+        "CMD_HELP": {
+            "en": "Short description about the available commands.",
+            "es": "Descripción breve sobre los comandos disponibles."
+        },
+        "CMD_INVENTORY": {
+            "en": "Display current user items.",
+            "es": "Muestra los objetos actuales del usuario."
+        },
+        "CMD_ITEM": {
+            "en": "Command group to interact with the items.",
+            "es": "Grupo de comandos para interactuar con los objetos."
+        },
+        "CMD_PROFILE": {
+            "en": "See your information.",
+            "es": "Ver tu información."
+        },
+        "CMD_REGISTER": {
+            "en": "Create your Kimm account.",
+            "es": "Create tu cuenta de Kimm."
+        },
+        "CMD_SETLANG": {
+            "en": "Change the language of the bot.",
+            "es": "Cambia el idioma del bot."
+        },
+        "CMD_SHOP": {
+            "en": "Display available items.",
+            "es": "Muestra los objetos disponibles."
+        },
+        "CMD_STATS": {
+            "en": "Shows the user specific stats in different subjects.",
+            "es": "Muestra las estadísticas del usuario en diferentes temas."
+        },
+        "CMD_SUGGEST": {
+            "en": "Suggest questions to the bot, you may get a title after getting many questions approved.",
+            "es": "Sugerencia de preguntas al bot, puedes obtener un título después de obtener muchas preguntas aprobadas."
+        },
+        "CMD_WARMUP": {
+            "en": "Quick question to warm up those neurons.",
+            "es": "Pregunta rápida para calentar esos neuronas."
+        },
+        "CMD_WORKOUT": {
+            "en": "Test to train your brain and gain experience.",
+            "es": "Prueba para entrenar tu cerebro y ganar experiencia."
+        },
+        "CMD_XPADD": {
+            "en": "Temporal command, not available for public use.",
+            "es": "Comando temporal, no disponible para uso público."
+        },
         "CONFIRM": {
             "en": "Do you wish to confirm this action?",
             "es": "¿Quieres confirmar esta acción?"
@@ -20,6 +76,10 @@
         "COOLDOWN": {
             "en": "You are on cooldown for this command. Please wait {{time}}.",
             "es": "Este comando está en reposo. Por favor espera {{time}}."
+        },
+        "CREATE_PROFILE": {
+            "en": "You have not created your profile yet. Please do so by typing `/register`.",
+            "es": "Todavía no has creado tu perfil. Por favor, hazlo escribiendo `/register`."
         },
         "DESCRIPTION_ECONOMY": {
             "en": "Commands used to interact with the shop and currency system.",
@@ -137,13 +197,13 @@
             "en": "{{user}}'s inventory",
             "es": "Inventario de {{user}}"
         },
-        "ITEM_GATORADE": {
-            "en": "Energy drink that recovers 10 ME points.",
-            "es": "Gatorade que recupera 10 ME."
-        },
         "ITEM_CHALLENGE_KEY": {
             "en": "Item required to challenge.",
             "es": "Objeto de prueba temporal."
+        },
+        "ITEM_GATORADE": {
+            "en": "Energy drink that recovers 10 ME points.",
+            "es": "Gatorade que recupera 10 ME."
         },
         "ITEM_HINT": {
             "en": "Item that eliminates alternatives from an active quiz.",
@@ -165,9 +225,13 @@
             "en": "Choose the correct answer.",
             "es": "Elige la respuesta correcta."
         },
+        "PROBLEM_ANSWER_FOOTER": {
+            "en": "You have {{time}} seconds to answer.\n{{type}} id: `{{id}}` ",
+            "es": "Tienes {{time}} segundos para responder.\n{{type}} id: `{{id}}`"
+        },
         "PROBLEM_REQ_NOT_MET": {
-            "en": "You don't have the required items or tiers.",
-            "es": "No tienes los objetos o niveles requeridos."
+            "en": "You don't have the required items or tier.",
+            "es": "No tienes los objetos o rango requeridos."
         },
         "PROBLEM_REST": {
             "en": "You need to rest before you can do that.",
@@ -207,7 +271,7 @@
         },
         "PROBLEM_SUBJECT_NOT_SUPPORTED": {
             "en": "This subject is not supported.",
-            "es": "Este tema no está soportado."
+            "es": "Este tema no está disponible."
         },
         "PROBLEM_TIME_EXPIRED": {
             "en": "Time expired, your new ME is `{{me}}`.",
@@ -237,17 +301,33 @@
             "en": "Language set to English.",
             "es": "Idioma establecido a Español."
         },
-        "CREATE_PROFILE": {
-            "en": "You have not created your profile yet. Please do so by typing `/register`.",
-            "es": "Todavía no has creado tu perfil. Por favor, hazlo escribiendo `/register`."
+        "SHOP_CONSUMABLE_TYPE": {
+            "en": "Items intended to be used and replaced.",
+            "es": "Objetos que se pueden usar y reemplazar."
         },
         "SHOP_DESCRIPTION": {
             "en": "Buy items and upgrades to improve your skills.",
             "es": "Compra objetos y mejoras para mejorar tus habilidades."
         },
+        "SHOP_EQUIPMENT_TYPE":{
+            "en": "Items intended to be equipped.",
+            "es": "Objetos que se pueden equipar."
+        },
+        "SHOP_QUEST_TYPE": {
+            "en": "Quest items.",
+            "es": "Objetos de misión."
+        },
+        "SHOP_SPECIAL_CONSUMABLE_TYPE": {
+            "en": "Special consumables that may help during problems and advancements.",
+            "es": "Consumibles especiales que pueden ayudar durante problemas y avanzamientos."
+        },
         "SHOP_TITLE": {
             "en": "Shop",
             "es": "Tienda"
+        },
+        "SHOP_TYPES": {
+            "en": "Equipment:Consumable:Special Consumable:Quest",
+            "es": "Equipamiento:Consumible:Consumible Especial:Misión"
         },
         "STATS_DESCRIPTION": {
             "en": "Your current statistics.",
@@ -262,8 +342,8 @@
             "es": "Estadísticas"
         },
         "STAT_ADVANCE": {
-            "en": "Congratulations!{{subject}} is now tier **{{tier}}**.",
-            "es": "¡Felicidades!{{subject}} ahora es tier **{{tier}}**."
+            "en": "Tier Breakthrough:Congratulations! {{subject}} is now tier **{{tier}}**.",
+            "es": "Avance de Rango:¡Felicidades! {{subject}} ahora es tier **{{tier}}**."
         },
         "SUBJECT_COMPUTER_SCIENCE": {
             "en": "Computer Science",
@@ -298,8 +378,12 @@
             "es": "¡Te has registrado con éxito, haz clic en el botón para comenzar el tutorial!"
         },
         "TIER_ADVANCE": {
-            "en": "Congratulations! You have advanced to tier **{{tier}}**.",
-            "es": "¡Felicidades! Has subido al tier **{{tier}}**."
+            "en": "Tier Promotion:Congratulations! You have advanced to tier **{{tier}}**.",
+            "es": "Ascenso de Rango:¡Felicidades! Has subido al tier **{{tier}}**."
+        },
+        "TIER_READY": {
+            "en": "Tier Requirements Met:Congratulations {{user}}, you meet the requirements to advance to tier **{{tier}}**.",
+            "es": "Cumplimiento de Requisitos de Rango:Felicidades {{user}}, cumples los requisitos para subir al tier **{{tier}}**."
         },
         "TUTORIAL": {
             "en": "Starting tutorial...:INSERT TUTORIAL:You have finished the tutorial.",
@@ -320,62 +404,6 @@
         "WAIT_FOR_REPLY": {
             "en": "Fetching data...",
             "es": "Obteniendo datos..."
-        },
-        "CMD_HELP": {
-            "en": "Short description about the available commands.",
-            "es": "Descripción breve sobre los comandos disponibles."
-        },
-        "CMD_SUGGEST": {
-            "en": "Suggest questions to the bot, you may get a title after getting many questions approved.",
-            "es": "Sugerencia de preguntas al bot, puedes obtener un título después de obtener muchas preguntas aprobadas."
-        },
-        "CMD_INVENTORY": {
-            "en": "Display current user items.",
-            "es": "Muestra los objetos actuales del usuario."
-        },
-        "CMD_PROFILE": {
-            "en": "See your information.",
-            "es": "Ver tu información."
-        },
-        "CMD_REGISTER": {
-            "en": "Create your Kimm account.",
-            "es": "Create tu cuenta de Kimm."
-        },
-        "CMD_STATS": {
-            "en": "Shows the user specific stats in different subjects.",
-            "es": "Muestra las estadísticas del usuario en diferentes temas."
-        },
-        "CMD_BALANCE": {
-            "en": "Shows the user balance.",
-            "es": "Muestra el saldo del usuario."
-        },
-        "CMD_ITEM": {
-            "en": "Command group to interact with the items.",
-            "es": "Grupo de comandos para interactuar con los objetos."
-        },
-        "CMD_SHOP": {
-            "en": "Display available items.",
-            "es": "Muestra los objetos disponibles."
-        },
-        "CMD_SETLANG": {
-            "en": "Change the language of the bot.",
-            "es": "Cambia el idioma del bot."
-        },
-        "CMD_CHALLENGE": {
-            "en": "The ultimate test.",
-            "es": "El desafío."
-        },
-        "CMD_WORKOUT": {
-            "en": "Test to train your brain and gain experience.",
-            "es": "Prueba para entrenar tu cerebro y ganar experiencia."
-        },
-        "CMD_WARMUP": {
-            "en": "Quick question to warm up those neurons.",
-            "es": "Pregunta rápida para calentar esos neuronas."
-        },
-        "CMD_XPADD":{
-            "en": "Temporal command, not available for public use.",
-            "es": "Comando temporal, no disponible para uso público."
         },
         "YES": {
             "en": "Yes",

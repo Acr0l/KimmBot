@@ -18,7 +18,7 @@ const effectsData = new mongoose.Schema({
         incorrect: { type: Number, default: 0, required: true },
     }),
     inventorySchema = new mongoose.Schema({
-        id: { type: String, required: true },
+        _id: { type: String, required: true },
         quantity: { type: Number, default: 0, required: true },
     }),
     profileSchema = new mongoose.Schema({
@@ -35,7 +35,7 @@ const effectsData = new mongoose.Schema({
             required: true,
             default: new Map(),
         },
-        title: { type: Array, required: true, default: ['No Title'] },
+        title: { type: [ String ], required: true, default: ['No Title'] },
         // 0 = ME 1 = MR
         // ME = Mental Energy, MR = Mental Recovery
         mentalEnergy: {
@@ -46,7 +46,7 @@ const effectsData = new mongoose.Schema({
         },
         // Stats = Subjects { subject: String, level: Number }
         stats: { type: [statsSchema], required: true, default: [] },
-        equipment: { type: Array, required: true, default: [] },
+        equipment: { type: [ String ], required: true, default: [] },
         effects: { type: [effectsData], required: true, default: [] },
     });
 
