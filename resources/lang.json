@@ -19,7 +19,7 @@
         },
         "CMD_CHALLENGE": {
             "en": "The ultimate test.",
-            "es": "El desafío."
+            "es": "Prueba para desafiarte y avanzar en KimmBot."
         },
         "CMD_HELP": {
             "en": "Short description about the available commands.",
@@ -59,7 +59,7 @@
         },
         "CMD_WARMUP": {
             "en": "Quick question to warm up those neurons.",
-            "es": "Pregunta rápida para calentar esos neuronas."
+            "es": "Pregunta rápida para calentar esas neuronas."
         },
         "CMD_WORKOUT": {
             "en": "Test to train your brain and gain experience.",
@@ -307,7 +307,7 @@
         },
         "SHOP_DESCRIPTION": {
             "en": "Buy items and upgrades to improve your skills.",
-            "es": "Compra objetos y mejoras para mejorar tus habilidades."
+            "es": "Compra objetos y mejoras para perfeccionar tus habilidades."
         },
         "SHOP_EQUIPMENT_TYPE":{
             "en": "Items intended to be equipped.",
@@ -374,8 +374,8 @@
             "es": "Ciencia"
         },
         "SUCCESSFUL_REGISTER": {
-            "en": "You have successfully registered, click the button to begin the tutorial!",
-            "es": "¡Te has registrado con éxito, haz clic en el botón para comenzar el tutorial!"
+            "en": "Welcome {{user}}, you have successfully registered, click the button to begin the tutorial!",
+            "es": "¡Te damos la bienvenida {{user}}, te has registrado con éxito, haz clic en el botón para comenzar el tutorial!"
         },
         "TIER_ADVANCE": {
             "en": "Tier Promotion:Congratulations! You have advanced to tier **{{tier}}**.",
@@ -398,8 +398,8 @@
             "es": "No tienes ese objeto."
         },
         "UNSUCCESSFUL_REGISTER": {
-            "en": "You already have a Kimm account.",
-            "es": "Ya tienes una cuenta de Kimm."
+            "en": "Dont't worry {{user}}, you already have a Kimm account!",
+            "es": "¡No te preocupes {{user}}, ya tienes una cuenta en Kimm!"
         },
         "WAIT_FOR_REPLY": {
             "en": "Fetching data...",
@@ -408,6 +408,14 @@
         "YES": {
             "en": "Yes",
             "es": "Sí"
+        },
+        "BALANCE_TITLE" : {
+            "en" : "{{user}}'s balance",
+            "es" : "Saldo de {{user}}"
+        },
+        "BALANCE_DESCRIPTION" : {
+            "en" : "💸 Your current balance is **Ɖ{{dons}}**",
+            "es" : "💸 Tu saldo actual es de **Ɖ{{dons}}**"
         }
     }
 }

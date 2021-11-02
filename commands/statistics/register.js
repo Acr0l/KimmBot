@@ -1,12 +1,15 @@
 const { MessageActionRow, MessageButton } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const profileModel = require("../../models/profileSchema");
+const { translate } = require('../../handlers/language');
+const mustache = require('mustache');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("register")
         .setDescription("Create your Kimm account."),
     async execute(interaction, noData, client) {
+        const { guild } = interaction;
         let profileData;
 
         try {
@@ -27,13 +30,16 @@ module.exports = {
                         .setEmoji("📖")
                 );
                 await interaction.reply({
-                    content:
-                        "You have successfully registered, click the button to begin the tutorial!",
+                    content: mustache.render(translate( guild , 'SUCCESSFUL_REGISTER' ), {
+                        user: interaction.user.username,
+                    }),
                     components: [row],
                 });
                 return;
             } else {
-                await interaction.reply("You already have a Kimm account.");
+                await interaction.reply(mustache.render(translate( guild , 'UNSUCCESSFUL_REGISTER' ), {
+                    user: interaction.user.username,
+                }));
                 return;
             }
         } catch (err) {

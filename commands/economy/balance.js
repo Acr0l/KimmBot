@@ -1,15 +1,22 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
+const { translate } = require('../../handlers/language');
+const mustache = require('mustache');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("balance")
         .setDescription("Check your balance"),
     async execute(interaction, profileData) {
+        const { guild } = interaction;
         const embed = new MessageEmbed()
-            .setTitle(`${interaction.user.username}'s balance`)
-            .setDescription(
-                `💸 Your current balance is **Ɖ${profileData.dons}**.`
+            .setColor(`#39A2A5`)
+            .setTitle(mustache.render(translate(guild, 'BALANCE_TITLE'), {
+                user: interaction.user.username,
+            }))
+            .setDescription(mustache.render(translate(guild, 'BALANCE_DESCRIPTION'), {
+                    dons: profileData.dons
+                })
             );
         interaction.reply({ embeds: [embed] });
     },

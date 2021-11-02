@@ -92,7 +92,7 @@ module.exports = {
         try {
             await subcommand.execute(interaction, profileData, client);
         } catch (error) {
-            console.error(error);
+            console.error(error);            
         }
         // await interaction.reply({ content: `This command is not yet implemented.`, ephemeral: true });
     },
