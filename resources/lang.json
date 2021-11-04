@@ -13,6 +13,30 @@
             "en": "You bought one {{item}} for Ɖ{{price}}.:You bought {{amount}} {{item}}s for Ɖ{{price}}.",
             "es": "Has comprado un {{item}} por Ɖ{{price}}.:Has comprado {{amount}} {{item}}s por Ɖ{{price}}."
         },
+        "CHALLENGE_START_DESC": {
+            "en": "Brave warrior, beware of the dangers of The Challenge because although you might break through your tier, the consequences will be harsh if you fail.",
+            "es": "Valiente guerrero, ten cuidado de los peligros del Desafío porque aunque puedas superar tu rango, las consecuencias serán duras si fallas."
+        },
+        "CHALLENGE_START_FIELDS": {
+            "en": "Questions:Time:Difficulty",
+            "es": "Preguntas:Tiempo:Dificultad"
+        },
+        "CHALLENGE_START_F_QUESTIONS": {
+            "en": "You will be facing {{number}} questions, ranging from your most accomplished subject to the subjects you might have neglected...",
+            "es": "Te enfrentarás a {{number}} preguntas, que van desde tus materias más desarrolladas hasta las que has dejado de lado..."
+        },
+        "CHALLENGE_START_F_DIFFICULTY": {
+            "en": "Is it hard? Well, you will face difficulties during the road, but you must persevere and get 80% of the questions correct (Perfect scores will be rewarded).",
+            "es": "¿Es difícil? Bueno, te enfrentarás a dificultades en el camino, pero debes persistir y obtener 80% de las preguntas correctas (Puntajes perfectos serán recompensados)."
+        },
+        "CHALLENGE_START_F_TIME": {
+            "en": "You have {{time}} seconds to answer each question, for a total of {{totalTime}} to complete the test.",
+            "es": "Tienes {{time}} segundos para responder a cada pregunta, para un total de {{totalTime}} para completar el test."
+        },
+        "CHALLENGE_START_TITLE": {
+            "en": "Challenging yourself...",
+            "es": "Desafiándote a ti mismo..."
+        },
         "CMD_BALANCE": {
             "en": "Shows the user balance.",
             "es": "Muestra el saldo del usuario."

@@ -98,15 +98,18 @@ async function generateQuiz(interaction, profileData, type) {
     // type = 0 -> warmup - 1 -> workout - 2 -> challenge
 
     const { guild } = interaction;
-    if (profileData.mentalEnergy.me <= 10) {
+    if (profileData.mentalEnergy.me <= 10 && type != 2) {
         interaction.reply(translate(guild, 'PROBLEM_REST'));
-        return;
+        return false;
     }
 
+    let subject = 'challenge';
     // Get the subject
-    const subject = interaction.options.getString('subject');
+    if (type != 2) {
+        subject = interaction.options.getString('subject');
+    }
 
-    if (subject !== 'Math') {
+    if (subject !== 'Math' && type != 2) {
         interaction.reply(translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'));
         return;
     }
