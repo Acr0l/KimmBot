@@ -1,9 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const profileModel = require('../../models/profileSchema');
-const { MessageEmbed } = require('discord.js');
-const { levelFormula } = require('../../util/levelFunctions');
-const { translate } = require('../../handlers/language');
-const mustache = require('mustache');
+const { SlashCommandBuilder } = require('@discordjs/builders'),
+    profileModel = require('../../models/profileSchema'),
+    { MessageEmbed } = require('discord.js'),
+    { levelFormula } = require('../../util/levelFunctions'),
+    { translate } = require('../../handlers/language'),
+    { getItem } = require('../../handlers/itemInventory'),
+    mustache = require('mustache');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -29,7 +30,7 @@ module.exports = {
             }${effectMr !== 0 ? ` (+${effectMr})` : ''}`;
         let equipped =
             profileData.equipment != 0
-                ? profileData.equipment.map((e) => `-  **${e}**`).join('\n')
+                ? profileData.equipment.map((e) => `-  **${getItem(e).name}**`).join('\n')
                 : translate(guild, 'PROFILE_NO_EQUIPMENT');
 
         const embed = new MessageEmbed()

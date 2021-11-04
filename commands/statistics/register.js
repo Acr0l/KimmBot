@@ -46,16 +46,17 @@ module.exports = {
             console.log(err);
         }
 
+        const filter = (i) =>
+            i.user.id === interaction.user.id && i.customId === 'tutorial';
+
         const collector = interaction.channel.createMessageComponentCollector({
+            filter,
             componentType: MessageButton,
             time: 20000,
         });
 
         collector.on("collect", async (i) => {
-            if (!i.customId === "tutorial") return;
-            if (!i.user.id === interaction.user.id) return;
-
-            await interaction.reply("Starting tutorial...");
+            await i.reply("Starting tutorial...");
         });
 
         collector.on("end", async () => {

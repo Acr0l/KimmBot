@@ -21,7 +21,7 @@ module.exports = {
             currentItem =
                 itemList[
                     Object.keys(itemList).filter(
-                        (item) => itemList[item].name === itemToBuy,
+                        (item) => itemList[item].name.toLowerCase() === itemToBuy.toLowerCase(),
                     )
                 ];
 

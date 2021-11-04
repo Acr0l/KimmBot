@@ -19,7 +19,7 @@ for (const subject of Object.keys(subjects)) {
     subjectsArr.push([subject, subject]);
 }
 // Constants
-const N = 5;
+let N = 5;
 const quizCategories = [
     {
         type: 'Warmup',
@@ -111,7 +111,7 @@ async function generateQuiz(interaction, profileData, type) {
 
     if (subject !== 'Math' && type != 2) {
         interaction.reply(translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'));
-        return;
+        return false;
     }
 
     // Random element is stored in "question"
@@ -134,16 +134,24 @@ async function generateQuiz(interaction, profileData, type) {
 
     // Create embed with the question
     let embed = new MessageEmbed()
-        .setTitle(question.question)
-        .setColor('#39A2A5')
-        .setDescription(translate(guild, 'PROBLEM_DESCRIPTION'))
-        .setFooter(
-            mustache.render(translate(guild, 'PROBLEM_ANSWER_FOOTER'), {
-                type: quizCategories[type].type,
-                time: quizCategories[type].time,
-                id: question._id,
-            }),
-        );
+            .setTitle(question.question)
+            .setColor('#39A2A5')
+            .setDescription(translate(guild, 'PROBLEM_DESCRIPTION'))
+            .setFooter(
+                mustache.render(translate(guild, 'PROBLEM_ANSWER_FOOTER'), {
+                    type: quizCategories[type].type,
+                    time: quizCategories[type].time,
+                    id: question._id,
+                }),
+            ),
+        hintButton = (state) =>
+            new MessageActionRow().addComponents([
+                new MessageButton()
+                    .setCustomId('getHint')
+                    .setLabel(translate(guild, 'PROBLEM_HINT_REQ'))
+                    .setStyle('SUCCESS')
+                    .setDisabled(state),
+            ]);
 
     if (question.image) {
         embed.setImage(question.image);
@@ -162,13 +170,7 @@ async function generateQuiz(interaction, profileData, type) {
                 : question.incorrect_answers.length + 1;
 
         // Randomize the alternatives.
-        let problemAlternatives = [
-            question.correct_answer,
-            ...question.incorrect_answers,
-        ].slice(0, altNum);
-
-        // Shuffle the alternatives
-        shuffle(problemAlternatives);
+        let problemAlternatives = shuffleAlternatives(altNum, question);
 
         // Create options as array of objects
         let options = [];
@@ -192,8 +194,11 @@ async function generateQuiz(interaction, profileData, type) {
                     .setMaxValues(1)
                     .addOptions(options),
             ),
+            hintButton(state),
         ];
-        filter = (i) => i.customId === 'problemSelect';
+        filter = (i) =>
+            (i.customId === 'problemSelect' || i.customId === 'getHint') &&
+            i.user.id === interaction.user.id;
     } else if (question.type === 'T/F') {
         // True/False
         compType = 'BUTTON';
@@ -211,9 +216,13 @@ async function generateQuiz(interaction, profileData, type) {
                     .setStyle('SECONDARY')
                     .setDisabled(state),
             ]),
+            hintButton(state),
         ];
         filter = (i) =>
-            i.customId === 'problemButton' || i.customId === 'problemButton1';
+            (i.customId === 'problemButton' ||
+                i.customId === 'problemButton1' ||
+                i.customId === 'getHint') &&
+            i.user.id === interaction.user.id;
     }
 
     //Reply
@@ -231,6 +240,15 @@ async function generateQuiz(interaction, profileData, type) {
 
     // Collect the answer
     collector.on('collect', async (i) => {
+        // Get if hint
+        if (i.customId === 'getHint') {
+            problemAlternatives = shuffleAlternatives(altNum, question);
+            return await interaction.reply({
+                embeds: [embed],
+                ephemeral: true,
+                components: row(false),
+            });
+        }
         interaction.editReply({
             embeds: [embed],
             ephemeral: true,
@@ -322,6 +340,14 @@ async function generateQuiz(interaction, profileData, type) {
         }
         const collectorEmbed = new MessageEmbed()
             .setColor(color)
+            .setAuthor(
+                interaction.user.username,
+                'https://cdn.discordapp.com/avatars/' +
+                    profileData.userID +
+                    '/' +
+                    interaction.user.avatar +
+                    '.jpeg',
+            )
             .setTitle(title)
             .setDescription(description)
             .setThumbnail(image)
@@ -333,9 +359,14 @@ async function generateQuiz(interaction, profileData, type) {
         });
         // End the interaction
         await profileData.save();
+        collector.stop();
     });
 
     collector.on('end', async (collected) => {
+        embed = new MessageEmbed()
+            .setColor('#FCDFA6')
+            .setTitle(translate(guild, 'PROBLEM_END_TITLE'))
+            .setDescription(`\`${question.question}\``);
         interaction.editReply({ embeds: [embed], components: [] });
         // Delete activity
         deleteActivity(interaction.user.id);
@@ -383,4 +414,15 @@ function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+function shuffleAlternatives(number, question) {
+    let alternatives = [];
+    for (let i = 0; i < number; i++) {
+        if (i === 0) {
+            alternatives.push(question.correct_answer);
+        } else {
+            alternatives.push(question.incorrect_answers[i - 1]);
+        }
+    }
+    return shuffle(alternatives);
+}
 module.exports = { generateQuiz };

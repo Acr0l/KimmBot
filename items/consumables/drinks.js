@@ -39,12 +39,10 @@ module.exports = {
                 ).durationLeft = effect.duration;
             }
             interaction.reply(
-                mustache.render(
-                    translate(guild, 'DRINK_ACTIVATED', {
-                        item: item.name,
-                        duration: secondsToDhms(effect.duration),
-                    }),
-                ),
+                mustache.render(translate(guild, 'DRINK_ACTIVATED'), {
+                    item: item.name,
+                    duration: forHumans(effect.duration / 1000),
+                }),
             );
         } else {
             // Add effect to profile
@@ -79,4 +77,27 @@ function secondsToDhms(seconds) {
     let mDisplay = m > 0 ? m + (m == 1 ? ' minute, ' : ' minutes, ') : '';
     let sDisplay = s > 0 ? s + (s == 1 ? ' second' : ' seconds') : '';
     return dDisplay + hDisplay + mDisplay + sDisplay;
+}
+
+/**
+ * Translates seconds into human readable format of seconds, minutes, hours, days, and years
+ * 
+ * @param  {number} seconds The number of seconds to be processed
+ * @return {string}         The phrase describing the amount of time
+ */
+ function forHumans ( seconds ) {
+    var levels = [
+        [Math.floor(seconds / 31536000), 'years'],
+        [Math.floor((seconds % 31536000) / 86400), 'days'],
+        [Math.floor(((seconds % 31536000) % 86400) / 3600), 'hours'],
+        [Math.floor((((seconds % 31536000) % 86400) % 3600) / 60), 'minutes'],
+        [(((seconds % 31536000) % 86400) % 3600) % 60, 'seconds'],
+    ];
+    var returntext = '';
+
+    for (var i = 0, max = levels.length; i < max; i++) {
+        if ( levels[i][0] === 0 ) continue;
+        returntext += ' ' + levels[i][0] + ' ' + (levels[i][0] === 1 ? levels[i][1].substr(0, levels[i][1].length-1): levels[i][1]);
+    };
+    return returntext.trim();
 }
