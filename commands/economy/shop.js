@@ -100,7 +100,7 @@ module.exports = {
         });
 
         collector.on('end', () => {
-            interaction.reply({
+            interaction.editReply({
                 embeds: [embed],
                 components: components(true),
             });

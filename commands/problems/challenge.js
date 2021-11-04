@@ -3,7 +3,8 @@ const { SlashCommandBuilder } = require('@discordjs/builders'),
     { translate } = require('../../handlers/language'),
     { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js'),
     mustache = require('mustache'),
-    { generateQuiz } = require('../../util/problemFunctions');
+    { generateQuiz } = require('../../util/problemFunctions'),
+    wait = require('util').promisify(setTimeout);
 
 module.exports = {
     cooldown: 10, //86400 * 3,
@@ -71,19 +72,29 @@ module.exports = {
         await interaction.reply({
             content: mustache.render(translate(guild, 'CONFIRM')),
             embeds: [embed],
-            components: row(false),
             ephemeral: true,
         });
-
+        await wait(10000);
+        await interaction.editReply({
+            content: mustache.render(translate(guild, 'CONFIRM')),
+            embeds: [embed],
+            components: row(false),
+            ephemeral: true,
+        })
         const filter = (i) =>
             i.customId == 'challengeConfirm' || i.customId == 'challengeReject';
         const collector = interaction.channel.createMessageComponentCollector({
             filter,
             componentType: 'BUTTON',
-            time: 40000,
+            time: 50000,
         });
 
         collector.on('collect', (i) => {
+            if (i.customId == 'challengeReject')
+            {
+                collector.stop('rejected');
+                return;
+            }
             interaction.editReply({
                 content: 'In progress...',
                 components: row(true),
@@ -99,9 +110,9 @@ module.exports = {
             i.reply({ ephemeral: true, content: 'Fight me!' });
         });
 
-        collector.on('end', () => {
+        collector.on('end', collected => {
             interaction.editReply({
-                contents: 'Challenge finished or cancelled.',
+                contents: `Challenge ${collected}.`,
                 embeds: [embed],
                 components: [],
             });

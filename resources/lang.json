@@ -249,9 +249,17 @@
             "en": "Choose the correct answer.",
             "es": "Elige la respuesta correcta."
         },
+        "PROBLEM_END_TITLE": {
+            "en": "Question answered:",
+            "es": "Pregunta contestada:"
+        },
         "PROBLEM_ANSWER_FOOTER": {
             "en": "You have {{time}} seconds to answer.\n{{type}} id: `{{id}}` ",
             "es": "Tienes {{time}} segundos para responder.\n{{type}} id: `{{id}}`"
+        },
+        "PROBLEM_HINT_REQ": {
+            "en": "Use hint",
+            "es": "Usar pista"
         },
         "PROBLEM_REQ_NOT_MET": {
             "en": "You don't have the required items or tier.",
