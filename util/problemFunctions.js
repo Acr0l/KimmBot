@@ -13,7 +13,8 @@ const { MessageEmbed } = require('discord.js'),
     { setActivity, deleteActivity } = require('../handlers/activity'),
     mustache = require('mustache'),
     { applyStatChanges } = require('./tierFunctions'),
-    { translate } = require('../handlers/language');
+    { translate } = require('../handlers/language'),
+    client = require('../index');
 
 for (const subject of Object.keys(subjects)) {
     subjectsArr.push([subject, subject]);
@@ -98,17 +99,21 @@ async function generateQuiz(interaction, profileData, type) {
     // type = 0 -> warmup - 1 -> workout - 2 -> challenge
 
     const { guild } = interaction;
+
+    // Check if the user has enough me
     if (profileData.mentalEnergy.me <= 10 && type != 2) {
         interaction.reply(translate(guild, 'PROBLEM_REST'));
         return false;
     }
 
+    // Select subject
     let subject = 'challenge';
     // Get the subject
     if (type != 2) {
         subject = interaction.options.getString('subject');
     }
 
+    // Available subjects
     if (subject !== 'Math' && type != 2) {
         interaction.reply(translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'));
         return false;
@@ -158,32 +163,28 @@ async function generateQuiz(interaction, profileData, type) {
     }
 
     // Variables to store the settings
-    let row, compType, filter;
+    let row,
+        compType,
+        filter,
+        altNum,
+        hintFilter = (i) => i.customId == 'getHint',
+        hintEmoji = client.emojis.cache.get('905990062095867935'),
+        hintUsed = false;
     // Detect question type
     if (question.type === 'MC') {
         // Multiple choice
         compType = 'SELECT_MENU';
         // Set number of alternatives (+ correct answer)
-        const altNum =
+        altNum =
             question.incorrect_answers.length >= N - 1
                 ? N
                 : question.incorrect_answers.length + 1;
 
         // Randomize the alternatives.
-        let problemAlternatives = shuffleAlternatives(altNum, question);
-
-        // Create options as array of objects
-        let options = [];
-
-        for (let i = 0; i < problemAlternatives.length; i++) {
-            options[i] = {
-                label: problemAlternatives[i],
-                value: problemAlternatives[i],
-            };
-        }
+        let options = shuffleAlternatives(altNum, question);
 
         //Create row with select menu
-        row = (state) => [
+        row = (state) =>
             new MessageActionRow().addComponents(
                 new MessageSelectMenu()
                     .setCustomId('problemSelect')
@@ -193,17 +194,14 @@ async function generateQuiz(interaction, profileData, type) {
                     .setMinValues(1)
                     .setMaxValues(1)
                     .addOptions(options),
-            ),
-            hintButton(state),
-        ];
+            );
         filter = (i) =>
-            (i.customId === 'problemSelect' || i.customId === 'getHint') &&
-            i.user.id === interaction.user.id;
+            i.customId === 'problemSelect' && i.user.id === interaction.user.id;
     } else if (question.type === 'T/F') {
         // True/False
         compType = 'BUTTON';
         // Create the array of buttons
-        row = (state) => [
+        row = (state) =>
             new MessageActionRow().addComponents([
                 new MessageButton()
                     .setCustomId('problemButton')
@@ -215,13 +213,10 @@ async function generateQuiz(interaction, profileData, type) {
                     .setLabel(problemAlternatives[1])
                     .setStyle('SECONDARY')
                     .setDisabled(state),
-            ]),
-            hintButton(state),
-        ];
+            ]);
         filter = (i) =>
             (i.customId === 'problemButton' ||
-                i.customId === 'problemButton1' ||
-                i.customId === 'getHint') &&
+                i.customId === 'problemButton1') &&
             i.user.id === interaction.user.id;
     }
 
@@ -229,26 +224,55 @@ async function generateQuiz(interaction, profileData, type) {
     await interaction.reply({
         embeds: [embed],
         ephemeral: true,
-        components: row(false),
+        components: [row(false), hintButton(false)],
     });
 
     const collector = interaction.channel.createMessageComponentCollector({
-        filter,
-        componentType: compType,
-        time: quizCategories[type].time * 1000,
+            filter,
+            componentType: compType,
+            time: quizCategories[type].time * 1000,
+        }),
+        hintCollector = interaction.channel.createMessageComponentCollector({
+            hintFilter,
+            componentType: 'BUTTON',
+            time: (quizCategories[type].time - 3) * 1000,
+        });
+
+    // Collect hint
+    hintCollector.on('collect', async (i) => {
+        if (question.type !== 'MC') {
+            return;
+        }
+        // Check if the user has a hint.
+        const hintInvHandler = require('../subcommands/use');
+        i['item'] = 'Hint'
+        hintInvHandler.execute(i, profileData)
+        options = shuffleAlternatives(altNum - 1, question);
+        row = (state) =>
+            new MessageActionRow().addComponents(
+                new MessageSelectMenu()
+                    .setCustomId('problemSelect')
+                    .setPlaceholder(
+                        translate(guild, 'PROBLEM_SELECT_ALTERNATIVE'),
+                    )
+                    .setMinValues(1)
+                    .setMaxValues(1)
+                    .addOptions(options),
+            );
+        let hintEmbed = new MessageEmbed(embed).setTitle(
+            `${hintEmoji} ${question.question}`,
+        );
+        i.update({
+            embeds: [hintEmbed],
+            ephemeral: true,
+            components: [row(false), hintButton(true)],
+        });
+        hintUsed = true;
+        hintCollector.stop();
     });
 
     // Collect the answer
     collector.on('collect', async (i) => {
-        // Get if hint
-        if (i.customId === 'getHint') {
-            problemAlternatives = shuffleAlternatives(altNum, question);
-            return await interaction.reply({
-                embeds: [embed],
-                ephemeral: true,
-                components: row(false),
-            });
-        }
         interaction.editReply({
             embeds: [embed],
             ephemeral: true,
@@ -365,8 +389,16 @@ async function generateQuiz(interaction, profileData, type) {
     collector.on('end', async (collected) => {
         embed = new MessageEmbed()
             .setColor('#FCDFA6')
-            .setTitle(translate(guild, 'PROBLEM_END_TITLE'))
+            .setTitle(
+                `${hintUsed ? `${hintEmoji} ` : ''}${translate(
+                    guild,
+                    'PROBLEM_END_TITLE',
+                )}`,
+            )
             .setDescription(`\`${question.question}\``);
+        if (question.image) {
+            embed.setImage(question.image);
+        }
         interaction.editReply({ embeds: [embed], components: [] });
         // Delete activity
         deleteActivity(interaction.user.id);
@@ -415,7 +447,8 @@ function getRandomArbitrary(min, max) {
 }
 
 function shuffleAlternatives(number, question) {
-    let alternatives = [];
+    let alternatives = [],
+        options = [];
     for (let i = 0; i < number; i++) {
         if (i === 0) {
             alternatives.push(question.correct_answer);
@@ -423,6 +456,15 @@ function shuffleAlternatives(number, question) {
             alternatives.push(question.incorrect_answers[i - 1]);
         }
     }
-    return shuffle(alternatives);
+    alternatives = shuffle(alternatives);
+
+    for (let i = 0; i < alternatives.length; i++) {
+        options[i] = {
+            label: alternatives[i],
+            value: alternatives[i],
+        };
+    }
+
+    return options;
 }
 module.exports = { generateQuiz };

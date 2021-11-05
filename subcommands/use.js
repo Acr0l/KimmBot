@@ -9,10 +9,16 @@ module.exports = {
      * @param { Object } profileData
      * @param { Client } client
      */
-    async execute(interaction, profileData, client) {
-        const itemAction = interaction.options.getString('item').toLowerCase(),
-            amount = interaction.options.getNumber('amount') || 1,
-            { guild } = interaction,
+    async execute(interaction, profileData) {
+        let itemAction, amount;
+        if (interaction.item) {
+            itemAction = interaction.item.toLowerCase();
+            amount = 1;
+        } else {
+            itemAction = interaction.options.getString('item').toLowerCase();
+            amount = interaction.options.getNumber('amount') || 1;
+        }
+        const { guild } = interaction,
             itemList = getItemList(),
             currentItem =
                 itemList[
@@ -43,6 +49,7 @@ module.exports = {
                 profileData.inventory[ownedIndex].quantity = finalAmount;
             }
             await profileData.save();
+            if (currentItem.type === 2) return;
             const itemUse = require(`../items/${currentItem.path}`);
             if (itemUse)
                 await itemUse.use(
