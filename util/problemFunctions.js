@@ -13,8 +13,7 @@ const { MessageEmbed } = require('discord.js'),
     { setActivity, deleteActivity } = require('../handlers/activity'),
     mustache = require('mustache'),
     { applyStatChanges } = require('./tierFunctions'),
-    { translate } = require('../handlers/language'),
-    client = require('../index');
+    { translate, getLanguage } = require('../handlers/language');
 
 for (const subject of Object.keys(subjects)) {
     subjectsArr.push([subject, subject]);
@@ -57,6 +56,12 @@ const quizCategories = [
                 5
             );
         },
+        donsFormula: function (difficulty, answerTime) {
+            return Math.min(
+                Math.ceil(100 / (3 * answerTime)) * (difficulty + 1),
+                difficulty * 15,
+            );
+        },
         image: {
             correct:
                 'https://cdn.pixabay.com/photo/2016/03/31/14/37/check-mark-1292787__340.png',
@@ -93,28 +98,25 @@ const quizCategories = [
  * @param { Object } interaction - The interaction object
  * @param { Object } profileData - The user's profile data
  * @param { Number } type - The type of quiz to generate.
- * @returns Boolean - Whether or not the quiz was generated successfully.
+ * @param {*} client - The client object
+ * @returns { Boolean } - Whether or not the quiz was generated successfully.
  */
-async function generateQuiz(interaction, profileData, type) {
-    // type = 0 -> warmup - 1 -> workout - 2 -> challenge
+async function generateQuiz(interaction, profileData, type, client) {
+    // type = 0 -> warmup - 1 -> workout
 
     const { guild } = interaction;
 
     // Check if the user has enough me
-    if (profileData.mentalEnergy.me <= 10 && type != 2) {
+    if (profileData.mentalEnergy.me <= 10) {
         interaction.reply(translate(guild, 'PROBLEM_REST'));
         return false;
     }
 
-    // Select subject
-    let subject = 'challenge';
     // Get the subject
-    if (type != 2) {
-        subject = interaction.options.getString('subject');
-    }
+    const subject = interaction.options.getString('subject');
 
     // Available subjects
-    if (subject !== 'Math' && type != 2) {
+    if (subject !== 'Math') {
         interaction.reply(translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'));
         return false;
     }
@@ -128,6 +130,7 @@ async function generateQuiz(interaction, profileData, type) {
                 $and: [
                     { subject: subject },
                     { category: quizCategories[type].type },
+                    { lang: getLanguage(guild) },
                 ],
             },
         },
@@ -169,7 +172,8 @@ async function generateQuiz(interaction, profileData, type) {
         altNum,
         hintFilter = (i) => i.customId == 'getHint',
         hintEmoji = client.emojis.cache.get('905990062095867935'),
-        hintUsed = false;
+        hintUsed = false,
+        rowSelectMenu;
     // Detect question type
     if (question.type === 'MC') {
         // Multiple choice
@@ -184,36 +188,31 @@ async function generateQuiz(interaction, profileData, type) {
         let options = shuffleAlternatives(altNum, question);
 
         //Create row with select menu
-        row = (state) =>
-            new MessageActionRow().addComponents(
-                new MessageSelectMenu()
-                    .setCustomId('problemSelect')
-                    .setPlaceholder(
-                        translate(guild, 'PROBLEM_SELECT_ALTERNATIVE'),
-                    )
-                    .setMinValues(1)
-                    .setMaxValues(1)
-                    .addOptions(options),
-            );
+        rowSelectMenu = new MessageSelectMenu()
+            .setCustomId('problemSelect')
+            .setPlaceholder(translate(guild, 'PROBLEM_SELECT_ALTERNATIVE'))
+            .setMinValues(1)
+            .setMaxValues(1)
+            .addOptions(options);
+        row = new MessageActionRow().addComponents(rowSelectMenu);
         filter = (i) =>
             i.customId === 'problemSelect' && i.user.id === interaction.user.id;
     } else if (question.type === 'T/F') {
         // True/False
         compType = 'BUTTON';
         // Create the array of buttons
-        row = (state) =>
-            new MessageActionRow().addComponents([
-                new MessageButton()
-                    .setCustomId('problemButton')
-                    .setLabel(problemAlternatives[0])
-                    .setStyle('SECONDARY')
-                    .setDisabled(state),
-                new MessageButton()
-                    .setCustomId('problemButton1')
-                    .setLabel(problemAlternatives[1])
-                    .setStyle('SECONDARY')
-                    .setDisabled(state),
-            ]);
+        row = new MessageActionRow().addComponents([
+            new MessageButton()
+                .setCustomId('problemButton')
+                .setLabel(problemAlternatives[0])
+                .setStyle('SECONDARY')
+                .setDisabled(state),
+            new MessageButton()
+                .setCustomId('problemButton1')
+                .setLabel(problemAlternatives[1])
+                .setStyle('SECONDARY')
+                .setDisabled(state),
+        ]);
         filter = (i) =>
             (i.customId === 'problemButton' ||
                 i.customId === 'problemButton1') &&
@@ -224,18 +223,20 @@ async function generateQuiz(interaction, profileData, type) {
     await interaction.reply({
         embeds: [embed],
         ephemeral: true,
-        components: [row(false), hintButton(false)],
+        components: [row, hintButton(false)],
     });
 
     const collector = interaction.channel.createMessageComponentCollector({
             filter,
             componentType: compType,
             time: quizCategories[type].time * 1000,
+            max: 2,
         }),
         hintCollector = interaction.channel.createMessageComponentCollector({
             hintFilter,
             componentType: 'BUTTON',
             time: (quizCategories[type].time - 3) * 1000,
+            max: 1,
         });
 
     // Collect hint
@@ -245,30 +246,23 @@ async function generateQuiz(interaction, profileData, type) {
         }
         // Check if the user has a hint.
         const hintInvHandler = require('../subcommands/use');
-        i['item'] = 'Hint'
-        hintInvHandler.execute(i, profileData)
+        i['item'] = 'Hint';
+        hintInvHandler.execute(i, profileData);
         options = shuffleAlternatives(altNum - 1, question);
-        row = (state) =>
-            new MessageActionRow().addComponents(
-                new MessageSelectMenu()
-                    .setCustomId('problemSelect')
-                    .setPlaceholder(
-                        translate(guild, 'PROBLEM_SELECT_ALTERNATIVE'),
-                    )
-                    .setMinValues(1)
-                    .setMaxValues(1)
-                    .addOptions(options),
-            );
+        rowHint = new MessageActionRow().addComponents(
+            rowSelectMenu.setOptions(options),
+        );
         let hintEmbed = new MessageEmbed(embed).setTitle(
             `${hintEmoji} ${question.question}`,
         );
+        // Set the hint as used
+        hintUsed = true;
+        // Reply with the hint
         i.update({
             embeds: [hintEmbed],
             ephemeral: true,
-            components: [row(false), hintButton(true)],
+            components: [rowHint, hintButton(true)],
         });
-        hintUsed = true;
-        hintCollector.stop();
     });
 
     // Collect the answer
@@ -330,7 +324,12 @@ async function generateQuiz(interaction, profileData, type) {
         let color, title, description, image, footer;
         // Check if the answer is correct
         if (answer === question.correct_answer) {
-            let xp = quizCategories[type].xpFormula(question.difficulty);
+            // Get rewards
+            let [xp, donsGained] = rewards(type, answerTime, question);
+            if (donsGained) {
+                profileData.dons += donsGained;
+            } else donsGained = 0;
+            // Build embed
             color = '#80EA98';
             title = mustache.render(
                 translate(guild, 'PROBLEM_SELECT_CORRECT_TITLE'),
@@ -342,10 +341,12 @@ async function generateQuiz(interaction, profileData, type) {
                     xp,
                     meSpent,
                     user: interaction.user.username,
+                    dons: donsGained,
                 },
             );
             image = quizCategories[type].image.correct;
             footer = `${quizCategories[type].type} id: \`${question._id}\``;
+            // Apply rewards
             await applyXp(profileData, xp, i);
         } else {
             color = '#eb3434';
@@ -378,12 +379,11 @@ async function generateQuiz(interaction, profileData, type) {
             .setFooter(footer);
 
         // Reply
-        await i.reply({
+        i.reply({
             embeds: [collectorEmbed],
         });
         // End the interaction
         await profileData.save();
-        collector.stop();
     });
 
     collector.on('end', async (collected) => {
@@ -466,5 +466,14 @@ function shuffleAlternatives(number, question) {
     }
 
     return options;
+}
+
+function rewards(type, answerTime, question) {
+    let ans = [];
+    ans.push(quizCategories[type].xpFormula(question.difficulty));
+    if (quizCategories[type].type === 'Workout') {
+        ans.push(quizCategories[type].donsFormula(question.difficulty, answerTime));
+    }
+    return ans;
 }
 module.exports = { generateQuiz };

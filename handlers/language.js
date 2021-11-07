@@ -29,4 +29,8 @@ const translate = (guild, textKey) => {
 
     return lang.translations[textKey][selectedLanguage];
 };
-module.exports = { loadLanguages, setLanguage, translate };
+
+const getLanguage = (guild) => {
+    return guildLanguages[guild.id] || 'en';
+};
+module.exports = { loadLanguages, setLanguage, translate, getLanguage };

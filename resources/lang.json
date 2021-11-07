@@ -274,8 +274,8 @@
             "es": "Elige una alternativa."
         },
         "PROBLEM_SELECT_CORRECT_DESCRIPTION": {
-            "en": "Congratulations {{user}}! You won {{xp}} XP points\nYou spent {{meSpent}} ME points.",
-            "es": "¡Felicidades {{user}}, has ganado {{xp}} puntos de XP!\nHas gastado {{meSpent}} puntos de ME."
+            "en": "Congratulations {{user}}! You won {{xp}} XP points and Ɖ{{dons}}.\nYou spent {{meSpent}} ME points.",
+            "es": "¡Felicidades {{user}}, has ganado {{xp}} puntos de XP y Ɖ{{dons}}!\nHas gastado {{meSpent}} puntos de ME."
         },
         "PROBLEM_SELECT_CORRECT_TITLE": {
             "en": "{{user}} has answered correctly",

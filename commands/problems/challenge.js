@@ -3,7 +3,6 @@ const { SlashCommandBuilder } = require('@discordjs/builders'),
     { translate } = require('../../handlers/language'),
     { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js'),
     mustache = require('mustache'),
-    { generateQuiz } = require('../../util/problemFunctions'),
     wait = require('util').promisify(setTimeout);
 
 module.exports = {

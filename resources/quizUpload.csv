@@ -1,3 +1,13 @@
 subject,difficulty,question,correct_answer,incorrect_answers,image,type,category,lang
-Math,1.2,1+1,2,"3,4,5,6",,MC,Warmup,es
-History and Geography,2,Where is Chile?,South America,"Oceania, Europe, Asia, North America, Antartica",,MC,Warmup,en
+Math,0,¿Qué operación se ha representado?,"–2,5 – 1","–3,5 – 2,5:–3,5 + 2,5:–2,5 + 1:–3,5 – 1",https://i.imgur.com/5NHWSlc.png,MC,Warmup,es
+Math,0,¿What operation has been represented?,–2.5 – 1,–3.5 – 2.5:–3.5 + 2.5:–2.5 + 1:–3.5 – 1,https://i.imgur.com/5NHWSlc.png,MC,Warmup,en
+Math,0,¿Cuál es el resultado de... ,45 086,40 586:45 806:45 860:40 081,https://i.imgur.com/WbvyIBi.png,MC,Warmup,es
+Math,0,What is the result of...?,45 086,40 586:45 806:45 860:40 081,https://i.imgur.com/WbvyIBi.png,MC,Warmup,en
+Math,0,Considerando la siguiente operación:,1/5,1:3:1/3:5,https://i.imgur.com/qgd0Fy0.png,MC,Warmup,es
+Math,0,Considering the following operation:,1/5,1:3:1/3:5,https://i.imgur.com/5ROhOim.png,MC,Warmup,en
+Math,0,¿Cuál es la medida del ángulo r en la figura?,20°,10°:15°:45°:100,https://i.imgur.com/ulYYfj4.png,MC,Workout,es
+Math,0,What is the measure of the angle r in the figure?,20°,10°:15°:45°:100,https://i.imgur.com/ulYYfj4.png,MC,Workout,en
+Math,0,¿Cuál es el perímetro de la región pintada si el radio de la circunferencia de centro O mide 5 cm?,15π,5π:10π:20π:10,https://i.imgur.com/NdJPH5H.png,MC,Workout,es
+Math,0,What is the perimeter of the grayed region if the radious of the circumference with center O is 5 cm?,15π,5π:10π:20π:10,https://i.imgur.com/NdJPH5H.png,MC,Workout,en
+Math,0,¿Cuál es el nombre de un polígono de nueve lados?,Heptágono,Nonágono:Septagono:Sieteágono:Hexágono,,MC,Warmup,es
+Math,0,What is the name of a nine-sided polygon?,Heptagon,Nonogon:Sevegon:Hedagon:Hexagon,,MC,Warmup,en

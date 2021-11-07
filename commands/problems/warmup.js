@@ -21,8 +21,8 @@ module.exports = {
                 .addChoices(subjectsArr),
         ),
 
-    async execute(interaction, profileData) {
-        if (!generateQuiz(interaction, profileData, 0)){
+    async execute(interaction, profileData, client) {
+        if (!generateQuiz(interaction, profileData, 0, client)){
             console.log('Error generating quiz');
         };
     },

@@ -34,8 +34,10 @@ router.post('/', async (req, res) => {
         quiz['quizDifficulty'] = row['difficulty'];
         quiz['quizQuestion'] = row['question'];
         quiz['answerCorrect'] = row['correct_answer'];
-        quiz['answerIncorrect'] = row['incorrect_answers'].split(',');
-        quiz['quizImage'] = row['image'];
+        quiz['answerIncorrect'] = row['incorrect_answers'].split(':');
+        if (row['image']) {
+            quiz['quizImage'] = row['image'];
+        }
         quiz['quizType'] = row['type'];
         quiz['quizCategory'] = row['category'];
         quiz['quizLang'] = row['lang'];
