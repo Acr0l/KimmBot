@@ -19,6 +19,7 @@ module.exports = {
             return interaction.reply(translate(guild, 'PROBLEM_REQ_NOT_MET'));
         }
         const numberOfQuestions = Math.ceil((profileData.tier + 1) * 1.5) + 2,
+            secondsPerQuestion = (profileData.tier + 1) * 20 + 30,
             embedFields = translate(guild, 'CHALLENGE_START_FIELDS').split(':'),
             enEmbedFields = translate(
                 { id: 'en' },
@@ -44,14 +45,17 @@ module.exports = {
                 Questions: { number: numberOfQuestions },
                 Difficulty: {},
                 Time: {
-                    time: profileData.tier * 10,
-                    totalTime: profileData.tier * 10,
+                    time: forHumans(secondsPerQuestion, guild),
                 },
             },
             fieldTitleMap = new Map();
         for (let i = 0; i < embedFields.length; i++) {
             fieldTitleMap.set(enEmbedFields[i], embedFields[i]);
         }
+        propertiesObject.Time['totalTime'] = forHumans(
+            secondsPerQuestion * propertiesObject.Questions.number,
+            guild,
+        );
         const embed = new MessageEmbed()
             .setTitle(translate(guild, 'CHALLENGE_START_TITLE'))
             .setDescription(translate(guild, 'CHALLENGE_START_DESC'))
@@ -74,23 +78,23 @@ module.exports = {
             ephemeral: true,
         });
         await wait(10000);
-        await interaction.editReply({
+        interaction.editReply({
             content: mustache.render(translate(guild, 'CONFIRM')),
             embeds: [embed],
             components: row(false),
             ephemeral: true,
-        })
+        });
         const filter = (i) =>
             i.customId == 'challengeConfirm' || i.customId == 'challengeReject';
         const collector = interaction.channel.createMessageComponentCollector({
             filter,
             componentType: 'BUTTON',
             time: 50000,
+            max: 1,
         });
 
         collector.on('collect', (i) => {
-            if (i.customId == 'challengeReject')
-            {
+            if (i.customId == 'challengeReject') {
                 collector.stop('rejected');
                 return;
             }
@@ -99,17 +103,32 @@ module.exports = {
                 components: row(true),
                 ephemeral: true,
             });
-            let statsOrdered = profileData.stats.sort(
-                    (a, b) => a.tier - b.tier,
-                ),
-                finalOrder = [];
-            for (let i = 0; i < numberOfQuestions; i++) {
-                finalOrder.push(statsOrdered[i % statsOrdered.length]);
+            let orderByTier = new Map();
+            for (const subject of profileData.stats) {
+                if (orderByTier.has(subject.tier)) {
+                    let tmp = orderByTier.get(subject.tier);
+                    tmp.push(subject.subject);
+                    orderByTier.set(subject.tier, tmp);
+                } else {
+                    orderByTier.set(subject.tier, [subject.subject]);
+                }
             }
-            i.reply({ ephemeral: true, content: 'Fight me!' });
+            let subjectTest = [];
+            for (const [tier, subjects] of orderByTier) {
+                if (tier != profileData.tier && tier != profileData.tier + 1)
+                    continue;
+                for (const subject of subjects) {
+                    subjectTest.push(subject);
+                }
+            }
+            if (subjectTest.length < numberOfQuestions) {
+                subjectTest = subjectTest.concat(subjectTest);
+            }
+            const test = subjectTest.slice(0, numberOfQuestions);
+            i.reply({ ephemeral: true, content: test.join('\n') });
         });
 
-        collector.on('end', collected => {
+        collector.on('end', (collected) => {
             interaction.editReply({
                 contents: `Challenge ${collected}.`,
                 embeds: [embed],
@@ -118,3 +137,39 @@ module.exports = {
         });
     },
 };
+
+/**
+ * Translates seconds into human readable format of seconds, minutes, hours, days, and years
+ *
+ * @param  {number} seconds The number of seconds to be processed
+ * @return {string}         The phrase describing the amount of time
+ */
+function forHumans(seconds, trGuild) {
+    let levels = [
+        [
+            Math.floor(((seconds % 31536000) % 86400) / 3600),
+            translate(trGuild, 'hours'),
+        ],
+        [
+            Math.floor((((seconds % 31536000) % 86400) % 3600) / 60),
+            translate(trGuild, 'minutes'),
+        ],
+        [
+            (((seconds % 31536000) % 86400) % 3600) % 60,
+            translate(trGuild, 'seconds'),
+        ],
+    ];
+    let returntext = '';
+
+    for (let i = 0, max = levels.length; i < max; i++) {
+        if (levels[i][0] === 0) continue;
+        returntext +=
+            ' ' +
+            levels[i][0] +
+            ' ' +
+            (levels[i][0] === 1
+                ? levels[i][1].substr(0, levels[i][1].length - 1)
+                : levels[i][1]);
+    }
+    return returntext.trim();
+}

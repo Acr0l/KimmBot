@@ -215,7 +215,7 @@ router.get('/', async (req, res) => {
         // Create item
         if (obj.item) {
             delete obj.item;
-            if (await createItem(obj)) {
+            if (createItem(obj)) {
                 res.redirect('/');
             } else {
                 res.send('Error creating item');
@@ -267,6 +267,11 @@ router.get('/create', (req, res) => {
             obj['itemUnique'] = true;
         } else {
             obj['itemUnique'] = false;
+        }
+    } else if (obj.quiz) {
+        obj['answerIncorrect'] = obj['answerIncorrect'].split(':');
+        if (!obj['quizImage']) {
+            delete obj['quizImage'];
         }
     }
     console.log(obj);

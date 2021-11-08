@@ -21,7 +21,7 @@
             "en": "Questions:Time:Difficulty",
             "es": "Preguntas:Tiempo:Dificultad"
         },
-        "CHALLENGE_START_F_QUESTIONS": {
+        "CHALLENGE_START_F_QUESTIONS": {    
             "en": "You will be facing {{number}} questions, ranging from your most accomplished subject to the subjects you might have neglected...",
             "es": "Te enfrentarás a {{number}} preguntas, que van desde tus materias más desarrolladas hasta las que has dejado de lado..."
         },
@@ -30,8 +30,8 @@
             "es": "¿Es difícil? Bueno, te enfrentarás a dificultades en el camino, pero debes persistir y obtener 80% de las preguntas correctas (Puntajes perfectos serán recompensados)."
         },
         "CHALLENGE_START_F_TIME": {
-            "en": "You have {{time}} seconds to answer each question, for a total of {{totalTime}} to complete the test.",
-            "es": "Tienes {{time}} segundos para responder a cada pregunta, para un total de {{totalTime}} para completar el test."
+            "en": "You have {{time}} to answer each question, for a total of {{totalTime}} to complete the test.",
+            "es": "Tienes {{time}} para responder a cada pregunta, para un total de {{totalTime}} para completar el test."
         },
         "CHALLENGE_START_TITLE": {
             "en": "Challenging yourself...",
@@ -448,6 +448,22 @@
         "BALANCE_DESCRIPTION" : {
             "en" : "💸 Your current balance is **Ɖ{{dons}}**",
             "es" : "💸 Tu saldo actual es de **Ɖ{{dons}}**"
+        },
+        "days": {
+            "en": "days",
+            "es": "días"
+        },
+        "hours": {
+            "en": "hours",
+            "es": "horas"
+        },
+        "minutes": {
+            "en": "minutes",
+            "es": "minutos"
+        },
+        "seconds": {
+            "en": "seconds",
+            "es": "segundos"
         }
     }
 }

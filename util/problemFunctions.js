@@ -116,11 +116,10 @@ async function generateQuiz(interaction, profileData, type, client) {
     const subject = interaction.options.getString('subject');
 
     // Available subjects
-    if (subject !== 'Math') {
+    if (subject != 'Math' && subject != 'Science' && subject != 'History and Geography' && subject != 'Computer Science') {
         interaction.reply(translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'));
         return false;
     }
-
     // Random element is stored in "question"
     // match is to filter possible questions, sample is to pick a random one.
     // [] around a variable means it is the first element of the array.
@@ -233,7 +232,7 @@ async function generateQuiz(interaction, profileData, type, client) {
             max: 2,
         }),
         hintCollector = interaction.channel.createMessageComponentCollector({
-            hintFilter,
+            filter: hintFilter,
             componentType: 'BUTTON',
             time: (quizCategories[type].time - 3) * 1000,
             max: 1,

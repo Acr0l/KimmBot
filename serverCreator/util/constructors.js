@@ -18,12 +18,11 @@ const itemModel = require('../../models/itemSchema'),
  * @returns { Boolean } - Returns true if the item was created, false if not.
  */
 const createItem = async (obj) => {
-    try {
-        itemVerifier(obj);
-    } catch (e) {
+    itemVerifier(obj).catch((e) => {
         console.log(e);
-        return false;
-    }
+        exit(1);
+    });
+
     try {
         const item = await itemModel.create({
             name: obj.itemName,

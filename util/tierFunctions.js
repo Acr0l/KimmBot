@@ -2,6 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const tierRequirements = {
         0: {},
         1: {
+            0: 3,
             1: 1,
         },
         2: {
@@ -73,7 +74,7 @@ const readyToAdvance = (user) => {
         }
     });
     for (key in tierRequirements[user.tier + 1]) {
-        if (tierMap[key] < tierRequirements[user.tier + 1][key]) {
+        if (tierMap[key] < tierRequirements[user.tier + 1][key] || !tierMap[key]) {
             return false;
         }
     }
@@ -94,7 +95,7 @@ const readyToAdvanceStat = (user, statName) => {
         return false;
     }
     let tier = statTierRequirements[stat.tier + 1];
-    if (stat.correct >= tier.correct && stat.accuracy >= tier.accuracy) {
+    if (stat.correct >= tier.correct && stat.accuracy >= tier.accuracy && user.tier + 1 > stat.tier) {
         return true;
     }
     return false;
