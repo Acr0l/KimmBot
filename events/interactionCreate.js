@@ -47,7 +47,6 @@ client.on('interactionCreate', async (interaction) => {
                 profileData.currentME,
             );
             profileData.mentalEnergy.lastRecovery = Date.now();
-            await profileData.save();
         }
 
         // Effect Handling
@@ -90,13 +89,13 @@ client.on('interactionCreate', async (interaction) => {
             }
 
             profileData.cooldowns.set(interaction.commandName, currentTime);
-            await profileData.save();
+            
         }
     }
 
     const command = client.commands.get(interaction.commandName);
 
-    if (!command) return;
+    if (!command) return await profileData.save();
 
     try {
         await command.execute(interaction, profileData, client);

@@ -261,6 +261,10 @@
             "en": "Use hint",
             "es": "Usar pista"
         },
+        "PROBLEM_ONGOING": {
+            "en": "You already have an ongoing quiz.",
+            "es": "Ya tienes un quiz en curso."
+        },
         "PROBLEM_REQ_NOT_MET": {
             "en": "You don't have the required items or tier.",
             "es": "No tienes los objetos o rango requeridos."

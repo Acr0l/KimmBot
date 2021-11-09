@@ -180,7 +180,7 @@ const applyStatChanges = async (user, stat, interaction) => {
             color: '#39A2A5',
         });
     }
-    await user.save();
+    return user;
 };
 
 const applyTierChanges = async (user, interaction) => {

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders'),
     { readyToAdvance } = require('../../util/tierFunctions'),
-    { translate } = require('../../handlers/language'),
+    { translate, getLanguage } = require('../../handlers/language'),
+    quizDatabase = require('../../models/quizSchema'),
     { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js'),
     mustache = require('mustache'),
     wait = require('util').promisify(setTimeout);
@@ -93,7 +94,7 @@ module.exports = {
             max: 1,
         });
 
-        collector.on('collect', (i) => {
+        collector.on('collect', async (i) => {
             if (i.customId == 'challengeReject') {
                 collector.stop('rejected');
                 return;
@@ -125,7 +126,43 @@ module.exports = {
                 subjectTest = subjectTest.concat(subjectTest);
             }
             const test = subjectTest.slice(0, numberOfQuestions);
+            let questions = test.map(async (subject) => {
+                return ([subject] = await quizDatabase.aggregate([
+                    {
+                        $match: {
+                            $and: [
+                                {
+                                    subject: subject,
+                                },
+                                {
+
+                                },
+                                {
+                                    difficulty: profileData.tier,
+                                },
+                                {
+                                    lang: getLanguage(guild),
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $sample: {
+                            size: 1,
+                        },
+                    },
+                ]));
+            });
+            // for (const question of questions) {
+            //     await wait(secondsPerQuestion * 1000);
+            //     interaction.editReply({
+            //         content: 'In progress...',
+            //         components: row(true),
+            //         ephemeral: true,
+            //     });
+            // }
             i.reply({ ephemeral: true, content: test.join('\n') });
+            collector.stop();
         });
 
         collector.on('end', (collected) => {
