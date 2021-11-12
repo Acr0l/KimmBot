@@ -21,7 +21,7 @@
             "en": "Questions:Time:Difficulty",
             "es": "Preguntas:Tiempo:Dificultad"
         },
-        "CHALLENGE_START_F_QUESTIONS": {    
+        "CHALLENGE_START_F_QUESTIONS": {
             "en": "You will be facing {{number}} questions, ranging from your most accomplished subject to the subjects you might have neglected...",
             "es": "Te enfrentarás a {{number}} preguntas, que van desde tus materias más desarrolladas hasta las que has dejado de lado..."
         },
@@ -345,7 +345,7 @@
             "en": "Buy items and upgrades to improve your skills.",
             "es": "Compra objetos y mejoras para perfeccionar tus habilidades."
         },
-        "SHOP_EQUIPMENT_TYPE":{
+        "SHOP_EQUIPMENT_TYPE": {
             "en": "Items intended to be equipped.",
             "es": "Objetos que se pueden equipar."
         },
@@ -437,6 +437,10 @@
             "en": "Dont't worry {{user}}, you already have a Kimm account!",
             "es": "¡No te preocupes {{user}}, ya tienes una cuenta en Kimm!"
         },
+        "USE_MAYBE_EQUIP": {
+            "en": "You can't use this item but you can equip it.",
+            "es": "No puedes usar este objeto pero puedes equiparlo."
+        },
         "WAIT_FOR_REPLY": {
             "en": "Fetching data...",
             "es": "Obteniendo datos..."
@@ -445,13 +449,13 @@
             "en": "Yes",
             "es": "Sí"
         },
-        "BALANCE_TITLE" : {
-            "en" : "{{user}}'s balance",
-            "es" : "Saldo de {{user}}"
+        "BALANCE_TITLE": {
+            "en": "{{user}}'s balance",
+            "es": "Saldo de {{user}}"
         },
-        "BALANCE_DESCRIPTION" : {
-            "en" : "💸 Your current balance is **Ɖ{{dons}}**",
-            "es" : "💸 Tu saldo actual es de **Ɖ{{dons}}**"
+        "BALANCE_DESCRIPTION": {
+            "en": "💸 Your current balance is **Ɖ{{dons}}**",
+            "es": "💸 Tu saldo actual es de **Ɖ{{dons}}**"
         },
         "days": {
             "en": "days",

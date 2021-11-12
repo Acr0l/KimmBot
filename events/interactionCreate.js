@@ -80,8 +80,9 @@ client.on('interactionCreate', async (interaction) => {
             if (currentTime < timeStamp + cmdCooldown && !justRegistered) {
                 await interaction.reply(
                     mustache.render(translate(guild, 'COOLDOWN'), {
-                        time: secondsToDhms(
+                        time: forHumans(
                             (cmdCooldown - (currentTime - timeStamp)) / 1000,
+                            interaction.guild,
                         ),
                     }),
                 );
@@ -89,7 +90,6 @@ client.on('interactionCreate', async (interaction) => {
             }
 
             profileData.cooldowns.set(interaction.commandName, currentTime);
-            
         }
     }
 
@@ -115,4 +115,34 @@ function secondsToDhms(seconds) {
     let mDisplay = m > 0 ? m + (m == 1 ? ' minute, ' : ' minutes, ') : '';
     let sDisplay = s > 0 ? s + (s == 1 ? ' second' : ' seconds') : '';
     return dDisplay + hDisplay + mDisplay + sDisplay;
+}
+
+function forHumans(seconds, trGuild) {
+    let levels = [
+        [
+            Math.floor(((seconds % 31536000) % 86400) / 3600),
+            translate(trGuild, 'hours'),
+        ],
+        [
+            Math.floor((((seconds % 31536000) % 86400) % 3600) / 60),
+            translate(trGuild, 'minutes'),
+        ],
+        [
+            (((seconds % 31536000) % 86400) % 3600) % 60,
+            translate(trGuild, 'seconds'),
+        ],
+    ];
+    let returntext = '';
+
+    for (let i = 0, max = levels.length; i < max; i++) {
+        if (levels[i][0] === 0) continue;
+        returntext +=
+            ' ' +
+            levels[i][0] +
+            ' ' +
+            (levels[i][0] === 1
+                ? levels[i][1].substr(0, levels[i][1].length - 1)
+                : levels[i][1]);
+    }
+    return returntext.trim();
 }

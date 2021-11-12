@@ -10,7 +10,11 @@ const { MessageEmbed } = require('discord.js'),
     quizDatabase = require('../models/quizSchema'),
     subjects = require('./subjects.json'),
     subjectsArr = [],
-    { setActivity, deleteActivity, hasActivity } = require('../handlers/activity'),
+    {
+        setActivity,
+        deleteActivity,
+        hasActivity,
+    } = require('../handlers/activity'),
     mustache = require('mustache'),
     { applyStatChanges } = require('./tierFunctions'),
     { translate, getLanguage } = require('../handlers/language');
@@ -26,13 +30,16 @@ const quizCategories = [
         time: 60,
         meConsumption: 2,
         /**
-         * 
-         * @param { Number } answerTime 
-         * @param { Number } difficulty 
+         *
+         * @param { Number } answerTime
+         * @param { Number } difficulty
          * @returns { Number }
          */
         meFormula: function (answerTime, difficulty) {
-            return Math.max(Math.ceil(Math.log(answerTime)) * (difficulty + 2), 4);
+            return Math.max(
+                Math.ceil(Math.log(answerTime)) * (difficulty + 2),
+                4,
+            );
         },
         xpFormula: function (difficulty) {
             return (
@@ -109,9 +116,10 @@ const quizCategories = [
  */
 async function generateQuiz(interaction, profileData, type, client) {
     // type = 0 -> warmup - 1 -> workout
-    await interaction.deferReply({ephemeral: true});
+    await interaction.deferReply({ ephemeral: true });
     const { guild } = interaction;
-    if (hasActivity(interaction.user.id)) return await interaction.editReply(translate(guild, 'PROBLEM_ONGOING'))
+    if (hasActivity(interaction.user.id))
+        return await interaction.editReply(translate(guild, 'PROBLEM_ONGOING'));
     // Check if the user has enough me
     if (profileData.mentalEnergy.me <= 10) {
         interaction.editReply(translate(guild, 'PROBLEM_REST'));
@@ -128,7 +136,9 @@ async function generateQuiz(interaction, profileData, type, client) {
         subject != 'History and Geography' &&
         subject != 'Computer Science'
     ) {
-        interaction.editReply(translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'));
+        interaction.editReply(
+            translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'),
+        );
         return false;
     }
     // Random element is stored in "question"

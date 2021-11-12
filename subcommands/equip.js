@@ -1,7 +1,6 @@
 const itemModel = require('../models/itemSchema'),
     { SlashCommandBuilder } = require('@discordjs/builders'),
     { getItemList } = require('../handlers/itemInventory'),
-    { checkItemInfo } = require('../util/levelFunctions'),
     { translate } = require('../handlers/language'),
     mustache = require('mustache');
 
@@ -19,7 +18,15 @@ module.exports = {
             regex = /equip/;
 
         try {
-            let currentItem = checkItemInfo(getItemList(), itemAction);
+            let itemList = getItemList(),
+                currentItem =
+                    itemList[
+                        Object.keys(itemList).filter(
+                            (item) =>
+                                itemList[item].name.toLowerCase() ===
+                                itemAction.toLowerCase(),
+                        )
+                    ];
             let owned = profileData.inventory.findIndex(
                 (item) => item._id === currentItem.id,
             );
@@ -33,7 +40,11 @@ module.exports = {
                 profileData.equipment.push(currentItem.id);
                 profileData.inventory.splice(owned, 1);
                 await profileData.save();
-                await interaction.reply(mustache.render(translate(guild, 'EQUIP_SUCCESS'), { item: currentItem.name }));
+                await interaction.reply(
+                    mustache.render(translate(guild, 'EQUIP_SUCCESS'), {
+                        item: currentItem.name,
+                    }),
+                );
             } else {
                 await interaction.reply(translate(guild, 'INVALID_ITEM'));
             }

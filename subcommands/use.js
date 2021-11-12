@@ -34,7 +34,9 @@ module.exports = {
             (item) => item.id == currentItem.id,
         );
         if (ownedIndex === -1) {
-            interaction.reply(translate(guild, 'UNOWNED_ITEM'));
+            return interaction.reply(translate(guild, 'UNOWNED_ITEM'));
+        } else if (currentItem.type === 0) {
+            return interaction.reply(translate(guild, 'USE_MAYBE_EQUIP'));
         } else if (
             currentItem &&
             amount <= profileData.inventory[ownedIndex].quantity &&
@@ -52,14 +54,14 @@ module.exports = {
             if (currentItem.type === 2) return;
             const itemUse = require(`../items/${currentItem.path}`);
             if (itemUse)
-                await itemUse.use(
+                return await itemUse.use(
                     interaction,
                     profileData,
                     currentItem,
                     amount,
                 );
         } else {
-            interaction.reply(translate(guild, 'INVALID_ITEM'));
+            return interaction.reply(translate(guild, 'INVALID_ITEM'));
         }
     },
 };
