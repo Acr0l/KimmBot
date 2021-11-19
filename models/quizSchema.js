@@ -10,7 +10,7 @@ const quizSchema = new mongoose.Schema({
     // The answer.
     correct_answer: { type: String, required: true },
     // The incorrect answers.
-    incorrect_answers: { type: [ String ], required: true },
+    incorrect_answers: { type: [ String ], required: true, default: [] },
     // Complementary information (URL)
     image: { type: String, required: false },
     // Type of the question: multiple choice, true/false, etc.
