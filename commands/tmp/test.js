@@ -63,14 +63,13 @@ module.exports = {
                 scoreWithEmojis[i % scoreWithEmojis.length].push('🔳');
             }
         }
-        let [rowIndex, columnIndex] = getByIndex(
-            scoreWithEmojis,
-            counter,
-        );
+        let [rowIndex, columnIndex] = getByIndex(scoreWithEmojis, counter);
         scoreWithEmojis[rowIndex][columnIndex] = '⚪';
-        interaction.editReply({
-            content: scoreWithEmojis.map((e) => e.join(' ')).join('\n'),
+        await interaction.editReply({
             embeds: [embed],
+        });
+        interaction.followUp({
+            content: scoreWithEmojis.map((e) => e.join(' ')).join('\n'),
             components: [row],
         });
         const collector = interaction.channel.createMessageComponentCollector({
@@ -80,26 +79,32 @@ module.exports = {
         });
         collector.on('collect', async (i) => {
             const [answer] = i.values;
-            [rowIndex, columnIndex] = getByIndex(
-                scoreWithEmojis,
-                counter,
-            );
+            [rowIndex, columnIndex] = getByIndex(scoreWithEmojis, counter);
             if (answer === question.correct_answer[counter]) {
-                scoreWithEmojis[rowIndex][columnIndex] = '🟢';
+                scoreWithEmojis[rowIndex][columnIndex] =
+                    scoreWithEmojis[rowIndex][columnIndex] === '⚪'
+                        ? '🟢'
+                        : '🟡';
             } else {
+                if (scoreWithEmojis[rowIndex][columnIndex] === '⚪') {
+                    scoreWithEmojis[rowIndex][columnIndex] = '🟡';
+                    await i.update({
+                        content: scoreWithEmojis
+                            .map((e) => e.join(' '))
+                            .join('\n'),
+                        components: [row],
+                    });
+                    return;
+                }
                 scoreWithEmojis[rowIndex][columnIndex] = '🔴';
             }
             counter++;
             if (counter !== question.correct_answer.length) {
-                [rowIndex, columnIndex] = getByIndex(
-                    scoreWithEmojis,
-                    counter,
-                );
+                [rowIndex, columnIndex] = getByIndex(scoreWithEmojis, counter);
                 scoreWithEmojis[rowIndex][columnIndex] = '⚪';
-            }            
+            }
             await i.update({
                 content: scoreWithEmojis.map((e) => e.join(' ')).join('\n'),
-                embeds: [embed],
                 components: [row],
             });
             if (counter == question.correct_answer.length) {
@@ -107,13 +112,21 @@ module.exports = {
             }
         });
         collector.on('end', async (collected, reason) => {
-            if (reason === 'completed') {
-                const score = scoreWithEmojis.filter((i) => i.filter(e => e === '🟢') != 0).length;
+            if (reason === 'completed' || collected.size !== 0) {
+                const score = numOfOccurrences(scoreWithEmojis, '🟢'),
+                    halfPoint = numOfOccurrences(scoreWithEmojis, '🟡');
                 await interaction.editReply({
                     components: [],
                 });
                 await interaction.followUp({
-                    content: `${score}/${question.correct_answer.length}`,
+                    content: `${score + halfPoint / 2}/${
+                        question.correct_answer.length
+                    }`,
+                });
+            } else {
+                interaction.editReply({
+                    components: [],
+                    content: 'Tiempo agotado',
                 });
             }
         });
@@ -126,4 +139,17 @@ const getByIndex = (array, index) => {
         index -= array[i].length;
     }
     return [0, 0];
+};
+
+const numOfOccurrences = (array, value) => {
+    let counter = 0;
+    for (let i = 0; i < array.length; i++) {
+        if (Array.isArray(array[i])) {
+            counter += numOfOccurrences(array[i], value);
+        } else {
+            if (array[i] === value) counter++;
+        }
+    }
+
+    return counter;
 };

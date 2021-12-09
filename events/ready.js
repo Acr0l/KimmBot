@@ -1,9 +1,10 @@
 const client = require('../index'),
     { loadLanguages } = require('../handlers/language'),
     { loadDifficulties } = require('../handlers/difficulty'),
-    { loadItems } = require('../handlers/itemInventory');
+    { loadItems } = require('../handlers/itemInventory'),
+    { perms } = require('../util/permissions');
 
-client.once('ready', () => {
+client.once('ready', async () => {
     console.log(`Ready! Logged in as ${client.user.tag}`);
 
     // Load saved languages
@@ -14,5 +15,5 @@ client.once('ready', () => {
     loadItems();
 
     client.user.setActivity('anime (educational purposes).', { type: 'WATCHING' });
-    client.user.setStatus('idle');
+
 });

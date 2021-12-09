@@ -51,12 +51,12 @@ module.exports = {
 
         const collector = interaction.channel.createMessageComponentCollector({
             filter,
-            componentType: MessageButton,
+            componentType: 'BUTTON',
             time: 20000,
         });
 
         collector.on("collect", async (i) => {
-            await i.reply("Starting tutorial...");
+            await i.update("WIP");
         });
 
         collector.on("end", async () => {
