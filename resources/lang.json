@@ -434,7 +434,7 @@
             "es": "No tienes ese objeto."
         },
         "UNSUCCESSFUL_REGISTER": {
-            "en": "Dont't worry {{user}}, you already have a Kimm account!",
+            "en": "Don't worry {{user}}, you already have a Kimm account!",
             "es": "¡No te preocupes {{user}}, ya tienes una cuenta en Kimm!"
         },
         "USE_MAYBE_EQUIP": {
