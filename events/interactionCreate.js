@@ -1,121 +1,52 @@
-const client = require('../index'),
-    profileDatabase = require('../models/profileSchema'),
+// const client = require('../index'),
+const profileDatabase = require('../models/profileSchema'),
     { translate } = require('../handlers/language'),
     mustache = require('mustache'),
-    RECOVERYTIME = 5;
+    RECOVERYTIME = 5,
+    logger = require('../logger');
 
-client.on('interactionCreate', async (interaction) => {
-    // Get guild.
-    const { guild } = interaction;
-    // Get user from db.
-    let profileData;
-    try {
-        profileData = await profileDatabase.findOne({
-            userID: interaction.user.id,
-        });
-        if (!profileData && interaction.commandName !== 'register') {
-            await interaction.reply({
-                content: translate(guild, 'CREATE_PROFILE'),
-                ephemeral: false,
+module.exports = {
+    name: 'interactionCreate',
+    once: false,
+    async execute(interaction) {
+        // Get guild.
+        const { guild } = interaction;
+        // Get user from db.
+        let profileData;
+        try {
+            profileData = await getUser({
+                interaction,
+                profileDatabase,
+                guild,
             });
-            return;
-        }
-    } catch (err) {
-        console.log(err);
-    }
-
-    // Command Handling
-
-    if (!interaction.isCommand()) return;
-
-    if (interaction.commandName !== 'register' && profileData) {
-        const currentTime = Date.now();
-
-        // Mental Energy Handling
-        if (
-            profileData.mentalEnergy.lastRecovery <
-            currentTime - RECOVERYTIME * 1000 * 60
-        ) {
-            let recoveryAmount = Math.floor(
-                (currentTime -
-                    profileData.mentalEnergy.lastRecovery.getTime()) /
-                    (RECOVERYTIME * 1000 * 60),
-            );
-            profileData.mentalEnergy.me = Math.min(
-                profileData.mentalEnergy.me +
-                    profileData.currentMR * recoveryAmount,
-                profileData.currentME,
-            );
-            profileData.mentalEnergy.lastRecovery = Date.now();
+        } catch (err) {
+            logger.error(err);
         }
 
-        // Effect Handling
-        if (profileData.effects.length > 0) {
-            for (let i = 0; i < profileData.effects.length; i++) {
-                if (profileData.effects[i].durationLeft <= 0) {
-                    profileData.effects.splice(i, 1);
-                    i--;
-                }
-            }
+        // Command Handling
+
+        if (!interaction.isCommand()) return;
+
+        if (interaction.commandName !== 'register' && profileData) {
+            profileData = await updateUserStatus({
+                profileData,
+                interaction,
+                guild,
+            });
         }
 
-        // Cooldown Handling
-        if (client.commands.get(interaction.commandName).cooldown) {
-            let justRegistered = false;
-            if (
-                !profileData.cooldowns.has(interaction.commandName) &&
-                client.commands.get(interaction.commandName).cooldown !== 0
-            ) {
-                justRegistered = true;
-                profileData.cooldowns.set(interaction.commandName, Date.now());
-            }
+        const command = interaction.client.commands.get(interaction.commandName);
 
-            // Cooldown Check
+        if (!command) return await profileData.save();
 
-            const timeStamp = profileData.cooldowns
-                .get(interaction.commandName)
-                .getTime();
-            const cmdCooldown =
-                client.commands.get(interaction.commandName).cooldown * 1000;
-            if (currentTime < timeStamp + cmdCooldown && !justRegistered) {
-                await interaction.reply(
-                    mustache.render(translate(guild, 'COOLDOWN'), {
-                        time: forHumans(
-                            (cmdCooldown - (currentTime - timeStamp)) / 1000,
-                            interaction.guild,
-                        ),
-                    }),
-                );
-                return;
-            }
-
-            profileData.cooldowns.set(interaction.commandName, currentTime);
+        try {
+            await command.execute(interaction, profileData, interaction.client);
+        } catch (error) {
+            logger.error(error);
         }
-    }
-
-    const command = client.commands.get(interaction.commandName);
-
-    if (!command) return await profileData.save();
-
-    try {
-        await command.execute(interaction, profileData, client);
-    } catch (error) {
-        console.error(error);
-    }
-});
-function secondsToDhms(seconds) {
-    seconds = Number(seconds);
-    let d = Math.floor(seconds / (3600 * 24));
-    let h = Math.floor((seconds % (3600 * 24)) / 3600);
-    let m = Math.floor((seconds % 3600) / 60);
-    let s = Math.floor(seconds % 60);
-
-    let dDisplay = d > 0 ? d + (d == 1 ? ' day, ' : ' days, ') : '';
-    let hDisplay = h > 0 ? h + (h == 1 ? ' hour, ' : ' hours, ') : '';
-    let mDisplay = m > 0 ? m + (m == 1 ? ' minute, ' : ' minutes, ') : '';
-    let sDisplay = s > 0 ? s + (s == 1 ? ' second' : ' seconds') : '';
-    return dDisplay + hDisplay + mDisplay + sDisplay;
-}
+        // });
+    },
+};
 
 function forHumans(seconds, trGuild) {
     let levels = [
@@ -145,4 +76,82 @@ function forHumans(seconds, trGuild) {
                 : levels[i][1]);
     }
     return returntext.trim();
+}
+
+async function getUser({ interaction, profileDatabase, guild }) {
+    const user = await profileDatabase.findOne({
+        userID: interaction.user.id,
+    });
+    if (!user && interaction.commandName !== 'register') {
+        await interaction.reply({
+            content: translate(guild, 'CREATE_PROFILE'),
+            ephemeral: false,
+        });
+        return true;
+    }
+    return user;
+}
+
+async function updateUserStatus({ profileData, interaction, guild}) {
+    const currentTime = Date.now();
+    // Mental Energy Handling)
+    if (
+        profileData.mentalEnergy.lastRecovery <
+        currentTime - RECOVERYTIME * 1000 * 60
+    ) {
+        let recoveryAmount = Math.floor(
+            (currentTime - profileData.mentalEnergy.lastRecovery.getTime()) /
+                (RECOVERYTIME * 1000 * 60),
+        );
+        profileData.mentalEnergy.me = Math.min(
+            profileData.mentalEnergy.me +
+                profileData.currentMR * recoveryAmount,
+            profileData.currentME,
+        );
+        profileData.mentalEnergy.lastRecovery = Date.now();
+    }
+
+    // Effect Handling
+    if (profileData.effects.length > 0) {
+        for (let i = 0; i < profileData.effects.length; i++) {
+            if (profileData.effects[i].durationLeft <= 0) {
+                profileData.effects.splice(i, 1);
+                i--;
+            }
+        }
+    }
+
+    // Cooldown Handling
+    if (interaction.client.commands.get(interaction.commandName).cooldown > 0) {
+        let justRegistered = false;
+        if (
+            !profileData.cooldowns.has(interaction.commandName) &&
+            interaction.client.commands.get(interaction.commandName).cooldown !== 0
+        ) {
+            justRegistered = true;
+            profileData.cooldowns.set(interaction.commandName, Date.now());
+        }
+
+        // Cooldown Check
+
+        const timeStamp = profileData.cooldowns
+            .get(interaction.commandName)
+            .getTime();
+        const cmdCooldown =
+            interaction.client.commands.get(interaction.commandName).cooldown * 1000;
+        if (currentTime < timeStamp + cmdCooldown && !justRegistered) {
+            await interaction.reply(
+                mustache.render(translate(guild, 'COOLDOWN'), {
+                    time: forHumans(
+                        (cmdCooldown - (currentTime - timeStamp)) / 1000,
+                        interaction.guild,
+                    ),
+                }),
+            );
+            return profileData;
+        }
+
+        profileData.cooldowns.set(interaction.commandName, currentTime);
+        return profileData;
+    }
 }

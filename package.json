@@ -3,7 +3,11 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node index.js",
+        "devStart": "nodemon index.js --ignore ./log.json | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
+        "precommit": "npm run lint && npm run test",
+        "lint": "eslint --ext .js"
     },
     "keywords": [
         "discord",
@@ -34,5 +38,11 @@
         "singleQuote": true,
         "trailingComma": "all",
         "bracketSpacing": true
+    },
+    "devDependencies": {
+        "eslint": "^8.7.0",
+        "nodemon": "^2.0.15",
+        "pino": "^7.6.3",
+        "pino-pretty": "^7.3.0"
     }
 }
