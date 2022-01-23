@@ -8,8 +8,6 @@ const { MessageEmbed } = require('discord.js'),
     } = require('discord.js'),
     { applyXp } = require('./levelFunctions'),
     quizDatabase = require('../models/quizSchema'),
-    subjects = require('./subjects.json'),
-    subjectsArr = [],
     {
         setActivity,
         deleteActivity,
@@ -17,291 +15,116 @@ const { MessageEmbed } = require('discord.js'),
     } = require('../handlers/activity'),
     mustache = require('mustache'),
     { applyStatChanges } = require('./tierFunctions'),
-    { translate, getLanguage } = require('../handlers/language');
+    { translate, getLanguage } = require('../handlers/language'),
+    quizCategories = require('../util/quizCategories');
 
-for (const subject of Object.keys(subjects)) {
-    subjectsArr.push([subject, subject]);
-}
 // Constants
-let N = 5;
-const quizCategories = [
-    {
-        type: 'Warmup',
-        time: 60,
-        meConsumption: 2,
-        /**
-         *
-         * @param { Number } answerTime
-         * @param { Number } difficulty
-         * @returns { Number }
-         */
-        meFormula: function (answerTime, difficulty) {
-            return Math.max(
-                Math.ceil(Math.log(answerTime)) * (difficulty + 2),
-                4,
-            );
-        },
-        xpFormula: function (difficulty) {
-            return (
-                Math.floor(Math.random() * (difficulty * 2)) +
-                3 * difficulty +
-                3
-            );
-        },
-        image: {
-            correct:
-                'https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/e8ba734de1b8121.png',
-            incorrect:
-                'https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/d709a38e2bfc90d.png',
-        },
-    },
-    {
-        type: 'Workout',
-        time: 180,
-        meConsumption: 3,
-        meFormula: function (answerTime, difficulty) {
-            return Math.ceil(answerTime / 2 + 10) * (difficulty + 2);
-        },
-        xpFormula: function (difficulty) {
-            return (
-                Math.floor(Math.random() * (difficulty * difficulty * 5 + 15)) +
-                10 * difficulty +
-                5
-            );
-        },
-        donsFormula: function (difficulty, answerTime) {
-            return Math.min(
-                Math.ceil(100 / (3 * answerTime)) * (difficulty + 1),
-                difficulty * 15,
-            );
-        },
-        image: {
-            correct:
-                'https://cdn.pixabay.com/photo/2016/03/31/14/37/check-mark-1292787__340.png',
-            incorrect:
-                'https://cdn.pixabay.com/photo/2012/04/12/20/12/x-30465_960_720.png',
-        },
-    },
-    {
-        type: 'Challenge',
-        time: 300,
-        meConsumption: 4,
-        meFormula: function (answerTime) {
-            return 0;
-        },
-        xpFormula: function (difficulty) {
-            return (
-                Math.floor(
-                    getRandomArbitrary(0.8, 1) *
-                        (Math.pow(difficulty, 3) * 7 + 15),
-                ) +
-                100 * difficulty +
-                100
-            );
-        },
-        image: {
-            correct: 'https://i.imgur.com/0L5zVXQ.png',
-            incorrect:
-                'https://www.icegif.com/wp-content/uploads/sad-anime-icegif.gif', // CHANGE THIS
-        },
-    },
-];
+const N = 5;
+
 /**
  * Function to get the quiz questions
- * @param { Object } interaction - The interaction object
- * @param { Object } profileData - The user's profile data
+ * @param { Interaction } interaction - The interaction object
+ * @param { quizDatabase } profileData - The user's profile data
  * @param { Number } type - The type of quiz to generate.
- * @param {*} client - The client object
- * @returns { Boolean } - Whether or not the quiz was generated successfully.
+ * @param { Client } client - The client object
+ * @returns { Boolean } - Whether or not the quiz was handled successfully.
  */
 async function generateQuiz(interaction, profileData, type, client) {
-    // type = 0 -> warmup - 1 -> workout
+    // Defer response
     await interaction.deferReply({ ephemeral: true });
     const { guild } = interaction;
-    if (hasActivity(interaction.user.id))
-        return await interaction.editReply(translate(guild, 'PROBLEM_ONGOING'));
-    // Check if the user has enough me
-    if (profileData.mentalEnergy.me <= 10) {
-        interaction.editReply(translate(guild, 'PROBLEM_REST'));
-        return false;
-    }
 
-    // Get the subject
+    // Check if the user can take the quiz
+    if (!(await checkUser({ interaction, profileData, guild }))) return true;
+
+    // Variables
     const subject = interaction.options.getString('subject');
+    // REMOVE: Not needed, but keeping for now.
+    let answerTime = 0;
 
-    // Available subjects
-    if (
-        subject != 'Math' &&
-        subject != 'Science' &&
-        subject != 'History and Geography' &&
-        subject != 'Computer Science'
-    ) {
-        interaction.editReply(
-            translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'),
-        );
-        return false;
-    }
-    // Random element is stored in "question"
-    // match is to filter possible questions, sample is to pick a random one.
-    // [] around a variable means it is the first element of the array.
-    const [question] = await quizDatabase.aggregate([
-        {
-            $match: {
-                $and: [
-                    { subject: subject },
-                    { category: quizCategories[type].type },
-                    { lang: getLanguage(guild) },
-                ],
-            },
-        },
-        { $sample: { size: 1 } },
-    ]);
-    if (!question) return interaction.editReply('Cagaste compa');
+    // Check if the subject is valid
+    if (!(await checkValidSubject({ interaction, subject, guild })))
+        return true;
+
+    // Get the quiz question
+    // [var] is to get the first element
+    const [question] = await getQuizQuestion({
+        interaction,
+        profileData,
+        type,
+        subject,
+        guild,
+    });
+
     // Set activity
     setActivity(interaction.user.id, question._id);
 
-    // Create embed with the question
-    let embed = new MessageEmbed()
-            .setTitle(question.question)
-            .setColor('#39A2A5')
-            .setDescription(translate(guild, 'PROBLEM_DESCRIPTION'))
-            .setFooter(
-                mustache.render(translate(guild, 'PROBLEM_ANSWER_FOOTER'), {
-                    type: quizCategories[type].type,
-                    time: quizCategories[type].time,
-                    id: question._id,
-                }),
-            ),
-        hintButton = (state) =>
-            new MessageActionRow().addComponents([
-                new MessageButton()
-                    .setCustomId('getHint')
-                    .setLabel(translate(guild, 'PROBLEM_HINT_REQ'))
-                    .setStyle('SUCCESS')
-                    .setDisabled(state),
-            ]),
-        answerTime = 0;
-
-    if (question.image) {
-        embed.setImage(question.image);
-    }
-
     // Variables to store the settings
-    let row,
-        compType,
-        filter,
-        altNum,
-        hintEmoji = client.emojis.cache.get('905990062095867935'),
-        hintUsed = false,
-        rowSelectMenu;
-    // Detect question type
-    if (question.type === 'MC') {
-        // Multiple choice
-        compType = 'SELECT_MENU';
-        // Set number of alternatives (+ correct answer)
-        altNum =
-            question.incorrect_answers.length >= N - 1
-                ? N
-                : question.incorrect_answers.length + 1;
-
-        // Randomize the alternatives.
-        let options = shuffleAlternatives(altNum, question);
-
-        //Create row with select menu
-        rowSelectMenu = new MessageSelectMenu()
-            .setCustomId('problemSelect')
-            .setPlaceholder(translate(guild, 'PROBLEM_SELECT_ALTERNATIVE'))
-            .setMinValues(1)
-            .setMaxValues(1)
-            .addOptions(options);
-        row = new MessageActionRow().addComponents(rowSelectMenu);
-        filter = (i) =>
-            i.customId === 'problemSelect' && i.user.id === interaction.user.id;
-    } else if (question.type === 'T/F') {
-        // True/False
-        compType = 'BUTTON';
-        // Create the array of buttons
-        row = new MessageActionRow().addComponents([
-            new MessageButton()
-                .setCustomId('problemButton')
-                .setLabel(problemAlternatives[0])
-                .setStyle('SECONDARY')
-                .setDisabled(state),
-            new MessageButton()
-                .setCustomId('problemButton1')
-                .setLabel(problemAlternatives[1])
-                .setStyle('SECONDARY')
-                .setDisabled(state),
-        ]);
-        filter = (i) =>
-            (i.customId === 'problemButton' ||
-                i.customId === 'problemButton1') &&
-            i.user.id === interaction.user.id;
-    }
+    let hintEmoji = client.emojis.cache.get('905990062095867935'),
+        options = {
+            alternatives: shuffleAlternatives(
+                numberOfAlternatives(question),
+                question,
+            ),
+            hint: false,
+            correct_answer: question.correct_answer,
+        },
+        embed = quizEmbedCreator({ question, type, guild }),
+        hintButton = createButton({ type: 'hint', guild, options }),
+        componentInfo = createRow({
+            interaction,
+            question,
+            guild,
+            options,
+        });
 
     //Reply
     await interaction.editReply({
         embeds: [embed],
         ephemeral: true,
-        components: [row, hintButton(false)],
+        components: [componentInfo.row, hintButton(false)],
     });
 
+    // Create message component collectors
     const collector = interaction.channel.createMessageComponentCollector({
-            filter,
-            componentType: compType,
+            filter: componentInfo.filter,
+            componentType: componentInfo.cType,
             time: quizCategories[type].time * 1000,
         }),
-        hintFilter = (i) => i.customId == 'getHint';
-    const hintCollector = interaction.channel.createMessageComponentCollector({
-        filter: hintFilter,
-        componentType: 'BUTTON',
-        time: (quizCategories[type].time - 3) * 1000,
-        max: 1,
-    });
+        hintCollector = interaction.channel.createMessageComponentCollector({
+            filter: (i) => i.customId == 'getHint',
+            componentType: 'BUTTON',
+            time: (quizCategories[type].time - 3) * 1000,
+            max: 1,
+        });
 
     // Collect hint
-    hintCollector.on('collect', (i) => {
-        if (question.type !== 'MC') {
-            return;
-        }
-        // Check if the user has a hint.
-        const hintInvHandler = require('../subcommands/use');
-        i['item'] = 'Hint';
-        hintInvHandler.execute(i, profileData);
-        options = shuffleAlternatives(altNum - 1, question);
-        rowHint = new MessageActionRow().addComponents(
-            rowSelectMenu.setOptions(options),
-        );
-        let hintEmbed = new MessageEmbed(embed).setTitle(
-            `${hintEmoji} ${question.question}`,
-        );
-        // Set the hint as used
-        hintUsed = true;
-        // Reply with the hint
-        i.update({
-            embeds: [hintEmbed],
-            ephemeral: true,
-            components: [rowHint, hintButton(true)],
+    hintCollector.on('collect', async (i) => {
+        hintHandler({
+            question,
+            options,
+            profileData,
+            guild,
+            embed,
+            hintEmoji,
+            hintButton,
+            hintCollector,
+            i,
         });
     });
 
     // Collect the answer
     collector.on('collect', async (i) => {
         await i.deferReply();
-        interaction.editReply({
+        await interaction.editReply({
             embeds: [embed],
             ephemeral: true,
             components: [],
         });
         // Get the answer
-        let answer;
-        if (i.customId === 'problemButton') {
-            answer = problemAlternatives[0];
-        } else if (i.customId === 'problemButton1') {
-            answer = problemAlternatives[1];
-        } else {
-            [answer] = i.values;
-        }
+        const answer = /^problemButton[1-9]$/.test(i.customId)
+            ? options.alternatives[i.customId.match(/[1-9]/)[0]].value
+            : i.values;
 
         answerTime = Math.floor(
             (Date.now() - SnowflakeUtil.deconstruct(i.message.id).timestamp) /
@@ -316,111 +139,57 @@ async function generateQuiz(interaction, profileData, type, client) {
             return;
         }
         const meSpent = quizCategories[type].meFormula(
-            answerTime,
-            question.difficulty,
-        );
-        // Apply the spent mental energy
-        if (profileData.mentalEnergy.me - meSpent < 0) {
-            // Not enough energy
-            profileData.mentalEnergy.me = 0;
-            i.editReply(
-                mustache.render(translate(guild, 'PROBLEM_NOT_ENOUGH_ME'), {
-                    meSpent,
-                }),
-            );
-            profileData.save();
-            return;
-        } else {
-            profileData.mentalEnergy.me -= meSpent;
-            profileData = await applyStatChanges(
-                profileData,
+                answerTime,
+                question.difficulty,
+            ),
+            collectorEmbed = quizEmbedCreator(
+                { question, type, guild, embedType: 'answer' },
                 {
-                    name: subject,
-                    correct: answer == question.correct_answer,
+                    answer: answer === question.correct_answer,
+                    interaction,
+                    meSpent,
                 },
-                i,
             );
+        // Apply the spent mental energy
+        profileData = await updateMe({
+            profileData,
+            meSpent,
+            guild,
+            i,
+            question,
+            answer,
+        });
+        if (!profileData) {
+            collector.stop();
+            return;
         }
-        // Declare embed variables
-        let color, title, description, image, footer;
-        // Check if the answer is correct
+
         if (answer === question.correct_answer) {
             // Get rewards
-            let [xp, donsGained] = rewards(type, answerTime, question);
-            if (donsGained) {
-                profileData.dons += donsGained;
-            } else donsGained = 0;
-            // Build embed
-            color = '#80EA98';
-            title = mustache.render(
-                translate(guild, 'PROBLEM_SELECT_CORRECT_TITLE'),
-                { user: interaction.user.username },
-            );
-            description = mustache.render(
-                translate(guild, 'PROBLEM_SELECT_CORRECT_DESCRIPTION'),
-                {
-                    xp,
-                    meSpent,
-                    user: interaction.user.username,
-                    dons: donsGained,
-                },
-            );
-            image = quizCategories[type].image.correct;
-            footer = `${quizCategories[type].type} id: \`${question._id}\``;
-            // Apply rewards
-            await applyXp(profileData, xp, i);
-        } else {
-            color = '#eb3434';
-            title = mustache.render(
-                translate(guild, 'PROBLEM_SELECT_INCORRECT_TITLE'),
-                { user: interaction.user.username },
-            );
-            description = mustache.render(
-                translate(guild, 'PROBLEM_SELECT_INCORRECT_DESCRIPTION'),
-                {
-                    meSpent,
-                },
-            );
-            image = quizCategories[type].image.incorrect;
-            footer = `${quizCategories[type].type} id: \`${question._id}\``;
+            const [xp, donsGained] = rewards(type, answerTime, question);
+            profileData = applyXp(profileData, xp);
+            profileData.dons += donsGained || 0;
         }
-        const collectorEmbed = new MessageEmbed()
-            .setColor(color)
-            .setAuthor(
-                interaction.user.username,
-                'https://cdn.discordapp.com/avatars/' +
-                    profileData.userID +
-                    '/' +
-                    interaction.user.avatar +
-                    '.jpeg',
-            )
-            .setTitle(title)
-            .setDescription(description)
-            .setThumbnail(image)
-            .setFooter(footer);
-
         // Reply
         await i.editReply({
             embeds: [collectorEmbed],
         });
+
         // End the interaction
         collector.stop();
     });
 
     collector.on('end', async (collected) => {
-        embed = new MessageEmbed()
-            .setColor('#FCDFA6')
-            .setTitle(
-                `${hintUsed ? `${hintEmoji} ` : ''}${translate(
-                    guild,
-                    'PROBLEM_END_TITLE',
-                )}`,
-            )
-            .setDescription(`\`${question.question}\``);
-        if (question.image) {
-            embed.setImage(question.image);
-        }
-        interaction.editReply({ embeds: [embed], components: [] });
+        let endEmbed = quizEmbedCreator({
+            question,
+            type,
+            guild,
+            embedType: 'end',
+            hint: options.hint,
+            emoji: hintEmoji,
+        });
+        
+        await interaction.editReply({ embeds: [endEmbed], components: [] });
         // Delete activity
         deleteActivity(interaction.user.id);
 
@@ -441,6 +210,7 @@ async function generateQuiz(interaction, profileData, type, client) {
             }),
         );
         await profileData.save();
+        hintCollector.stop();
     });
 }
 
@@ -464,10 +234,12 @@ function shuffle(array) {
     return array;
 }
 
-function getRandomArbitrary(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
+/**
+ * Shuffles the array and returns the alternatives in a random order.
+ * @param { Number } number - Number of alternatives to be returned.
+ * @param { {_id: String, subject: String, difficulty: Number, question: String, correct_answer: String, incorrect_answers: String[]} } question - Question object, with the alternatives.
+ * @returns { [{label: String, value: String}, Boolean] } - Array of alternatives.
+ */
 function shuffleAlternatives(number, question) {
     let alternatives = [],
         options = [];
@@ -490,14 +262,324 @@ function shuffleAlternatives(number, question) {
     return options;
 }
 
+async function checkUser({ interaction, profileData, guild }) {
+    if (hasActivity(interaction.user.id)) {
+        await interaction.editReply(translate(guild, 'PROBLEM_ONGOING'));
+        return false;
+    }
+    // Check if the user has enough me
+    else if (profileData.mentalEnergy.me <= 10) {
+        await interaction.editReply(translate(guild, 'PROBLEM_REST'));
+        return false;
+    }
+
+    return true;
+}
+
 function rewards(type, answerTime, question) {
     let ans = [];
     ans.push(quizCategories[type].xpFormula(question.difficulty));
-    if (quizCategories[type].type === 'Workout') {
+    if (quizCategories[type].type === 'Workout')
         ans.push(
             quizCategories[type].donsFormula(question.difficulty, answerTime),
         );
-    }
+
     return ans;
+}
+
+async function checkValidSubject({ interaction, subject, guild }) {
+    // Available subjects
+    const availableSubjects = ['Math', 'Science'];
+    if (availableSubjects.indexOf(subject) === -1) {
+        await interaction.editReply(
+            translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'),
+        );
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Function to get questions from the database
+ * @param {*} param0 - Object with the following properties:
+ * @param {*} param0.interaction - The interaction object
+ * @param {*} param0.profileData - Subject
+ * @param { String } param0.guild - The guild
+ * @param { Number } param0.type - The type of the quiz
+ * @param { Number } param0.quantity - The number of questions
+ * @returns { Array } - Array of questions (Boolean if no question was found)
+ */
+async function getQuizQuestion({
+    interaction,
+    subject,
+    type,
+    guild,
+    quantity = 1,
+}) {
+    // Random element is stored in "question"
+    // match is to filter possible questions, sample is to pick a random one.
+    const question = await quizDatabase.aggregate([
+        {
+            $match: {
+                $and: [
+                    { subject },
+                    { category: quizCategories[type].type },
+                    { lang: getLanguage(guild) },
+                ],
+            },
+        },
+        { $sample: { size: quantity } },
+    ]);
+    if (!question) {
+        await interaction.editReply('No questions found');
+        return false;
+    }
+    return question;
+}
+
+/**
+ * Function to create display of the question
+ * @param {*} param0 - Object with the following properties:
+ * @param { Question } param0.question - The question object
+ * @param { Number } param0.type - The type of the quiz
+ * @param { String } param0.guild - The guild language
+ * @returns { Object } Embed object
+ */
+function quizEmbedCreator(
+    {
+        question,
+        type = 0,
+        guild,
+        embedType = 'question',
+        hint = false,
+        emoji = '',
+    },
+    { answer, interaction, meSpent } = {},
+) {
+    if (embedType === 'question')
+        return (
+            new MessageEmbed()
+                .setTitle(question.question)
+                .setColor('#39A2A5')
+                .setDescription(translate(guild, 'PROBLEM_DESCRIPTION'))
+                .setFooter({
+                    text: mustache.render(
+                        translate(guild, 'PROBLEM_ANSWER_FOOTER'),
+                        {
+                            type: quizCategories[type].type,
+                            time: quizCategories[type].time,
+                            id: question._id,
+                        },
+                    ),
+                })
+                // REVIEW: This may fail as the image is not always present
+                .setImage(question.image)
+        );
+    else if (embedType === 'answer')
+        return new MessageEmbed()
+            .setTitle(
+                mustache.render(
+                    translate(
+                        guild,
+                        `PROBLEM_SELECT_${answer ? '' : 'IN'}CORRECT_TITLE`,
+                    ),
+                    { user: interaction.user.username },
+                ),
+            )
+            .setColor(answer ? '#80EA98' : '#EB3434')
+            .setDescription(
+                mustache.render(
+                    translate(
+                        guild,
+                        `PROBLEM_SELECT_${
+                            answer ? '' : 'IN'
+                        }CORRECT_DESCRIPTION`,
+                    ),
+                    { meSpent },
+                ),
+            )
+            .setFooter({
+                text: `${quizCategories[type].type} id: \`${question._id}\``,
+            })
+            .setThumbnail(
+                answer
+                    ? quizCategories[type].image.correct
+                    : quizCategories[type].image.incorrect,
+            )
+            .setAuthor({
+                name: interaction.user.username,
+                iconURL: `https://cdn.discordapp.com/avatars/${interaction.user.id}/${interaction.user.avatar}.png?size=256`,
+            });
+    else if (embedType === 'end') {
+        return new MessageEmbed()
+            .setTitle(
+                `${hint ? `${emoji} ` : ''}${translate(
+                    guild,
+                    'PROBLEM_END_TITLE',
+                )}`,
+            )
+            .setColor('#FCDFA6')
+            .setDescription(question.question)
+            .setTimestamp()
+            .setImage(question.image || '');
+    }
+}
+
+/**
+ * Creates a message action row with a button component (TODO: Add more buttons)
+ * @param { * } param0 - Object with the following properties:
+ * @param { String } param0.type - The type of button to create.
+ * @param { String } param0.guild - The guild language
+ * @param { { alternatives: [{label: String, value: String}], correct_answer: String, hint: Boolean } } param0.options - The options to create the button for.
+ * @returns { MessageButton[] } - function to create a button component
+ */
+function createButton({ type, guild, options }) {
+    if (type == 'hint') {
+        return (state) =>
+            new MessageActionRow().addComponents([
+                new MessageButton()
+                    .setCustomId('getHint')
+                    .setLabel(translate(guild, 'PROBLEM_HINT_REQ'))
+                    .setStyle('SUCCESS')
+                    .setDisabled(state),
+            ]);
+    } else if (type == 'question') {
+        let res = [];
+
+        for (let i = 0; i < options.alternatives.length; i++) {
+            res.push(
+                new MessageButton()
+                    .setCustomId(`problemButton${i}`)
+                    .setLabel(options.alternatives[i].label)
+                    .setStyle('SECONDARY'),
+            );
+        }
+        return res;
+    }
+}
+
+function numberOfAlternatives(question) {
+    return question.incorrect_answers.length >= N - 1
+        ? N
+        : question.incorrect_answers.length + 1;
+}
+
+/**
+ *
+ * @param { Object } param0 - Object with the following properties:
+ * @param { String } param0.guild - The guild language
+ * @param { Number } [param0.difference] - Alternatives to subtract from the options
+ * @param {{ alternatives: [{label: String, value: String}], correct_answer: String, hint: Boolean } } param0.options - The options to create the button for.
+ * @returns { MessageSelectMenu } - MessageSelectMenu object
+ */
+function createSelectMenu({ guild, question, difference = 0, options }) {
+    // Randomize the alternatives.
+    if (difference != 0)
+        options.alternatives = shuffleAlternatives(
+            numberOfAlternatives(question) - difference,
+            question,
+        );
+
+    //Create row with select menu
+    return new MessageSelectMenu()
+        .setCustomId(`K${question.type}`)
+        .setPlaceholder(translate(guild, 'PROBLEM_SELECT_ALTERNATIVE'))
+        .setMinValues(1)
+        .setMaxValues(1)
+        .addOptions(options.alternatives);
+}
+
+/**
+ *
+ * @param {*} param0 - Object with the following properties:
+ * @param { interaction } param0.interaction - The interaction object
+ * @param { String } param0.guild - The guild language
+ * @param {{ alternatives: [{label: String, value: String}], correct_answer: String, hint: Boolean } } param0.options - The options to create the button for.
+ * @returns
+ */
+function createRow({ question, guild, interaction, options }) {
+    // Create row with select menu
+    return {
+        cType: question.type === 'T/F' ? 'BUTTON' : 'SELECT_MENU',
+        filter: function (i) {
+            return (
+                (i.customId === `K${question.type}` ||
+                    /^problemButton[1-9]$/.test(i.customId)) &&
+                i.user.id === interaction.user.id
+            );
+        },
+        row: new MessageActionRow().addComponents(
+            question.type == 'T/F'
+                ? createButton({ type: 'question', guild, question, options })
+                : [createSelectMenu({ guild, question, options })],
+        ),
+    };
+}
+
+/**
+ *
+ * @param {*} param0 - Object with the following properties:
+ * @param { profileData } param0.profileData - The profile data object
+ * @param { String } param0.guild - The guild language
+ * @param { Number } param0.meSpent - The amount of mental energy spend on the quiz.
+ * @param { String } param0.answer - The answer of the user.
+ * @returns { profileData | false } - The profile data object or false if the ME isn't enough to answer.
+ */
+async function updateMe({ profileData, meSpent, guild, i, question, answer }) {
+    if (profileData.mentalEnergy.me - meSpent < 0) {
+        // Not enough energy
+        profileData.mentalEnergy.me = 0;
+        await i.editReply(
+            mustache.render(translate(guild, 'PROBLEM_NOT_ENOUGH_ME'), {
+                meSpent,
+            }),
+        );
+        profileData.save();
+        return false;
+    }
+
+    profileData.mentalEnergy.me -= meSpent;
+    profileData = await applyStatChanges(
+        profileData,
+        {
+            name: question.subject,
+            correct: answer === question.correct_answer,
+        },
+        i,
+    );
+    return profileData;
+}
+
+async function hintHandler({
+    question,
+    options,
+    profileData,
+    guild,
+    embed,
+    hintEmoji,
+    hintButton,
+    hintCollector,
+    i,
+}) {
+    if (question.type !== 'MC' || options.hint) return;
+    // Check if the user has a hint.
+    const hintInvHandler = require('../subcommands/use');
+    i['item'] = 'Hint';
+    hintInvHandler.execute(i, profileData);
+    let rowHint = new MessageActionRow().addComponents(
+            createSelectMenu({ guild, question, difference: 1, options }),
+        ),
+        hintEmbed = new MessageEmbed(embed).setTitle(
+            `${hintEmoji} ${question.question}`,
+        );
+    // Set the hint as used
+    options.hint = true;
+    // Reply with the hint
+    await i.update({
+        embeds: [hintEmbed],
+        ephemeral: true,
+        components: [rowHint, hintButton(true)],
+    });
+    hintCollector.stop();
 }
 module.exports = { generateQuiz };

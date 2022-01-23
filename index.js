@@ -77,6 +77,11 @@ for (const file of eventFiles) {
     }
 }
 
+// eslint-disable-next-line no-undef
+process.on('unhandledRejection', error => {
+	logger.error('Unhandled promise rejection:', error);
+});
+
 // Connect to MongoDB
 mongoose
     .connect(MONGODB_URI, {
