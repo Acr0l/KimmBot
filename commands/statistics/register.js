@@ -1,14 +1,15 @@
-const { MessageActionRow, MessageButton } = require("discord.js");
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const profileModel = require("../../models/profileSchema");
-const { translate } = require('../../handlers/language');
-const mustache = require('mustache');
+const { MessageActionRow, MessageButton } = require('discord.js'),
+    { SlashCommandBuilder } = require('@discordjs/builders'),
+    profileModel = require('../../models/profileSchema'),
+    { translate } = require('../../handlers/language'),
+    mustache = require('mustache'),
+    logger = require('../../logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("register")
-        .setDescription("Create your Kimm account."),
-    async execute(interaction, noData, client) {
+        .setName('register')
+        .setDescription('Create your Kimm account.'),
+    async execute(interaction) {
         const { guild } = interaction;
         let profileData;
 
@@ -24,26 +25,31 @@ module.exports = {
                 profile.save();
                 const row = new MessageActionRow().addComponents(
                     new MessageButton()
-                        .setCustomId("tutorial")
-                        .setLabel("Tutorial")
-                        .setStyle("SUCCESS")
-                        .setEmoji("📖")
+                        .setCustomId('tutorial')
+                        .setLabel('Tutorial')
+                        .setStyle('SUCCESS')
+                        .setEmoji('📖'),
                 );
                 await interaction.reply({
-                    content: mustache.render(translate( guild , 'SUCCESSFUL_REGISTER' ), {
-                        user: interaction.user.username,
-                    }),
+                    content: mustache.render(
+                        translate(guild, 'SUCCESSFUL_REGISTER'),
+                        {
+                            user: interaction.user.username,
+                        },
+                    ),
                     components: [row],
                 });
                 return;
             } else {
-                await interaction.reply(mustache.render(translate( guild , 'UNSUCCESSFUL_REGISTER' ), {
-                    user: interaction.user.username,
-                }));
+                await interaction.reply(
+                    mustache.render(translate(guild, 'UNSUCCESSFUL_REGISTER'), {
+                        user: interaction.user.username,
+                    }),
+                );
                 return;
             }
         } catch (err) {
-            console.log(err);
+            logger.info(err);
         }
 
         const filter = (i) =>
@@ -55,12 +61,12 @@ module.exports = {
             time: 20000,
         });
 
-        collector.on("collect", async (i) => {
-            await i.update("WIP");
+        collector.on('collect', async (i) => {
+            await i.update('WIP');
         });
 
-        collector.on("end", async () => {
-            await interaction.editReply("You have finished the tutorial.");
+        collector.on('end', async () => {
+            await interaction.editReply('You have finished the tutorial.');
         });
     },
 };

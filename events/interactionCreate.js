@@ -9,6 +9,7 @@ module.exports = {
     name: 'interactionCreate',
     once: false,
     async execute(interaction) {
+        if (!interaction.inGuild()) return;
         // Get guild.
         const { guild } = interaction;
         // Get user from db.
