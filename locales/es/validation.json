@@ -1,0 +1,8 @@
+{
+    "unsuccessful_register": {
+        "already_registered": "¡Ya tienes una cuenta registrada!",
+        "error": "¡Error al registrarte!"
+    },
+    "successful_register": "¡Bienvenido {{interaction.user.username}}!, tu cuenta ha sido registrada con éxito.\n Haz click en el botón para comenzar el tutorial.",
+    "invalid_field": "Lo siento {{interaction.user.username}}, el parámetro en **{{field}}** es inválido."
+}

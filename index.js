@@ -5,7 +5,9 @@ const { Client, Collection, Intents } = require('discord.js'),
     fs = require('fs'),
     mongoose = require('mongoose'),
     path = require('path'),
-    logger = require('./logger');
+    logger = require('./logger'),
+    i18next = require('i18next'),
+    i18nextBackend = require('i18next-fs-backend');
 
 // Create client
 const client = new Client({
@@ -21,7 +23,7 @@ function throughDirectory(dir) {
     fs.readdirSync(dir).forEach((file) => {
         const absolute = path.join(dir, file);
         if (fs.statSync(absolute).isDirectory())
-        return throughDirectory(absolute);
+            return throughDirectory(absolute);
         else if (absolute.endsWith('js')) return tmp.push(absolute);
     });
 }
@@ -77,9 +79,26 @@ for (const file of eventFiles) {
     }
 }
 
-// eslint-disable-next-line no-undef
-process.on('unhandledRejection', error => {
-	logger.error('Unhandled promise rejection:', error);
+i18next.use(i18nextBackend).init(
+    {
+        initImmediate: false,
+        lng: 'en',
+        fallbackLng: 'en',
+        preload: ['en', 'es'],
+        ns: ['common', 'validation', 'glossary'],
+        defaultNS: 'common',
+        backend: {
+            loadPath: 'locales/{{lng}}/{{ns}}.json',
+        },
+    },
+    (err, t) => {
+        if (err) return logger.error(err);
+        logger.info(t('i18next_startup', { lng: Math.random() > 0.5 ? 'en' : 'es' }));
+    },
+);
+
+process.on('unhandledRejection', (error) => {
+    logger.error('Unhandled promise rejection:', error);
 });
 
 // Connect to MongoDB
@@ -90,6 +109,8 @@ mongoose
     })
     .then(() => logger.info('MongoDB Connected'))
     .catch((err) => logger.error(err));
+
+module.exports = { i18next };
 
 // Login to Discord (token)
 client.login(token);

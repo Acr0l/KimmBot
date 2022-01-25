@@ -1,0 +1,16 @@
+{
+    "i18next_startup": "i18next has been initialized successfully",
+    "accept": "Accept",
+    "days_one": "day",
+    "days_other": "{{count}} days",
+    "hours_one": "hour",
+    "hours_other": "{{count}} hours",
+    "minutes_one": "minute",
+    "minutes_other": "{{count}} minutes",
+    "months_one": "mes",
+    "months_other": "{{count}} months",
+    "seconds_one": "second",
+    "seconds_other": "{{count}} seconds",
+    "years_one": "year",
+    "years_other": "{{count}} years"
+}
