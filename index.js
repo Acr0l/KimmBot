@@ -9,6 +9,27 @@ const { Client, Collection, Intents } = require('discord.js'),
     i18next = require('i18next'),
     i18nextBackend = require('i18next-fs-backend');
 
+i18next.use(i18nextBackend).init(
+    {
+        initImmediate: false,
+        lng: 'en',
+        fallbackLng: 'en',
+        preload: ['en', 'es'],
+        ns: ['common', 'validation', 'glossary'],
+        defaultNS: 'common',
+        fallbackNS: 'glossary',
+        backend: {
+            loadPath: 'locales/{{lng}}/{{ns}}.json',
+        },
+    },
+    (err, t) => {
+        if (err) return logger.error(err);
+        logger.info(
+            t('i18next_startup', { lng: Math.random() > 0.5 ? 'en' : 'es' }),
+        );
+    },
+);
+
 // Create client
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
@@ -79,24 +100,6 @@ for (const file of eventFiles) {
     }
 }
 
-i18next.use(i18nextBackend).init(
-    {
-        initImmediate: false,
-        lng: 'en',
-        fallbackLng: 'en',
-        preload: ['en', 'es'],
-        ns: ['common', 'validation', 'glossary'],
-        defaultNS: 'common',
-        backend: {
-            loadPath: 'locales/{{lng}}/{{ns}}.json',
-        },
-    },
-    (err, t) => {
-        if (err) return logger.error(err);
-        logger.info(t('i18next_startup', { lng: Math.random() > 0.5 ? 'en' : 'es' }));
-    },
-);
-
 process.on('unhandledRejection', (error) => {
     logger.error('Unhandled promise rejection:', error);
 });
@@ -109,8 +112,6 @@ mongoose
     })
     .then(() => logger.info('MongoDB Connected'))
     .catch((err) => logger.error(err));
-
-module.exports = { i18next };
 
 // Login to Discord (token)
 client.login(token);

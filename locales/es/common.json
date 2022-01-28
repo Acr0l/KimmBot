@@ -12,5 +12,13 @@
     "seconds_one": "segundo",
     "seconds_other": "{{count}} segundos",
     "years_one": "año",
-    "years_other": "{{count}} años"
+    "years_other": "{{count}} años",
+    "wait": "Obteniendo datos...",
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "confirm": "¿Quieres continuar?",
+    "cancel": "Cancelar",
+    "yes": "Sí",
+    "no": "No",
+    "no_results": "No se encontraron resultados"
 }

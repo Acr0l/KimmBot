@@ -7,7 +7,7 @@ module.exports = {
     name: 'ready',
     once: true,
     async execute(client) {
-        logger.info(`Ready! Logged in as ${client.user.tag}`);
+        logger.info(`Ready! Logged in as ${client.user.tag}`);       
 
         // Load saved languages
         loadLanguages(client);
@@ -19,7 +19,5 @@ module.exports = {
         client.user.setActivity('anime (educational purposes).', {
             type: 'WATCHING',
         });
-
-        // });
     },
 };

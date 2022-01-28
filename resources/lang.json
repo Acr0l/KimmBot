@@ -5,10 +5,6 @@
             "en": "You can buy that item only once.",
             "es": "Solo puedes comprar ese objeto una vez."
         },
-        "BUY_OWNED": {
-            "en": "You already own that item.",
-            "es": "Ya tienes ese objeto."
-        },
         "BUY_SUCCESS": {
             "en": "You bought one {{item}} for Ɖ{{price}}.:You bought {{amount}} {{item}}s for Ɖ{{price}}.",
             "es": "Has comprado un {{item}} por Ɖ{{price}}.:Has comprado {{amount}} {{item}}s por Ɖ{{price}}."

@@ -1,7 +1,7 @@
 const express = require('express'),
     router = express.Router(),
     { createItem, createQuiz } = require('../util/constructors');
-    subjects = require('../../util/subjects.json');
+    { subjects } = require('../../util/subjects.json');
 
 const options = {
     item: [

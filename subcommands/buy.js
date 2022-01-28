@@ -11,9 +11,8 @@ module.exports = {
      * Execute the command.
      * @param { Message } interaction - The message that triggered the command.
      * @param { Object } profileData - The profile data of the user.
-     * @param { Client } client - The client instance.
      */
-    async execute(interaction, profileData, client) {
+    async execute(interaction, profileData) {
         const { guild } = interaction,
             itemToBuy = interaction.options.getString('item'),
             amount = parseInt(interaction.options.getNumber('amount')) || 1,

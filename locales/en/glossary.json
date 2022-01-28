@@ -1,3 +1,98 @@
 {
-    "hi": "hi"
+    "buy": {
+        "reject": {
+            "item_unique": "You already have this item.",
+            "insufficient_funds": "You do not have enough money to buy this item.",
+            "item_not_found": "Item not found.",
+            "item_not_available": "This item is not available to purchase.",
+            "invalid_quantity": "Invalid quantity."
+        },
+        "success_one": "You have successfully purchased a {{currentItem.name}} for Ɖ{{currentItem.price}}.",
+        "success_other": "You have successfully purchased {{amount}} {{currentItem.name}} for Ɖ{{currentItem.price}}."
+    },
+    "challenge": {
+        "reject": {
+            "item_unowned": "You need a {{currentItem.name}} to take the Challenge.",
+            "low_tier": "Your tier does not meet the requirements to take the Challenge."
+        },
+        "start_embed": {
+            "title": "Challenging yourself...",
+            "description": "Brave warrior, beware of the dangers of The Challenge, and remember that the real failure is when you stop trying.",
+            "fields": {
+                "questions": {
+                    "title": "Questions",
+                    "value": "You will be facing {{questions}} questions from all the subjects available."
+                },
+                "time": {
+                    "title": "Time",
+                    "value": "You have {{time}} to answer each question, for a total of {{totalTime}} to complete the challenge."
+                },
+                "difficulty": {
+                    "title": "Difficulty",
+                    "value": "Is it hard? Well, you will face difficulties during the road, but you must persevere and overcome them.\n\nThe difficulty of the questions will be based on the tier of the challenge, and to get the rewards you need 80% of the questions to be answered correctly (Perfect scores will be rewarded)."
+                }
+            },
+            "footer": "Dear past, thank you for the lessons. Dear future, I am ready."
+        }
+    },
+    "command_descriptions": {
+        "balance": "Check your balance.",
+        "challenge": "Take the Challenge.",
+        "help": "Show the help menu.",
+        "inventory": "Check your inventory.",
+        "item": "Command group to interact with the items.",
+        "profile": "Check your profile.",
+        "register": "Create your Kimm account.",
+        "set_lang": "Set the language of the bot.",
+        "stats": "Check your subject stats.",
+        "suggest": "Suggest new features/questions/items!",
+        "warmup": "Take a quick question to warm up your brain.",
+        "workout": "Test your knowledge and gain experience.",
+        "xp_add": "TEMPORAL COMMAND"
+    },
+    "cooldown": "You are on cooldown for this command, please wait {{time}}.",
+    "help": {
+        "start_embed": {
+            "title": "Help Menu",
+            "description": "Select the category you want to know more about in the dropdown menu below."
+        },
+        "category_embed": {
+            "title": "{{category}} commands",
+            "descriptions": {
+                "economy": "Commands to manage your resources.",
+                "guild": "Commands to manage the server.",
+                "info": "Commands to get information about the bot.",
+                "problems": "Commands to challenge yourself and prove your knowledge.",
+                "statistics": "Commands to get information about your subjects, level, tier, and more.",
+                "tmp": "TEMPORAL CATEGORY, DEV ONLY",
+                "no_description": "No description yet."
+            }
+        },
+        "row": {
+            "placeholder": "Select a category to see the commands.",
+            "directories": {
+                "info": "Information",
+                "statistics": "Statistics",
+                "problems": "Problems",
+                "economy": "Economy",
+                "guild": "Server", 
+                "tmp": "TEMPORAL"
+            },
+            "description": "Commands from the $t(help.row.directories.{{category}}, {\"ns\": \"glossary\"}) category."
+        }
+    },
+    "items": {
+        "drink": {
+            "used": "You drank a {{currentItem.name}} bottle, its effect will be applied for {{time}}.",
+            "active": "Your cooldown for this item hasn't expired yet.",
+            "mentalEnergy_zero": "You have recovered all of your ME points.",
+            "mentalEnergy_one": "You recovered 1 ME point.",
+            "mentalEnergy_other": "You recovered {{amount}} ME points."
+        },
+        "equipment": {
+            "already_equipped": "You already have this item equipped.",
+            "equipped": "You are now using a {{currentItem.name}}.",
+            "unequipped": "You are no longer using a {{currentItem.name}}."
+        }
+    }
 }

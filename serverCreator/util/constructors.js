@@ -1,6 +1,6 @@
 const itemModel = require('../../models/itemSchema'),
     quizDatabase = require('../../models/quizSchema'),
-    subjects = require('../../util/subjects.json'),
+    { subjects } = require('../../util/subjects.json'),
     { languages } = require('../../resources/lang.json');
 
 /**

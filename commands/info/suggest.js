@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders'),
     { MessageEmbed } = require('discord.js'),
-    subjects = require('../../util/subjects.json'),
-    { translate } = require('../../handlers/language');
+    { subjects } = require('../../util/subjects.json');
+    // { translate } = require('../../handlers/language');
 
 let subjectsArr = [];
 
@@ -68,7 +68,7 @@ module.exports = {
             .addField('Suggestion', suggestion)
             .addField('Correct answer', correctAnswer)
             .addField('Incorrect answers', incorrectAnswers.join(', '))
-            .setFooter('User ID: ' + interaction.user.id)
+            .setFooter({text: `User ID: ${interaction.user.id}`})
             .setTimestamp()
             .setColor('#0099ff');
 
@@ -76,6 +76,7 @@ module.exports = {
             .get('894728345235914802')
             .send({ embeds: [embed] });
         interaction.reply(
+            //TODO: translate
             `Your suggestion has been sent to the bot, thanks for your support!`,
         );
     },

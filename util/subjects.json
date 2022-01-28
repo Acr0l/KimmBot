@@ -1,9 +1,12 @@
 {
-    "Math": "SUBJECT_MATH",
-    "Language": "SUBJECT_LANGUAGE",
-    "History and Geography": "SUBJECT_HISTORY_GEOGRAPHY",
-    "Science": "SUBJECT_SCIENCE",
-    "Computer Science": "SUBJECT_COMPUTER_SCIENCE",
-    "Life Skills": "SUBJECT_LIFE_SKILLS",
-    "Music Theory": "SUBJECT_MUSIC_THEORY"
+    "subjects": {
+        "Math": "SUBJECT_MATH",
+        "Language": "SUBJECT_LANGUAGE",
+        "History and Geography": "SUBJECT_HISTORY_GEOGRAPHY",
+        "Science": "SUBJECT_SCIENCE",
+        "Computer Science": "SUBJECT_COMPUTER_SCIENCE",
+        "Life Skills": "SUBJECT_LIFE_SKILLS",
+        "Music Theory": "SUBJECT_MUSIC_THEORY"
+    },
+    "availableSubjects": [ "Math" ]
 }

@@ -6,7 +6,9 @@ const { SlashCommandBuilder } = require('@discordjs/builders'),
     } = require('discord.js'),
     { readdirSync } = require('fs'),
     { translate } = require('../../handlers/language'),
-    mustache = require('mustache');
+    mustache = require('mustache'),
+    logger = require('../../logger'),
+    { iTranslate } = require('../../handlers/language');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,14 +22,20 @@ module.exports = {
      * @param { Object } client - The discord.js client object.
      */
     async execute(interaction, profileData, client) {
+        // const {info, statistics } =
+        //     i18next.t('help.category_embed.descriptions', {
+        //         ns: 'glossary',
+        //         returnObjects: true,
+        //     });
         // Get guild.
-        const { guild } = interaction;
-        // Get the language.
-        const langDirectories = translate(guild, 'HELP_DIRECTORIES').split(':');
-        // Get the commands
-        const directories = readdirSync('./commands', { withFileTypes: true })
-            .filter((dirent) => dirent.isDirectory())
-            .map((dirent) => dirent.name);
+        const { guild } = interaction,
+            ns = 'glossary',
+            // Get the language.
+            langDirectories = translate(guild, 'HELP_DIRECTORIES').split(':'),
+            // Get the commands
+            directories = readdirSync('./commands', { withFileTypes: true })
+                .filter((dirent) => dirent.isDirectory())
+                .map((dirent) => dirent.name);
 
         directories.move(directories.indexOf('info'), 0);
         directories.move(directories.indexOf('statistics'), 1);
@@ -57,14 +65,19 @@ module.exports = {
         });
         const embed = new MessageEmbed()
             .setTitle(translate(guild, 'HELP_TITLE_CHOOSE'))
-            .setColor('#C7F8CB')
             .setDescription(translate(guild, 'HELP_CHOOSE_CAT'));
+        const startEmbed = new MessageEmbed()
+            .setTitle(iTranslate(guild, 'help.start_embed.title', { ns }))
+            .setDescription(
+                iTranslate(guild, 'help.start_embed.description', { ns }),
+            )
+            .setColor('#C7F8CB');
 
         const components = (state) => [
             new MessageActionRow().addComponents(
                 new MessageSelectMenu()
                     .setCustomId('help-menu')
-                    .setPlaceholder(translate(guild, 'HELP_PLACEHOLDER'))
+                    .setPlaceholder(iTranslate(guild, 'help.row.placeholder', {ns}))
                     .setDisabled(state)
                     .addOptions(
                         categories.map((cmd) => {
@@ -89,6 +102,7 @@ module.exports = {
             embeds: [embed],
             components: components(false),
         });
+        const followUp = await interaction.followUp({ embeds: [startEmbed] });
         const filter = (i) => i.customId == 'help-menu';
         const collector = interaction.channel.createMessageComponentCollector({
             filter,
@@ -97,7 +111,7 @@ module.exports = {
         });
 
         collector.on('collect', (i) => {
-            const [ directory ] = i.values;
+            const [directory] = i.values;
             const category = categories.find(
                 (cat) => cat.directory.toLowerCase() == directory.toLowerCase(),
             );

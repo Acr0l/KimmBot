@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders'),
-    subjects = require('../../util/subjects.json'),
+    { subjects } = require('../../util/subjects.json'),
     subjectsArr = [],
     { generateQuiz } = require('../../util/problemFunctions');
 
@@ -19,7 +19,6 @@ module.exports = {
                 .addChoices(subjectsArr),
         ),
     async execute(interaction, profileData, client) {
-        // await interaction.reply({ content: `This command is not yet implemented.`, ephemeral: true });
         if (!generateQuiz(interaction, profileData, 1, client)) {
             console.log('No problems found.');
         }

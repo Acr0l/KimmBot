@@ -60,6 +60,29 @@ const quizCategories = [
         type: 'Challenge',
         time: 300,
         meConsumption: 4,
+        /**
+         * Get time limit and quantity of problems based on difficulty
+         * @param { Number } tier - Difficulty of the problem(s)
+         * @param { Function } dhmsFunction - Function to convert seconds to days, hours, minutes and seconds
+         * @param { String } language - Language of the problem(s)
+         * @returns {{ Questions: { totalTime: { String }, number: { Number }}, Difficulty: { Object}, Time: { seconds: { Number }, time: { String }} }}
+         */
+        questionsTimeAndQuantity: function (tier, dhmsFunction, language) {
+            return {
+                Questions: {
+                    totalTime: dhmsFunction(
+                        this.Questions.number * this.Time.seconds,
+                        language,
+                    ),
+                    number: Math.ceil((tier + 1) * 1.5) + 2,
+                },
+                Difficulty: {},
+                Time: {
+                    seconds: (tier + 1) * 20 + 30,
+                },
+                time: dhmsFunction(this.Time.seconds, language),
+            };
+        },
         meFormula: function () {
             return 0;
         },

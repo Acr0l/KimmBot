@@ -8,6 +8,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders'),
         deleteActivity,
         hasActivity,
     } = require('../../handlers/activity'),
+    quizCategories = require('../../util/quizCategories'),
     mustache = require('mustache'),
     wait = require('util').promisify(setTimeout);
 
@@ -17,23 +18,21 @@ module.exports = {
         .setName('challenge')
         .setDescription('The ultimate test'),
     async execute(interaction, profileData) {
+        // Defer reply
         await interaction.deferReply({ ephemeral: true });
-        const { guild } = interaction,
-            keyItem = profileData.inventory.find(
-                (item) => item._id.toString() == '6175f765562d1f316070f096',
-            );
-        if (hasActivity(interaction.user.id))
-            return await interaction.editReply(
-                translate(guild, 'PROBLEM_ONGOING'),
-            );
-        if (!readyToAdvance(profileData) || !keyItem) {
-            return interaction.editReply(
-                translate(guild, 'PROBLEM_REQ_NOT_MET'),
-            );
-        }
-        const numberOfQuestions = Math.ceil((profileData.tier + 1) * 1.5) + 2,
-            secondsPerQuestion = (profileData.tier + 1) * 20 + 30,
-            embedFields = translate(guild, 'CHALLENGE_START_FIELDS').split(':'),
+
+        // Constants
+        const { guild } = interaction, type = 2;
+
+        // Check if the user meets the requirements to be a Challenger.
+        if (!meetsChallengeRequirements({ profileData, interaction, guild }))
+            return;
+
+        // Get parameters of the challenge (time limit and number of questions)
+        const propertiesObject = quizCategories[type].questionsTimeAndQuantity(profileData.tier)
+
+        // TODO: Optimize this (embedFields may have easier ways).
+        const embedFields = translate(guild, 'CHALLENGE_START_FIELDS').split(':'),
             enEmbedFields = translate(
                 { id: 'en' },
                 'CHALLENGE_START_FIELDS',
@@ -54,13 +53,6 @@ module.exports = {
                         .setDisabled(state),
                 ]),
             ],
-            propertiesObject = {
-                Questions: { number: numberOfQuestions },
-                Difficulty: {},
-                Time: {
-                    time: forHumans(secondsPerQuestion, guild),
-                },
-            },
             fieldTitleMap = new Map();
         for (let i = 0; i < embedFields.length; i++) {
             fieldTitleMap.set(enEmbedFields[i], embedFields[i]);
@@ -143,9 +135,8 @@ module.exports = {
                         {
                             $match: {
                                 $and: [
-                                    {
-                                        subject: subject,
-                                    },
+                                    { subject },
+                                    { category: 'Challenge' },
                                     {
                                         difficulty: profileData.tier,
                                     },
@@ -169,12 +160,13 @@ module.exports = {
             });
             let results = 0;
             for (const question of questions) {
-                results = (await makeQuestion(
+                results = (await makeQuestion({
                     question,
-                    i,
+                    interaction: i,
                     profileData,
-                    secondsPerQuestion,
-                ))
+                    time: secondsPerQuestion,
+                    guild,
+                }))
                     ? results + 1
                     : results;
                 await wait(secondsPerQuestion * 1000);
@@ -241,7 +233,13 @@ function forHumans(seconds, trGuild) {
  * @param { Object } profileData - Data from the user.
  * @return { Boolean } - True if the question was answered correctly, false otherwise.
  */
-async function makeQuestion(question, interaction, profileData, time) {
+async function makeQuestion({
+    question,
+    interaction,
+    profileData,
+    time,
+    guild,
+}) {
     setActivity(interaction.user.id, question._id);
     const embed = new MessageEmbed()
         .setTitle(question.question)
@@ -353,14 +351,20 @@ async function makeQuestion(question, interaction, profileData, time) {
                 });
             } else if (scoreWithEmojis.includes('🔴')) {
                 interaction.editReply({
-                    content: translate(guild, 'PROBLEM_SELECT_ROW_PLACEHOLDER'.split(':')[1]),
+                    content: translate(
+                        guild,
+                        'PROBLEM_SELECT_ROW_PLACEHOLDER'.split(':')[1],
+                    ),
                     components: [],
-                    embeds: []
+                    embeds: [],
                 });
                 return false;
             } else {
                 interaction.editReply({
-                    content: translate(guild, 'PROBLEM_SELECT_ROW_PLACEHOLDER'.split(':')[0]),
+                    content: translate(
+                        guild,
+                        'PROBLEM_SELECT_ROW_PLACEHOLDER'.split(':')[0],
+                    ),
                     components: [],
                     embeds: [],
                 });
@@ -405,4 +409,29 @@ function shuffle(array) {
     }
 
     return array;
+}
+
+/**
+ * Function to check if the user meets the requirements to be a Challenger.
+ * @param { Object } param0 - Object with the following properties:
+ * @param { profileData } param0.profileData - Data from the user.
+ * @param { interaction } param0.interaction - The interaction message
+ * @param { String } param0.guild - The language of the guild.
+ * @returns { Boolean } - True if the user meets the requirements, false otherwise.
+ */
+async function meetsChallengeRequirements({ profileData, interaction, guild }) {
+    const keyItem = await profileData.inventory.find(
+        (item) => item._id.toString() == '6175f765562d1f316070f096',
+    );
+    if (hasActivity(interaction.user.id)) {
+        await interaction.editReply(translate(guild, 'PROBLEM_ONGOING'));
+        return false;
+    }
+    if (!readyToAdvance(profileData) || !keyItem) {
+        interaction.editReply(translate(guild, 'PROBLEM_REQ_NOT_MET'));
+        // TODO: Add a requirements hint message.
+        // if (Math.random() < 0.1) interaction.followUp(translate(guild, 'PROBLEM_REQ_HINT'))
+        return false;
+    }
+    return true;
 }

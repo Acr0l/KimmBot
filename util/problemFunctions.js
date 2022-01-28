@@ -1,6 +1,6 @@
 // Required variables:
-const { MessageEmbed } = require('discord.js'),
-    {
+const {
+        MessageEmbed,
         MessageActionRow,
         MessageButton,
         MessageSelectMenu,
@@ -122,7 +122,7 @@ async function generateQuiz(interaction, profileData, type, client) {
             components: [],
         });
         // Get the answer
-        const answer = /^problemButton[1-9]$/.test(i.customId)
+        const [ answer ] = /^problemButton[1-9]$/.test(i.customId)
             ? options.alternatives[i.customId.match(/[1-9]/)[0]].value
             : i.values;
 
@@ -188,7 +188,7 @@ async function generateQuiz(interaction, profileData, type, client) {
             hint: options.hint,
             emoji: hintEmoji,
         });
-        
+
         await interaction.editReply({ embeds: [endEmbed], components: [] });
         // Delete activity
         deleteActivity(interaction.user.id);
@@ -289,7 +289,7 @@ function rewards(type, answerTime, question) {
 
 async function checkValidSubject({ interaction, subject, guild }) {
     // Available subjects
-    const availableSubjects = ['Math', 'Science'];
+    const { availableSubjects } = require('./subjects.json');
     if (availableSubjects.indexOf(subject) === -1) {
         await interaction.editReply(
             translate(guild, 'PROBLEM_SUBJECT_NOT_SUPPORTED'),
@@ -582,4 +582,18 @@ async function hintHandler({
     });
     hintCollector.stop();
 }
-module.exports = { generateQuiz };
+module.exports = {
+    generateQuiz,
+    numberOfAlternatives,
+    shuffleAlternatives,
+    checkUser,
+    rewards,
+    checkValidSubject,
+    getQuizQuestion,
+    quizEmbedCreator,
+    createRow,
+    createSelectMenu,
+    createButton,
+    updateMe,
+    hintHandler,
+};

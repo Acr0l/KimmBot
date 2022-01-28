@@ -1,6 +1,6 @@
 // Required variables:
 const { SlashCommandBuilder } = require('@discordjs/builders'),
-    subjects = require('../../util/subjects.json'),
+    { subjects } = require('../../util/subjects.json'),
     subjectsArr = [],
     { generateQuiz } = require('../../util/problemFunctions'),
     logger = require('../../logger');
@@ -23,7 +23,7 @@ module.exports = {
         ),
 
     async execute(interaction, profileData, client) {
-        if (!generateQuiz(interaction, profileData, 0, client)){
+        if (!generateQuiz(interaction, profileData, 0, client)) {
             logger.info('Error generating quiz');
         }
     },
