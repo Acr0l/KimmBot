@@ -7,7 +7,6 @@ const { SlashCommandBuilder } = require('@discordjs/builders'),
     { readdirSync } = require('fs'),
     { translate } = require('../../handlers/language'),
     mustache = require('mustache'),
-    logger = require('../../logger'),
     { iTranslate } = require('../../handlers/language');
 
 module.exports = {
@@ -63,9 +62,9 @@ module.exports = {
                 commands: getCommands,
             };
         });
-        const embed = new MessageEmbed()
-            .setTitle(translate(guild, 'HELP_TITLE_CHOOSE'))
-            .setDescription(translate(guild, 'HELP_CHOOSE_CAT'));
+        // const embed = new MessageEmbed()
+        //     .setTitle(translate(guild, 'HELP_TITLE_CHOOSE'))
+        //     .setDescription(translate(guild, 'HELP_CHOOSE_CAT'));
         const startEmbed = new MessageEmbed()
             .setTitle(iTranslate(guild, 'help.start_embed.title', { ns }))
             .setDescription(
@@ -99,10 +98,10 @@ module.exports = {
         ];
 
         await interaction.reply({
-            embeds: [embed],
+            embeds: [startEmbed],
             components: components(false),
         });
-        const followUp = await interaction.followUp({ embeds: [startEmbed] });
+        // const followUp = await interaction.followUp({ embeds: [startEmbed] });
         const filter = (i) => i.customId == 'help-menu';
         const collector = interaction.channel.createMessageComponentCollector({
             filter,
@@ -144,7 +143,7 @@ module.exports = {
 
         collector.on('end', () => {
             interaction.editReply({
-                embeds: [embed],
+                embeds: [startEmbed],
                 components: components(true),
             });
         });
