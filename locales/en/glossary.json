@@ -94,5 +94,12 @@
             "equipped": "You are now using a {{currentItem.name}}.",
             "unequipped": "You are no longer using a {{currentItem.name}}."
         }
+    },
+    "economy": {
+        "balance": {
+            "title": "{{user.username}}'s balance",
+            "description": "Your balance is Ɖ{{user.balance}}.",
+            "footer": "You can spend your balance in the shop."
+        }
     }
 }

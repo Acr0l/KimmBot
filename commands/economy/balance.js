@@ -1,26 +1,25 @@
 const { SlashCommandBuilder } = require('@discordjs/builders'),
 	{ MessageEmbed } = require('discord.js'),
-	{ translate } = require('../../handlers/language'),
-	mustache = require('mustache');
+	{ iTranslate } = require('../../handlers/language');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('balance')
 		.setDescription('Check your balance'),
-	async execute(interaction, profileData) {
+	async execute(interaction, userData) {
 		const { guild } = interaction;
+		const { title, description, footer } = iTranslate(guild, 'economy.balance', {
+			user: {
+				username: interaction.user.username,
+				balance: userData.dons,
+			},
+			returnObjects: true,
+		});
 		const embed = new MessageEmbed()
 			.setColor('#39A2A5')
-			.setTitle(
-				mustache.render(translate(guild, 'BALANCE_TITLE'), {
-					user: interaction.user.username,
-				}),
-			)
-			.setDescription(
-				mustache.render(translate(guild, 'BALANCE_DESCRIPTION'), {
-					dons: profileData.dons,
-				}),
-			);
+			.setTitle(title)
+			.setDescription(description)
+			.setFooter({ text: footer });
 		interaction.reply({ embeds: [embed] });
 	},
 };
