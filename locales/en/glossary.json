@@ -80,7 +80,7 @@
                 "statistics": "Statistics",
                 "problems": "Problems",
                 "economy": "Economy",
-                "guild": "Server", 
+                "guild": "Server",
                 "tmp": "TEMPORAL"
             },
             "description": "Commands from the $t(help.row.directories.{{category}}, {\"ns\": \"glossary\"}) category."
@@ -116,8 +116,8 @@
                 "item_not_owned": "You need a {{currentItem.name}} to sell it.",
                 "item_equipped": "You need to unequip this item before selling it."
             },
-            "success_one": "You have successfully sold a {{currentItem.name}} for Ɖ{{currentItem.price}}.",
-            "success_other": "You have successfully sold {{count}} {{currentItem.name}} for Ɖ{{currentItem.price}}."
+            "success_one": "You have successfully sold a $t(items:{{currentItem.name}}, {\"count\": 0) for Ɖ{{currentItem.price}}.",
+            "success_other": "You have successfully sold $t(items:{{currentItem.name}}, {\"count\": {{count}}) for Ɖ{{currentItem.price}}."
         }
     }
 }

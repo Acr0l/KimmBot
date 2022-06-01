@@ -14,7 +14,7 @@ i18next.use(i18nextBackend).init(
 		lng: 'en',
 		fallbackLng: 'en',
 		preload: ['en', 'es'],
-		ns: ['common', 'validation', 'glossary'],
+		ns: ['common', 'validation', 'glossary', 'items'],
 		defaultNS: 'common',
 		fallbackNS: 'glossary',
 		backend: {

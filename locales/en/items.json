@@ -1,4 +1,9 @@
 {
     "Water_one": "Water Bottle",
-    "Water_other": "Water Bottles"
+    "Water_other": "{{count}} Water Bottles",
+    "Gatorade_one": "Gatorade",
+    "Gatorade_other": "{{count}} Gatorade Bottles",
+    "Challenge-key": "Challenge Key",
+    "Hint_one": "Hint",
+    "Hint_other": "{{count}} Hints"
 }
