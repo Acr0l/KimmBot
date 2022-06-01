@@ -51,6 +51,11 @@
         "xp_add": "TEMPORAL COMMAND"
     },
     "cooldown": "You are on cooldown for this command, please wait {{time}}.",
+    "descriptions": {
+        "categories": {
+            "economy": "Commands used to interact with the shop and currency system."
+        }
+    },
     "help": {
         "start_embed": {
             "title": "Help Menu",
@@ -100,6 +105,19 @@
             "title": "{{user.username}}'s balance",
             "description": "Your balance is Ɖ{{user.balance}}.",
             "footer": "You can spend your balance in the shop."
+        }
+    },
+    "subcommands": {
+        "sell": {
+            "reject": {
+                "item_not_found": "Item not found.",
+                "item_not_available": "This item is not available to sell.",
+                "invalid_quantity": "Invalid quantity.",
+                "item_not_owned": "You need a {{currentItem.name}} to sell it.",
+                "item_equipped": "You need to unequip this item before selling it."
+            },
+            "success_one": "You have successfully sold a {{currentItem.name}} for Ɖ{{currentItem.price}}.",
+            "success_other": "You have successfully sold {{count}} {{currentItem.name}} for Ɖ{{currentItem.price}}."
         }
     }
 }

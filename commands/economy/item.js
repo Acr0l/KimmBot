@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { iTranslate } = require('../../handlers/language');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -82,20 +83,19 @@ module.exports = {
      * @param { Client } client - The client instance.
      */
 	async execute(interaction, profileData, client) {
+		const { guild } = interaction;
 		const subcommand = client.subcommands.get(
 			interaction.options.getSubcommand(),
 		);
 		if (!subcommand) {
-			return interaction.reply(
-				`The subcommand \`${interaction.options.getSubcommand()}\` does not exist.`,
-			);
+			return interaction.reply({ content: iTranslate(guild, 'error') });
 		}
 		try {
 			await subcommand.execute(interaction, profileData, client);
 		}
 		catch (error) {
+			await interaction.reply({ content: iTranslate(guild, 'error'), ephemeral: true });
 			console.error(error);
 		}
-		// await interaction.reply({ content: `This command is not yet implemented.`, ephemeral: true });
 	},
 };

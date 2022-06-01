@@ -1,47 +1,45 @@
 const { SlashCommandBuilder } = require('@discordjs/builders'),
-    { getItemList } = require('../handlers/itemInventory'),
-    { translate } = require('../handlers/language');
+	{ getItemList } = require('../handlers/itemInventory'),
+	{ iTranslate } = require('../handlers/language');
 
+const TRANSLATION_PATH = 'subcommands.sell';
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName(`sell`)
-        .setDescription(`Sell item to the shop.`),
-    /**
-     * @param { Message } interaction
-     * @param { Object } profileData
-     * @param { Client } client
-     */
-    async execute(interaction, profileData, client) {
-        const { guild } = interaction,
-            amount = interaction.options.getNumber('amount') || 1,
-            itemToSell = interaction.options.getString('item'),
-            itemList = getItemList(),
-            currentItem =
-                itemList[
-                    Object.keys(itemList).filter(
-                        (item) => itemList[item].name === itemToSell,
-                    )
-                ],
-            ownedIndex = profileData.inventory.findIndex(
-                (item) => item._id === currentItem.id,
-            ),
-            finalAmount =
-                profileData.inventory[ownedIndex].quantity - amount;
-        if (!currentItem) {
-            interaction.reply(translate(guild, 'INVALID_ITEM'));
-        } else if (ownedIndex === -1) {
-            interaction.reply(translate(guild, 'UNOWNED_ITEM'));
-        } else if (finalAmount < 0) {
-            interaction.reply(translate(guild, 'INVALID_AMOUNT'));
-        } else {
-            profileData.dons += item.price * amount;
-            if (finalAmount === 0) {
-                profileData.inventory.splice(ownedIndex, 1);
-            } else {
-                profileData.inventory[ownedIndex].quantity = finalAmount;
-            }
-            await profileData.save();
-            await interaction.reply(translate(guild, 'SELL_SUCCESS', { amount, item: currentItem.name, price: item.price }));
-        }
-    },
+	data: new SlashCommandBuilder()
+		.setName('sell')
+		.setDescription('Sell item to the shop.'),
+	/**
+	 * @param { Message } interaction
+	 * @param { Object } profileData
+	 * @param { Client } client
+	 */
+	async execute(interaction, profileData) {
+		// Get guild data -> Guild language
+		const { guild } = interaction,
+			// Get amount of items to sell
+			amount = interaction.options.getNumber('amount') || 1,
+			// Get item to sell (String)
+			itemToSell = interaction.options.getString('item'),
+			// Get list to compare which item to sell
+			itemList = getItemList(),
+			currentItem = itemList[ Object.keys(itemList).filter((item) => itemList[item].name === itemToSell) ],
+			ownedIndex = profileData.inventory.findIndex((item) => item._id === currentItem.id),
+			finalAmount = profileData.inventory[ownedIndex].quantity - amount,
+			equipped = profileData.equipment.findIndex((item) => item === currentItem.id);
+		try {
+			if (!currentItem) {throw 'item_not_found';}
+			else if (ownedIndex === -1) {throw 'item_not_owned';}
+			else if (finalAmount < 0) {throw 'invalid_quantity';}
+			else if (equipped !== -1) {throw 'item_equipped';}
+			// TODO: Item not available
+			if (finalAmount === 0) {profileData.inventory.splice(ownedIndex, 1);}
+			else {profileData.inventory[ownedIndex].quantity = finalAmount;}
+			// Add cash to user
+			profileData.dons += currentItem.price * amount;
+			await profileData.save();
+			await interaction.reply({ content: iTranslate(guild, `${TRANSLATION_PATH}.success`, { count: amount, currentItem }) });
+		}
+		catch (error) {
+			return await interaction.reply({ content: iTranslate(guild, `${TRANSLATION_PATH}.reject.${error}`) });
+		}
+	},
 };
