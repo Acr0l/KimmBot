@@ -3,6 +3,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders'),
 	{ iTranslate } = require('../handlers/language');
 
 const TRANSLATION_PATH = 'subcommands.sell';
+const REJECTION_PATH = 'subcommands.items.rejection';
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('sell')
@@ -39,7 +40,7 @@ module.exports = {
 			await interaction.reply({ content: iTranslate(guild, `${TRANSLATION_PATH}.success`, { count: amount, currentItem }) });
 		}
 		catch (error) {
-			return await interaction.reply({ content: iTranslate(guild, `${TRANSLATION_PATH}.reject.${error}`) });
+			return await interaction.reply({ content: iTranslate(guild, `${REJECTION_PATH}.${error}`) });
 		}
 	},
 };

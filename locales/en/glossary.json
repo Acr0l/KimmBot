@@ -107,17 +107,41 @@
             "footer": "You can spend your balance in the shop."
         }
     },
+    "shop": {
+        "item_types": {
+            "equipment": "Equipment",
+            "consumable": "Consumable",
+            "special_consumable": "Special Consumable",
+            "quest": "Quest"
+        },
+        "category_description": {
+            "equipment": "Can improve your stats by wearing them.",
+            "consumable": "Can be used once with temporal & permanent effects.",
+            "special_consumable": "Unique and are harder to get.",
+            "quest": "Used to start or complete quests."
+        },
+        "embed": {
+            "title": "Shop",
+            "description": "Buy items and upgrades to improve your skills."
+        }
+    },
     "subcommands": {
-        "sell": {
-            "reject": {
+        "items": {
+            "rejection": {
                 "item_not_found": "Item not found.",
                 "item_not_available": "This item is not available to sell.",
                 "invalid_quantity": "Invalid quantity.",
                 "item_not_owned": "You need a {{currentItem.name}} to sell it.",
-                "item_equipped": "You need to unequip this item before selling it."
-            },
-            "success_one": "You have successfully sold a $t(items:{{currentItem.name}}, {\"count\": 0) for Ɖ{{currentItem.price}}.",
-            "success_other": "You have successfully sold $t(items:{{currentItem.name}}, {\"count\": {{count}}) for Ɖ{{currentItem.price}}."
+                "item_equipped": "You need to unequip this item before performing an action on it.",
+                "invalid_action": "You cannot perform this action on the item."
+            }
+        },
+        "sell": {
+            "success_one": "You have successfully sold a $t(items:names.{{currentItem.name}}, {\"count\": 0) for Ɖ{{currentItem.price}}.",
+            "success_other": "You have successfully sold $t(items:names.{{currentItem.name}}, {\"count\": {{count}}) for Ɖ{{currentItem.price}}."
+        },
+        "equip": {
+            "success": "You have successfully equipped a $t(items:names.{{currentItem.name}})."
         }
     }
 }

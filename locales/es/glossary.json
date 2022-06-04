@@ -3,5 +3,17 @@
         "reject": {
             "item_unique": "Ya tienes ese objecto."
         }
+    },
+    "shop": {
+        "item_types": {
+            "equipment": "Equipamiento",
+            "consumable": "Consumibles",
+            "special_consumable": "Consumibles especiales",
+            "quest": "Misiones"
+        },
+        "embed": {
+            "title": "Tienda",
+            "description": "Compra y vende tus objetos aquí."
+        }
     }
 }

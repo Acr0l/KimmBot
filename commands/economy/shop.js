@@ -1,3 +1,5 @@
+// const logger = require('../../logger');
+
 const { SlashCommandBuilder } = require('@discordjs/builders'),
 	{
 		MessageEmbed,
@@ -5,8 +7,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders'),
 		MessageSelectMenu,
 	} = require('discord.js'),
 	{ getItemList } = require('../../handlers/itemInventory'),
-	{ translate } = require('../../handlers/language'),
-	itemTypes = ['Equipment', 'Consumable', 'Special Consumable', 'Quest'];
+	{ translate, iTranslate } = require('../../handlers/language');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -18,32 +19,31 @@ module.exports = {
      * @param { Client } client
      */
 	async execute(interaction) {
+		// #region Variables
 		const { guild } = interaction;
-		const langTypes = translate(guild, 'SHOP_TYPES').split(':');
+		const langTypes = iTranslate(guild, 'shop.item_types', { returnObjects: true });
 		const items = getItemList(),
-			sortedKeys = Object.keys(items).sort(
-				(a, b) => items[a].price - items[b].price,
-			),
-			embed = new MessageEmbed()
-				.setTitle(translate(guild, 'SHOP_TITLE'))
-				.setColor('#0099ff')
-				.setDescription(translate(guild, 'SHOP_DESCRIPTION'));
-		const itemMap = new Map();
-		for (let i = 0; i < itemTypes.length; i++) {
-			itemMap.set(itemTypes[i], langTypes[i]);
-		}
-		const types = itemTypes.map((type) => {
-			const arrayItems = sortedKeys
-				.filter((item) => items[item].type === itemTypes.indexOf(type))
-				.map((item) => {
-					return {
-						name: `${items[item].name} (**Ɖ${items[item].price}**)`,
-						description: translate(guild, items[item].description),
-					};
-				});
+			sortedKeys = Object.keys(items).sort((a, b) => items[a].price - items[b].price),
+			{ title, description } = iTranslate(guild, 'shop.embed', { returnObjects: true }),
+			embed = new MessageEmbed().setTitle(title).setColor('#0099ff').setDescription(description);
+		// #endregion
+		const categories = Object.keys(langTypes).map((type, i) => {
 			return {
-				type: type,
-				items: arrayItems,
+				source: type,
+				type: langTypes[type],
+				items: sortedKeys.filter((key) => items[key].type === i).map(key => {
+					return {
+						name: `${items[key].name} (Ɖ${items[key].price})`,
+						description: iTranslate(guild, `items.descriptions.${items[key].description.toLowerCase()}`),
+					};
+				}),
+			};
+		});
+		const componentOptions = categories.map((category) => {
+			return {
+				label: category.type,
+				value: Object.keys(langTypes).find(key => langTypes[key] === category.type),
+				description: iTranslate(guild, `shop.category_description.${category.source}`),
 			};
 		});
 		const components = (state) => [
@@ -52,18 +52,7 @@ module.exports = {
 					.setCustomId('shop')
 					.setPlaceholder(translate(guild, 'HELP_PLACEHOLDER'))
 					.setDisabled(state)
-					.addOptions(
-						types.map((type) => {
-							return {
-								label: itemMap.get(type.type),
-								value: type.type,
-								description: translate(
-									guild,
-									`SHOP_${type.type.replace(/\s/g, '_').toUpperCase()}_TYPE`,
-								),
-							};
-						}),
-					),
+					.addOptions(componentOptions),
 			),
 		];
 		await interaction.reply({
@@ -80,22 +69,30 @@ module.exports = {
 			time: 120000,
 		});
 
-		collector.on('collect', (i) => {
-			const [iType] = i.values;
-			const category = types.find((type) => type.type === iType),
-				categoryEmbed = new MessageEmbed()
-					.setTitle(translate(guild, 'SHOP_TITLE'))
-					.setColor('#80EA98')
-					.setDescription(translate(guild, 'SHOP_DESCRIPTION'))
-					.setFields(
-						category.items.map((item) => {
-							return {
-								name: item.name,
-								value: item.description,
-							};
-						}),
-					);
-			i.update({ embeds: [categoryEmbed] });
+		collector.on('collect', async (collectorInteraction) => {
+			/**
+			 * @type { String }
+			 * @description The value of componentOptions ('equipment', 'consumable', 'special consumable', 'quest')
+			 */
+			const [selectedCategory] = collectorInteraction.values;
+			const cat2 = categories.find(cat => cat.source === selectedCategory.toLowerCase());
+			const embed2 = new MessageEmbed()
+				.setTitle('Shop title')
+				.setColor('#0099ff')
+				.setDescription('Cool description')
+				.setFields(cat2.items.map((item) => {
+					return {
+						name: item.name,
+						value: item.description,
+					};
+				}));
+			try {
+				await collectorInteraction.update({ embeds: [embed2] });
+			}
+			catch (error) {
+				await collectorInteraction.update({ content: iTranslate(guild, 'error') });
+				console.error(error);
+			}
 		});
 
 		collector.on('end', () => {

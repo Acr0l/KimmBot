@@ -24,7 +24,6 @@ const setLanguage = async (guildId, language) => {
 	guildLanguages[guildId] = language;
 };
 
-
 /**
  *
  * @param { Object } guild - The guild object.
@@ -46,20 +45,29 @@ const iTranslate = (guild, key, options = {}) => {
  * @param { * } options - The options to pass to the translation.
  * @returns { String } - The translated string.
  */
-const translate = (guild, key, options = {}) => {
-	return i18next.t(key, {
-		lng: guildLanguages[guild.id] || 'en',
-		...options,
-	});
-};
+// const translate = (guild, key, options = {}) => {
+// 	return i18next.t(key, {
+// 		lng: guildLanguages[guild.id] || 'en',
+// 		...options,
+// 	});
+// };
 
+const translate = (guild, textKey) => {
+	if (!lang.translations[textKey]) {
+		throw new Error(`Language key ${textKey} does not exist.`);
+	}
+
+	return lang.translations[textKey][guildLanguages[guild.id] || 'en'];
+};
 const getLanguage = (guild) => {
 	return guildLanguages[guild.id] || 'en';
 };
 
 // TODO: Add a way to get the language map for a specific key
 const getLanguageMap = (guild, key, separator = ':') => {
-	if (!lang.translations[key]) {throw new Error(`Language key ${key} does not exist.`);}
+	if (!lang.translations[key]) {
+		throw new Error(`Language key ${key} does not exist.`);
+	}
 	const propertiesMap = new Map(),
 		text = lang.translations[key];
 	for (const langKey of Object.keys(text)) {
