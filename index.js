@@ -8,6 +8,7 @@ const { Client, Collection, Intents } = require('discord.js'),
 	i18next = require('i18next'),
 	i18nextBackend = require('i18next-fs-backend');
 
+// @ts-ignore
 i18next.use(i18nextBackend).init(
 	{
 		initImmediate: false,
@@ -30,6 +31,9 @@ i18next.use(i18nextBackend).init(
 );
 
 // Create client
+/**
+ * @type {Client} client
+ */
 const client = new Client({
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 });
@@ -38,22 +42,26 @@ const client = new Client({
 client.commands = new Collection();
 client.subcommands = new Collection();
 
-let tmp = [];
-function throughDirectory(dir) {
+/**
+ * Iterate through the commands directory and add them to the respective collection
+ * @param {String} dir The directory to search
+ * @param {String[]} [arr] Accumulator for the directories
+ * @returns {String[]}
+ */
+const throughDirectory = (dir, arr = []) => {
 	fs.readdirSync(dir).forEach((file) => {
 		const absolute = path.join(dir, file);
-		if (fs.statSync(absolute).isDirectory()) {return throughDirectory(absolute);}
-		else if (absolute.endsWith('js')) {return tmp.push(absolute);}
+		if (fs.statSync(absolute).isDirectory()) {return throughDirectory(absolute, arr);}
+		else if (absolute.endsWith('js')) {return arr.push(absolute);}
 	});
-}
-throughDirectory('./commands');
-const commandFiles = [...tmp];
-tmp = [];
-throughDirectory('./subcommands');
-const subcommandFiles = [...tmp];
+	return arr;
+};
+
+const commandFiles = [...throughDirectory(path.join(__dirname, 'commands'))];
+const subcommandFiles = [...throughDirectory(path.join(__dirname, 'subcommands'))];
 
 for (const file of commandFiles) {
-	const command = require(`./${file}`),
+	const command = require(`${file}`),
 		splitted = file.split('\\'),
 		directory = splitted[splitted.length - 2];
 	command['directory'] = directory;
@@ -71,7 +79,7 @@ for (const file of commandFiles) {
 // });
 
 for (const file of subcommandFiles) {
-	const subcommand = require(`./${file}`);
+	const subcommand = require(`${file}`);
 	const splitted = file.split('\\');
 	const directory = splitted[splitted.length - 2];
 	// Set a new item in the Collection
@@ -81,8 +89,10 @@ for (const file of subcommandFiles) {
 	else {logger.error(`${subcommand} not found`);}
 }
 
-// module.exports = client;
 // Create a collection for the events
+/**
+ * @type {String[]} eventFiles
+ */
 const eventFiles = fs
 	.readdirSync('./events')
 	.filter((file) => file.endsWith('.js'));
@@ -103,10 +113,7 @@ process.on('unhandledRejection', (error) => {
 
 // Connect to MongoDB
 mongoose
-	.connect(MONGODB_URI, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
+	.connect(MONGODB_URI)
 	.then(() => logger.info('MongoDB Connected'))
 	.catch((err) => logger.error(err));
 

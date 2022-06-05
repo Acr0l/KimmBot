@@ -3,12 +3,6 @@ const quizCategories = [
 		type: 'Warmup',
 		time: 60,
 		meConsumption: 2,
-		/**
-         *
-         * @param { Number } answerTime
-         * @param { Number } difficulty
-         * @returns { Number }
-         */
 		meFormula: function(answerTime, difficulty) {
 			return Math.max(
 				Math.ceil(Math.log(answerTime)) * (difficulty + 2),
@@ -60,13 +54,6 @@ const quizCategories = [
 		type: 'Challenge',
 		time: 300,
 		meConsumption: 4,
-		/**
-         * Get time limit and quantity of problems based on difficulty
-         * @param { Number } tier - Difficulty of the problem(s)
-         * @param { Function } dhmsFunction - Function to convert seconds to days, hours, minutes and seconds
-         * @param { String } language - Language of the problem(s)
-         * @returns {{ Questions: { totalTime: { String }, number: { Number }}, Difficulty: { Object}, Time: { seconds: { Number }, time: { String }} }}
-         */
 		questionsTimeAndQuantity: function(tier, dhmsFunction, language) {
 			return {
 				Questions: {

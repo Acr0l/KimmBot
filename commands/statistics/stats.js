@@ -7,11 +7,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('stats')
 		.setDescription('Shows the user specific stats in different subjects.'),
-	/**
-    * @param { Object } interaction - Object with the interaction data sent by the user.
-    * @param { Object } profileData - Object from the database with the user profile data.
-    * @param { Object } client - The discord.js client object.
-    */
 	async execute(interaction, profileData) {
 		const { guild } = interaction;
 

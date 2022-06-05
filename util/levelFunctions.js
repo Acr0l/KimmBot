@@ -30,12 +30,6 @@ const printLvlUp = (user, interaction) => {
 	});
 };
 
-/**
- *
- * @param { Object } user - The user object (profileData)
- * @param { Number } exp - The amount of xp to add
- * @return { profileData } - The updated user object
- */
 const applyXp = async (user, exp, interaction) => {
 	user = addXp(user, exp);
 	if (readyToLevelUp(user, user.level)) {
@@ -46,12 +40,6 @@ const applyXp = async (user, exp, interaction) => {
 	return user;
 };
 
-/**
- *
- * @param { Object } itemList - The list of items in the database.
- * @param { String } itemName - The name of the item to search for.
- * @returns - The item object that matches the name.
- */
 const checkItemInfo = (itemList, itemName) => {
 	for (const key in itemList) {
 		if (itemList[key].name === itemName) {

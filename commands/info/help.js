@@ -14,12 +14,6 @@ module.exports = {
 		.setName('help')
 		.setDescription('Short description about the available commands.'),
 
-	/**
-     *
-     * @param { Object } interaction - Object with the interaction data sent by the user.
-     * @param { Object } profileData - Object from the database with the user profile data.
-     * @param { Object } client - The discord.js client object.
-     */
 	async execute(interaction, profileData, client) {
 		// const {info, statistics } =
 		//     i18next.t('help.category_embed.descriptions', {
@@ -36,10 +30,6 @@ module.exports = {
 				.filter((dirent) => dirent.isDirectory())
 				.map((dirent) => dirent.name);
 
-		directories.move(directories.indexOf('info'), 0);
-		directories.move(directories.indexOf('statistics'), 1);
-		directories.move(directories.indexOf('problems'), 2);
-		directories.move(directories.indexOf('economy'), 3);
 
 		const langMap = new Map();
 		for (let i = 0; i < langDirectories.length; i++) {
@@ -148,8 +138,4 @@ module.exports = {
 			});
 		});
 	},
-};
-
-Array.prototype.move = function(from, to) {
-	this.splice(to, 0, this.splice(from, 1)[0]);
 };

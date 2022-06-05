@@ -21,14 +21,6 @@ const {
 // Constants
 const N = 5;
 
-/**
- * Function to get the quiz questions
- * @param { Interaction } interaction - The interaction object
- * @param { quizDatabase } profileData - The user's profile data
- * @param { Number } type - The type of quiz to generate.
- * @param { Client } client - The client object
- * @returns { Boolean } - Whether or not the quiz was handled successfully.
- */
 async function generateQuiz(interaction, profileData, type, client) {
 	// Defer response
 	await interaction.deferReply({ ephemeral: true });
@@ -233,12 +225,6 @@ function shuffle(array) {
 	return array;
 }
 
-/**
- * Shuffles the array and returns the alternatives in a random order.
- * @param { Number } number - Number of alternatives to be returned.
- * @param { {_id: String, subject: String, difficulty: Number, question: String, correct_answer: String, incorrect_answers: String[]} } question - Question object, with the alternatives.
- * @returns { [{label: String, value: String}, Boolean] } - Array of alternatives.
- */
 function shuffleAlternatives(number, question) {
 	const options = [];
 	let alternatives = [];
@@ -300,16 +286,6 @@ async function checkValidSubject({ interaction, subject, guild }) {
 	return true;
 }
 
-/**
- * Function to get questions from the database
- * @param {*} param0 - Object with the following properties:
- * @param {*} param0.interaction - The interaction object
- * @param {*} param0.profileData - Subject
- * @param { String } param0.guild - The guild
- * @param { Number } param0.type - The type of the quiz
- * @param { Number } param0.quantity - The number of questions
- * @returns { Array } - Array of questions (Boolean if no question was found)
- */
 async function getQuizQuestion({
 	interaction,
 	subject,
@@ -338,14 +314,7 @@ async function getQuizQuestion({
 	return question;
 }
 
-/**
- * Function to create display of the question
- * @param {*} param0 - Object with the following properties:
- * @param { Question } param0.question - The question object
- * @param { Number } param0.type - The type of the quiz
- * @param { String } param0.guild - The guild language
- * @returns { Object } Embed object
- */
+
 function quizEmbedCreator(
 	{
 		question,
@@ -428,24 +397,10 @@ function quizEmbedCreator(
 	}
 }
 
-/**
- * Creates a message action row with a button component (TODO: Add more buttons)
- * @param { * } param0 - Object with the following properties:
- * @param { String } param0.type - The type of button to create.
- * @param { String } param0.guild - The guild language
- * @param { { alternatives: [{label: String, value: String}], correct_answer: String, hint: Boolean } } param0.options - The options to create the button for.
- * @returns { MessageButton[] } - function to create a button component
- */
+
 function createButton({ type, guild, options }) {
 	if (type == 'hint') {
-		return (state) =>
-			new MessageActionRow().addComponents([
-				new MessageButton()
-					.setCustomId('getHint')
-					.setLabel(translate(guild, 'PROBLEM_HINT_REQ'))
-					.setStyle('SUCCESS')
-					.setDisabled(state),
-			]);
+		return (state) => new MessageActionRow().addComponents([ new MessageButton() .setCustomId('getHint') .setLabel(translate(guild, 'PROBLEM_HINT_REQ')) .setStyle('SUCCESS') .setDisabled(state) ]);
 	}
 	else if (type == 'question') {
 		const res = [];
@@ -468,14 +423,7 @@ function numberOfAlternatives(question) {
 		: question.incorrect_answers.length + 1;
 }
 
-/**
- *
- * @param { Object } param0 - Object with the following properties:
- * @param { String } param0.guild - The guild language
- * @param { Number } [param0.difference] - Alternatives to subtract from the options
- * @param {{ alternatives: [{label: String, value: String}], correct_answer: String, hint: Boolean } } param0.options - The options to create the button for.
- * @returns { MessageSelectMenu } - MessageSelectMenu object
- */
+
 function createSelectMenu({ guild, question, difference = 0, options }) {
 	// Randomize the alternatives.
 	if (difference != 0) {
@@ -494,14 +442,6 @@ function createSelectMenu({ guild, question, difference = 0, options }) {
 		.addOptions(options.alternatives);
 }
 
-/**
- *
- * @param {*} param0 - Object with the following properties:
- * @param { interaction } param0.interaction - The interaction object
- * @param { String } param0.guild - The guild language
- * @param {{ alternatives: [{label: String, value: String}], correct_answer: String, hint: Boolean } } param0.options - The options to create the button for.
- * @returns
- */
 function createRow({ question, guild, interaction, options }) {
 	// Create row with select menu
 	return {
@@ -513,23 +453,9 @@ function createRow({ question, guild, interaction, options }) {
                 i.user.id === interaction.user.id
 			);
 		},
-		row: new MessageActionRow().addComponents(
-			question.type == 'T/F'
-				? createButton({ type: 'question', guild, question, options })
-				: [createSelectMenu({ guild, question, options })],
-		),
-	};
+		row: new MessageActionRow().addComponents(question.type == 'T/F' ? createButton({ type: 'question', guild, question, options }) : [createSelectMenu({ guild, question, options })]) };
 }
 
-/**
- *
- * @param {*} param0 - Object with the following properties:
- * @param { profileData } param0.profileData - The profile data object
- * @param { String } param0.guild - The guild language
- * @param { Number } param0.meSpent - The amount of mental energy spend on the quiz.
- * @param { String } param0.answer - The answer of the user.
- * @returns { profileData | false } - The profile data object or false if the ME isn't enough to answer.
- */
 async function updateMe({ profileData, meSpent, guild, i, question, answer }) {
 	if (profileData.mentalEnergy.me - meSpent < 0) {
 		// Not enough energy

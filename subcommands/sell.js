@@ -8,11 +8,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('sell')
 		.setDescription('Sell item to the shop.'),
-	/**
-	 * @param { Message } interaction
-	 * @param { Object } profileData
-	 * @param { Client } client
-	 */
 	async execute(interaction, profileData) {
 		// Get guild data -> Guild language
 		const { guild } = interaction,

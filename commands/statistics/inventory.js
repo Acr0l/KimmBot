@@ -8,11 +8,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('inventory')
 		.setDescription('Display current user items.'),
-	/**
-     * @param { Message } interaction
-     * @param { Object } profileData
-     * @param { Client } client
-     */
 	async execute(interaction, profileData) {
 		const { guild } = interaction;
 		const inventory = profileData.inventory;

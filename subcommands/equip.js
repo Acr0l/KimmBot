@@ -8,10 +8,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('equip')
 		.setDescription('Equip selected item.'),
-	/**
-     * @param { Interaction } interaction
-     * @param { profileData } userData
-     */
 	async execute(interaction, userData) {
 		const { guild } = interaction,
 			itemAction = interaction.options.getString('item'),

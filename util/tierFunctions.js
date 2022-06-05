@@ -59,11 +59,6 @@ const tierRequirements = {
 	{ translate } = require('../handlers/language'),
 	mustache = require('mustache');
 
-/**
- * Function to check if the user can advance to the next tier.
- * @param { Object } user - The user object (profileData)
- * @returns boolean - Whether or not the user is ready to advance.
- */
 const readyToAdvance = (user) => {
 	const tierMap = {};
 	user.stats.map((stat) => {
@@ -82,12 +77,6 @@ const readyToAdvance = (user) => {
 	return true;
 };
 
-/**
- * Function to check if the user's stat can advance to the next tier.
- * @param { Object } user - The user object (profileData)
- * @param { String } statName - The name of the stat to check.
- * @returns boolean - Whether or not the stat can advance.
- */
 const readyToAdvanceStat = (user, statName) => {
 	const stat = user.stats.find((s) => {
 		return s.subject == statName;
@@ -102,12 +91,6 @@ const readyToAdvanceStat = (user, statName) => {
 	return false;
 };
 
-/**
- * Function to advance the user's stat and check if they can advance to the next tier.
- * @param { Object } user - The user object (profileData)
- * @param { String } statName - The name of the stat to check.
- * @returns Boolean - Whether or not the stat is ready to advance.
- */
 const advanceStatTier = (user, statName) => {
 	const stat = user.stats.find((s) => {
 		return s.subject.toLowerCase() == statName.toLowerCase();
@@ -120,13 +103,6 @@ const advanceTier = (user) => {
 	user.tier += 1;
 };
 
-/**
- * Function to apply changes to the user's stats.
- * @param { Object } user - The user object (profileData)
- * @param { String } statName - The name of the stat to check.
- * @param { Boolean } correct - Whether or not the user answered correctly.
- * @returns Boolean - Whether or not the stat is ready to advance.
- */
 const updateStat = (user, statName, correct) => {
 	const stat = user.stats.find((s) => {
 		return s.subject.toLowerCase() == statName.toLowerCase();
@@ -146,12 +122,6 @@ const updateStat = (user, statName, correct) => {
 	return readyToAdvanceStat(user, statName);
 };
 
-/**
- * Function used to print whether the user advanced tier/stat.
- * @param { Object } interaction - The interaction object.
- * @param { String } status - Capitalized string with the status after changes were applied.
- * @param { Object } objectStatus - Object with optional text to replace in the template.
- */
 const printStatus = (interaction, status, objectStatus = {}) => {
 	const [ embedTitle, embedDescription ] = mustache.render(translate(interaction.guild, status), objectStatus).split(':');
 	const embed = new MessageEmbed()
@@ -161,14 +131,6 @@ const printStatus = (interaction, status, objectStatus = {}) => {
 	interaction.followUp({ embeds: [embed] });
 };
 
-/**
- * Called every time the Workout command is used.
- * @param { Object } user - The user object (profileData)
- * @param { Object } stat - The stat to update.
- * @param { String } stat.name - The name of the subject to update.
- * @param { Boolean } stat.correct - Whether or not the user answered correctly.
- * @param { Object } interaction - The interaction object.
- */
 const applyStatChanges = async (user, stat, interaction) => {
 	if (updateStat(user, stat.name, stat.correct)) {
 		if (advanceStatTier(user, stat.name)) {printStatus(interaction, 'TIER_READY', { tier: user.tier + 1, user: interaction.user.username, color: '#F0F0F0' });}

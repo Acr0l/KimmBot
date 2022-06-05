@@ -128,3 +128,4 @@ config.json
 
 # Testing commands
 commands/tmp/*
+docs/

@@ -77,11 +77,6 @@ module.exports = {
 				),
 		),
 
-	/**
-     * @param { Message } interaction - The message that triggered the command.
-     * @param { Object } profileData - The profile data of the user.
-     * @param { Client } client - The client instance.
-     */
 	async execute(interaction, profileData, client) {
 		const { guild } = interaction;
 		const subcommand = client.subcommands.get(

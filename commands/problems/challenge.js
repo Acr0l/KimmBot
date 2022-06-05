@@ -185,18 +185,6 @@ module.exports = {
 };
 
 
-/**
- * Display the question.
- * @param { Object } question - Question object
- * @param { String } question.question - Question text
- * @param { String } question._id - Question ID
- * @param { String } question.image - Image of the question
- * @param { String } question.correct_answer - Correct answer
- * @param { String } question[].incorrect_answers - Incorrect answers
- * @param { MessageComponent } interaction - The interaction message
- * @param { Object } profileData - Data from the user.
- * @return { Boolean } - True if the question was answered correctly, false otherwise.
- */
 async function makeQuestion({
 	question,
 	interaction,
@@ -380,14 +368,6 @@ function shuffle(array) {
 	return array;
 }
 
-/**
- * Function to check if the user meets the requirements to be a Challenger.
- * @param { Object } param0 - Object with the following properties:
- * @param { profileData } param0.profileData - Data from the user.
- * @param { interaction } param0.interaction - The interaction message
- * @param { String } param0.guild - The language of the guild.
- * @returns { Boolean } - True if the user meets the requirements, false otherwise.
- */
 async function meetsChallengeRequirements({ profileData, interaction, guild }) {
 	const keyItem = await profileData.inventory.find(
 		(item) => item._id.toString() == '6175f765562d1f316070f096',

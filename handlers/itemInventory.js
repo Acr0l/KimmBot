@@ -25,14 +25,6 @@ const loadItems = async () => {
 		console.log(err);
 	}
 };
-
-/**
- * @param { String } itemId - The id of the quiz.
- * @returns { Object } - The quiz object.
- * @description Gets a quiz by id.
- * @example
- * getItem('5e9f8f8f8f8f8f8f8f8f8f8');
- */
 const getItem = (itemId) => {
 	return items[itemId];
 };

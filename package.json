@@ -1,48 +1,42 @@
 {
-    "name": "kimm-bot",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-        "start": "node index.js",
-        "devStart": "nodemon index.js --ignore ./log.json | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
-        "lint": "eslint --ext .js"
-    },
-    "keywords": [
-        "discord",
-        "bot",
-        "kimm"
-    ],
-    "author": "Acrol",
-    "license": "ISC",
-    "dependencies": {
-        "@discordjs/builders": "^0.13.0",
-        "@discordjs/rest": "^0.4.1",
-        "connect-busboy": "^1.0.0",
-        "csvtojson": "^2.0.10",
-        "discord-api-types": "^0.33.1",
-        "discord.js": "^13.7.0",
-        "ejs": "^3.1.8",
-        "express": "^4.18.1",
-        "i18next": "^21.8.5",
-        "i18next-fs-backend": "^1.1.4",
-        "mongodb": "^4.6.0",
-        "mongoose": "^6.3.5",
-        "mustache": "^4.2.0",
-        "node-fetch": "^3.2.4",
-        "path": "^0.12.7"
-    },
-    "description": "",
-    "prettier": {
-        "tabWidth": 4,
-        "quoteProps": "as-needed",
-        "singleQuote": true,
-        "trailingComma": "all",
-        "bracketSpacing": true
-    },
-    "devDependencies": {
-        "eslint": "^8.16.0",
-        "nodemon": "^2.0.16",
-        "pino": "^7.11.0",
-        "pino-pretty": "^7.6.1"
-    }
+  "name": "kimm-bot",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node index.js",
+    "devStart": "nodemon index.js --ignore ./log.json | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
+    "lint": "eslint --ext .js",
+    "doc": "jsdoc -c jsdoc.json"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "kimm"
+  ],
+  "author": "Acrol",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/builders": "^0.13.0",
+    "@discordjs/rest": "^0.4.1",
+    "connect-busboy": "^1.0.0",
+    "csvtojson": "^2.0.10",
+    "discord-api-types": "^0.33.1",
+    "discord.js": "^13.7.0",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "i18next": "^21.8.5",
+    "i18next-fs-backend": "^1.1.4",
+    "mongodb": "^4.6.0",
+    "mongoose": "^6.3.5",
+    "mustache": "^4.2.0",
+    "node-fetch": "^3.2.4",
+    "path": "^0.12.7"
+  },
+  "description": "",
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "nodemon": "^2.0.16",
+    "pino": "^7.11.0",
+    "pino-pretty": "^7.6.1"
+  }
 }

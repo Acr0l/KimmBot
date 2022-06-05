@@ -17,11 +17,6 @@ module.exports = {
 					{ name: 'Español', value: 'es' },
 				),
 		),
-	/**
-     * @param { Object } interaction - Object with the interaction data sent by the user.
-     * @param { Object } profileData - Object from the database with the user profile data.
-     * @param { Object } client - The discord.js client object.
-     */
 	async execute(interaction) {
 		const language = interaction.options.getString('lang');
 		const { guild } = interaction;

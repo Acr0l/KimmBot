@@ -25,11 +25,12 @@ const setLanguage = async (guildId, language) => {
 };
 
 /**
- *
- * @param { Object } guild - The guild object.
- * @param { String } key - The key to translate.
- * @param { * } options - The options to pass to the translation.
- * @returns { String } - The translated string.
+ * Function that allows the bot to communicate with i18next.
+ * @param {Object} guild Guild to get the language for
+ * @param {String} guild.id Guild ID
+ * @param {String} key Key withing the language map
+ * @param {*} [options] Options to pass to the language map
+ * @returns {String|Object} Translated string or object
  */
 const iTranslate = (guild, key, options = {}) => {
 	return i18next.t(key, {
@@ -37,20 +38,6 @@ const iTranslate = (guild, key, options = {}) => {
 		...options,
 	});
 };
-
-/**
- *
- * @param { Object } guild - The guild object.
- * @param { String } key - The key to translate.
- * @param { * } options - The options to pass to the translation.
- * @returns { String } - The translated string.
- */
-// const translate = (guild, key, options = {}) => {
-// 	return i18next.t(key, {
-// 		lng: guildLanguages[guild.id] || 'en',
-// 		...options,
-// 	});
-// };
 
 const translate = (guild, textKey) => {
 	if (!lang.translations[textKey]) {

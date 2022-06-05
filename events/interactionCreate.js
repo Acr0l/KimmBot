@@ -1,4 +1,5 @@
-const profileDatabase = require('../models/profileSchema'),
+/** @module interactionCreate */
+const Profile = require('../models/profileSchema'),
 	{ translate, iTranslate } = require('../handlers/language'),
 	mustache = require('mustache'),
 	RECOVERYTIME = 5,
@@ -51,6 +52,12 @@ module.exports = {
 };
 
 // TODO: Add time formatting with interpolation and plurals (i18next)
+/**
+ * Translates time into a human readable format.
+ * @param {Number} seconds Seconds to translate
+ * @param {*} trGuild Guild with specific language
+ * @returns {String}
+ */
 function forHumans(seconds, trGuild) {
 	const levels = [
 		[
@@ -74,13 +81,19 @@ function forHumans(seconds, trGuild) {
             ' ' +
             levels[i][0] +
             ' ' +
+            // @ts-ignore
             (levels[i][0] === 1 ? levels[i][1].substr(0, levels[i][1].length - 1) : levels[i][1]);
 	}
 	return returntext.trim();
 }
 
+/**
+ * Fetch user from database and, if not found, prompt user to register.
+ * @param {{interaction: *, guild: *}} params
+ * @returns {Promise<Profile|boolean>} user profile or false if user is not found
+ */
 async function getUser({ interaction, guild }) {
-	const user = await profileDatabase.findOne({
+	const user = await Profile.findOne({
 		userID: interaction.user.id,
 	});
 	if (!user && interaction.commandName !== 'register') {

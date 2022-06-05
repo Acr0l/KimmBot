@@ -1,5 +1,18 @@
+/**
+ * The schema for the users stored in the database
+ * @module profileSchema
+ * */
 const mongoose = require('mongoose');
-
+'use strict';
+/**
+ * @class effectsData
+ * @memberof module:profileSchema~Profile
+ * @property {string} name
+ * @property {Number} meBoost
+ * @property {Number} mrBoost
+ * @property {Number} duration
+ * @property {Date} durationEnd
+ */
 const effectsData = new mongoose.Schema({
 		name: { type: String, required: true },
 		meBoost: { type: Number, default: 0 },
@@ -11,16 +24,47 @@ const effectsData = new mongoose.Schema({
 			default: Date.now,
 		},
 	}),
+	/**
+	 * @class statsSchema
+	 * @memberof module:profileSchema~Profile
+	 * @property {String} subject
+	 * @property {Number} value
+	 * @property {Number} correct
+	 * @property {Number} incorrect
+	 */
 	statsSchema = new mongoose.Schema({
 		subject: { type: String, required: true },
 		tier: { type: Number, required: true },
 		correct: { type: Number, default: 0, required: true },
 		incorrect: { type: Number, default: 0, required: true },
 	}),
+	/**
+	 * @class inventorySchema
+	 * @memberof module:profileSchema~Profile
+	 */
 	inventorySchema = new mongoose.Schema({
 		_id: { type: String, required: true },
 		quantity: { type: Number, default: 0, required: true },
 	}),
+	/**
+	 * @constructor Profile
+	 * @mixes mongoose.Schema
+	 * @property {string} userID
+	 * @property {Number} level
+	 * @property {Number} xp
+	 * @property {Number} totalXp
+	 * @property {Number} tier
+	 * @property {Number} dons
+	 * @property {inventorySchema} inventory
+	 * @property {*} cooldowns
+	 * @property {string[]} title
+	 * @property {{me: Number, totalMe: Number, mr: Number, lastRecovery: Date}} mentalEnergy
+	 * @property {statsSchema} stats
+	 * @property {string[]} equipment
+	 * @property {effectsData} effects
+	 * @property {Date} createdAt
+	 * @property {Date} updatedAt
+	 */
 	profileSchema = new mongoose.Schema({
 		userID: { type: String, required: true, unique: true },
 		level: { type: Number, default: 0 },
@@ -81,6 +125,6 @@ profileSchema.virtual('currentMR').get(function() {
 	);
 });
 
-const model = mongoose.model('Profiles', profileSchema);
+const Profile = mongoose.model('Profiles', profileSchema);
 
-module.exports = model;
+module.exports = Profile;

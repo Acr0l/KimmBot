@@ -1,0 +1,19 @@
+{
+  "source": {
+    "include": ["./commands", "./events", "./models"],
+    "includePatter": ".+\\.js(doc|x)?$",
+    "exclude": ["./node_modules", "./test", "./docs", "./commands/tmp"]
+  },
+  "plugins": ["plugins/markdown"],
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true
+  },
+  "opts": {
+    "recurse": true,
+    "destination": "./docs/"
+  },
+  "tags": {
+    "dictionaries": ["jsdoc", "closure"]
+  }
+}

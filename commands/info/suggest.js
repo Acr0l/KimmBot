@@ -47,11 +47,6 @@ module.exports = {
 				.setRequired(true),
 		),
 
-	/**
-     * @param { Object } interaction - Object with the interaction data sent by the user.
-     * @param { Object } profileData - Object from the database with the user profile data.
-     * @param { Object } client - The discord.js client object.
-     */
 	async execute(interaction, profileData, client) {
 		// if (await DBLIST.findOne(interaction.user.id)) return interaction.reply('You are not allowed to use this command.')
 		// Build embed (TODO)
