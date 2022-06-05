@@ -2,11 +2,30 @@
  * The schema for the users stored in the database
  * @module profileSchema
  * */
+/**
+	 * @typedef User
+	 * @property {string} userID
+	 * @property {Number} level
+	 * @property {Number} xp
+	 * @property {Number} totalXp
+	 * @property {Number} tier
+	 * @property {Number} dons
+	 * @property {inventorySchema} inventory
+	 * @property {*} cooldowns
+	 * @property {string[]} title
+	 * @property {{me: Number, totalMe: Number, mr: Number, lastRecovery: Date}} mentalEnergy
+	 * @property {statsSchema} stats
+	 * @property {string[]} equipment
+	 * @property {effectsData} effects
+	 * @property {Date} createdAt
+	 * @property {Date} updatedAt
+	 * @mixes mongoose.model()
+	 */
 const mongoose = require('mongoose');
 'use strict';
 /**
  * @class effectsData
- * @memberof module:profileSchema~Profile
+ * @memberof module:profileSchema~User
  * @property {string} name
  * @property {Number} meBoost
  * @property {Number} mrBoost
@@ -26,7 +45,7 @@ const effectsData = new mongoose.Schema({
 	}),
 	/**
 	 * @class statsSchema
-	 * @memberof module:profileSchema~Profile
+	 * @memberof module:profileSchema~User
 	 * @property {String} subject
 	 * @property {Number} value
 	 * @property {Number} correct
@@ -40,31 +59,13 @@ const effectsData = new mongoose.Schema({
 	}),
 	/**
 	 * @class inventorySchema
-	 * @memberof module:profileSchema~Profile
+	 * @memberof module:profileSchema~User
 	 */
 	inventorySchema = new mongoose.Schema({
 		_id: { type: String, required: true },
 		quantity: { type: Number, default: 0, required: true },
 	}),
-	/**
-	 * @constructor Profile
-	 * @mixes mongoose.Schema
-	 * @property {string} userID
-	 * @property {Number} level
-	 * @property {Number} xp
-	 * @property {Number} totalXp
-	 * @property {Number} tier
-	 * @property {Number} dons
-	 * @property {inventorySchema} inventory
-	 * @property {*} cooldowns
-	 * @property {string[]} title
-	 * @property {{me: Number, totalMe: Number, mr: Number, lastRecovery: Date}} mentalEnergy
-	 * @property {statsSchema} stats
-	 * @property {string[]} equipment
-	 * @property {effectsData} effects
-	 * @property {Date} createdAt
-	 * @property {Date} updatedAt
-	 */
+	/** @constructor Profile */
 	profileSchema = new mongoose.Schema({
 		userID: { type: String, required: true, unique: true },
 		level: { type: Number, default: 0 },
@@ -125,6 +126,8 @@ profileSchema.virtual('currentMR').get(function() {
 	);
 });
 
+/** @instance Profile */
+// @ts-ignore
 const Profile = mongoose.model('Profiles', profileSchema);
 
 module.exports = Profile;
