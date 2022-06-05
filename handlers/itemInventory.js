@@ -28,7 +28,6 @@ const loadItems = async () => {
 const getItem = (itemId) => {
 	return items[itemId];
 };
-
 const getItemList = () => {
 	return items;
 };

@@ -138,6 +138,7 @@
       "invalid_quantity": "Invalid quantity.",
       "item_not_owned": "You need a {{currentItem.name}} to sell it.",
       "item_equipped": "You need to unequip this item before performing an action on it.",
+      "item_not_equipped": "You need to equip the item before doing that!",
       "invalid_action": "You cannot perform this action on the item.",
       "item_unique": "This item is unique, you cannot have more than one.",
       "insufficient_funds": "You don't have enough funds to buy this item."
@@ -145,15 +146,18 @@
   },
   "subcommands": {
     "sell": {
-      "success_one": "You have successfully sold a $t(items:names.{{currentItem.name}}, {\"count\": 0) for Ɖ{{currentItem.price}}.",
+      "success_one": "You have successfully sold a $t(items:names.{{currentItem.name}}, {\"count\": 1}) for Ɖ{{currentItem.price}}.",
       "success_other": "You have successfully sold $t(items:names.{{currentItem.name}}, {\"count\": {{count}}) for Ɖ{{currentItem.price}}."
     },
     "buy": {
-      "success_one": "You have successfully bought a $t(items:names.{{currentItem.name}}, {\"count\": 0) for Ɖ{{currentItem.price}}.",
+      "success_one": "You have successfully bought a $t(items:names.{{currentItem.name}}, {\"count\": 1}) for Ɖ{{currentItem.price}}.",
       "success_other": "You have successfully bought $t(items:names.{{currentItem.name}}, {\"count\": {{count}}) for Ɖ{{currentItem.price}}."
     },
     "equip": {
-      "success": "You have successfully equipped a $t(items:names.{{currentItem.name}})."
+      "success": "You have successfully equipped a **$t(items:names.{{currentItem.name}}, {\"count\": 1})**."
+    },
+    "unequip": {
+      "success": "You have successfully unequipped a **$t(items:names.{{currentItem.name}}, {\"count\": 1})**."
     }
   }
 }
