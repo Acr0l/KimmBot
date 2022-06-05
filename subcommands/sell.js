@@ -18,14 +18,20 @@ module.exports = {
 			// Get list to compare which item to sell
 			itemList = getItemList(),
 			currentItem = itemList[ Object.keys(itemList).filter((item) => itemList[item].name === itemToSell) ],
-			ownedIndex = profileData.inventory.findIndex((item) => item._id === currentItem?.id),
+			/** @type {Number} */
+			ownedIndex = profileData.inventory.findIndex(
+			/** @param {Object} item @param {String} item._id */
+				(item) => item._id === currentItem?.id),
 			finalAmount = profileData.inventory[ownedIndex]?.quantity - amount,
-			equipped = profileData.equipment.findIndex((item) => item === currentItem?.id);
+			/** @type {Boolean} */
+			equipped = profileData.equipment.some(
+				/** @param {String} item */
+				(item) => item === currentItem?.id);
 		try {
 			if (!currentItem) {throw 'item_not_found';}
+			else if (equipped && ownedIndex === -1) {throw 'item_equipped';}
 			else if (ownedIndex === -1) {throw 'item_not_owned';}
 			else if (finalAmount < 0) {throw 'invalid_quantity';}
-			else if (equipped !== -1) {throw 'item_equipped';}
 			// TODO: Item not available
 			if (finalAmount === 0) {profileData.inventory.splice(ownedIndex, 1);}
 			else {profileData.inventory[ownedIndex].quantity = finalAmount;}
