@@ -8,6 +8,12 @@ const Profile = require('../models/profileSchema'),
 module.exports = {
 	name: 'interactionCreate',
 	once: false,
+	/**
+	 * Event handler, called when a user interacts with the bot.
+	 * @param {import('discord.js').Interaction} interaction
+	 * @see {@link https://discord.js.org/#/docs/main/stable/class/Interaction}
+	 * @returns {Promise<void>}
+	 */
 	async execute(interaction) {
 		if (!interaction.inGuild()) return;
 		if (!interaction.isCommand()) return;

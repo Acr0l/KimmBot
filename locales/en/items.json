@@ -1,32 +1,34 @@
 {
-    "names": {
-        "Water_one": "Water Bottle",
-        "Water_other": "{{count}} Water Bottles",
-        "Gatorade_one": "Gatorade",
-        "Gatorade_other": "{{count}} Gatorade Bottles",
-        "Challenge-key": "Challenge Key",
-        "Hint_one": "Hint",
-        "Hint_other": "{{count}} Hints"
+  "names": {
+    "Water_one": "Water Bottle",
+    "Water_other": "{{count}} Water Bottles",
+    "Gatorade_one": "Gatorade",
+    "Gatorade_other": "{{count}} Gatorade Bottles",
+    "Challenge-key": "Challenge Key",
+    "Hint_one": "Hint",
+    "Hint_other": "{{count}} Hints",
+    "Notebook_one": "Notebook",
+    "Notebook_other": "{{count}} Notebooks"
+  },
+  "descriptions": {
+    "item_challenge_key": "Item required to take the Challenge.",
+    "item_gatorade": "Energy drink that recovers 10 ME points",
+    "item_hint": "Eliminates alternatives from an active quiz.",
+    "item_notebook": "Boosts your ME capacity by 10.",
+    "item_water": "Drink boosts your MR by one for one hour."
+  },
+  "actions": {
+    "drink": {
+      "used": "You drank a {{currentItem.name}} bottle, its effect will be applied for {{time}}.",
+      "active": "Your cooldown for this item hasn't expired yet.",
+      "mentalEnergy_zero": "You have recovered all of your ME points.",
+      "mentalEnergy_one": "You recovered 1 ME point.",
+      "mentalEnergy_other": "You recovered {{amount}} ME points."
     },
-    "descriptions": {
-        "item_challenge_key": "Item required to take the Challenge.",
-        "item_gatorade": "Energy drink that recovers 10 ME points",
-        "item_hint": "Eliminates alternatives from an active quiz.",
-        "item_notebook": "Boosts your ME capacity by 10.",
-        "item_water": "Drink boosts your MR by one for one hour."
-    },
-    "actions": {
-        "drink": {
-            "used": "You drank a {{currentItem.name}} bottle, its effect will be applied for {{time}}.",
-            "active": "Your cooldown for this item hasn't expired yet.",
-            "mentalEnergy_zero": "You have recovered all of your ME points.",
-            "mentalEnergy_one": "You recovered 1 ME point.",
-            "mentalEnergy_other": "You recovered {{amount}} ME points."
-        },
-        "equip": {
-            "already_equipped": "You already have this item equipped.",
-            "equipped": "You are now using a {{currentItem.name}}.",
-            "unequipped": "You are no longer using a {{currentItem.name}}."
-        }
+    "equip": {
+      "already_equipped": "You already have this item equipped.",
+      "equipped": "You are now using a {{currentItem.name}}.",
+      "unequipped": "You are no longer using a {{currentItem.name}}."
     }
+  }
 }
