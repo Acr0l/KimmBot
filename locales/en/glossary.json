@@ -121,8 +121,14 @@
             "quest": "Used to start or complete quests."
         },
         "embed": {
-            "title": "Shop",
-            "description": "Buy items and upgrades to improve your skills."
+            "start_embed": {
+                "title": "Shop",
+                "description": "Select the category you want to see in the dropdown menu below."
+            },
+            "category_embed": {
+                "title": "{{category}}",
+                "description": "{{categoryDescription}}"
+            }
         }
     },
     "subcommands": {

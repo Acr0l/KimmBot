@@ -20,5 +20,6 @@
     "cancel": "Cancel",
     "yes": "Yes",
     "no": "No",
-    "no_results": "No results found"
+    "no_results": "No results found",
+    "select_category": "Select a category"
 }
