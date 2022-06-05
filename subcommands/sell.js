@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders'),
 	{ iTranslate } = require('../handlers/language');
 
 const TRANSLATION_PATH = 'subcommands.sell';
-const REJECTION_PATH = 'subcommands.items.rejection';
+const REJECTION_PATH = 'rejection.items';
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('sell')
@@ -18,9 +18,9 @@ module.exports = {
 			// Get list to compare which item to sell
 			itemList = getItemList(),
 			currentItem = itemList[ Object.keys(itemList).filter((item) => itemList[item].name === itemToSell) ],
-			ownedIndex = profileData.inventory.findIndex((item) => item._id === currentItem.id),
-			finalAmount = profileData.inventory[ownedIndex].quantity - amount,
-			equipped = profileData.equipment.findIndex((item) => item === currentItem.id);
+			ownedIndex = profileData.inventory.findIndex((item) => item._id === currentItem?.id),
+			finalAmount = profileData.inventory[ownedIndex]?.quantity - amount,
+			equipped = profileData.equipment.findIndex((item) => item === currentItem?.id);
 		try {
 			if (!currentItem) {throw 'item_not_found';}
 			else if (ownedIndex === -1) {throw 'item_not_owned';}
