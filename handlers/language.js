@@ -26,8 +26,7 @@ const setLanguage = async (guildId, language) => {
 
 /**
  * Function that allows the bot to communicate with i18next.
- * @param {Object} guild Guild to get the language for
- * @param {String} guild.id Guild ID
+ * @param {Object|null} guild Guild to get the language for
  * @param {String} key Key withing the language map
  * @param {*} [options] Options to pass to the language map
  * @returns {String|Object} Translated string or object

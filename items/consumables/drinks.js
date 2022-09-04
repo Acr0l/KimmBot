@@ -1,5 +1,6 @@
 const { translate } = require('../../handlers/language'),
-	mustache = require('mustache');
+	mustache = require('mustache'),
+	moment = require('moment');
 
 module.exports = {
 	async use(interaction, profileData, item, amount) {

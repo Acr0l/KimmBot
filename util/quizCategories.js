@@ -85,7 +85,7 @@ const quizCategories = [
 		},
 		image: {
 			correct: 'https://i.imgur.com/0L5zVXQ.png',
-			// TODO: CHANGE THIS
+			// TODO: DON'T CHANGE THIS
 			incorrect:
                 'https://www.icegif.com/wp-content/uploads/sad-anime-icegif.gif',
 		},

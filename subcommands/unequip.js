@@ -15,12 +15,6 @@ module.exports = {
 		 * @returns
 		 */
 	async execute(interaction, profileData) {
-		/*
-        TODO:
-        - Check if item is in inventory
-        - Get item from db
-        - Add item to equipped items
-        */
 		/** @type {String} */
 		// @ts-ignore
 		const itemAction = interaction.options.getString('item'),
