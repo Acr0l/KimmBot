@@ -1,4 +1,5 @@
 const pino = require('pino');
+// @ts-ignore
 module.exports = pino({
 	transport: {
 		target: 'pino-pretty',

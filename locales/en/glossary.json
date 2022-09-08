@@ -107,6 +107,16 @@
       "footer": "You can spend your balance in the shop."
     }
   },
+  "profile": {
+    "embed": {
+      "author": "{{user}}'s profile",
+      "progress_value": "**Level**: {{level}} ({{percentage}}%)\n**XP**: {{experience}}\n**Tier**: {{tier}}",
+      "progress": "Progress",
+      "stats": "Stats",
+      "equipment": "Equipment",
+      "money": "Money"
+    }
+  },
   "shop": {
     "item_types": {
       "equipment": "Equipment",
