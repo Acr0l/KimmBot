@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders'),
-	{ MessageEmbed } = require('discord.js'),
+	{ EmbedBuilder } = require('discord.js'),
 	{ iTranslate } = require('../../handlers/language');
+const { PRIMARY } = require('../../constants/constants');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,8 +16,8 @@ module.exports = {
 			},
 			returnObjects: true,
 		});
-		const embed = new MessageEmbed()
-			.setColor('#39A2A5')
+		const embed = new EmbedBuilder()
+			.setColor(PRIMARY)
 			.setTitle(title)
 			.setDescription(description)
 			.setFooter({ text: footer });
