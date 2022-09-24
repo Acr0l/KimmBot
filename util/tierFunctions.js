@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const tierRequirements = {
 		0: {},
 		1: {
@@ -64,8 +64,7 @@ const readyToAdvance = (user) => {
 	user.stats.map((stat) => {
 		if (tierMap[stat.tier]) {
 			tierMap[stat.tier] += 1;
-		}
-		else {
+		} else {
 			tierMap[stat.tier] = 1;
 		}
 	});
@@ -114,8 +113,7 @@ const updateStat = (user, statName, correct) => {
 			correct: correct ? 1 : 0,
 			incorrect: correct ? 0 : 1,
 		});
-	}
-	else {
+	} else {
 		stat.correct += correct ? 1 : 0;
 		stat.incorrect += correct ? 0 : 1;
 	}
@@ -124,7 +122,7 @@ const updateStat = (user, statName, correct) => {
 
 const printStatus = (interaction, status, objectStatus = {}) => {
 	const [ embedTitle, embedDescription ] = mustache.render(translate(interaction.guild, status), objectStatus).split(':');
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setColor(objectStatus.color || '#34577A')
 		.setTitle(embedTitle)
 		.setDescription(embedDescription);

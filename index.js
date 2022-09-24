@@ -20,7 +20,7 @@ i18next.use(i18nextBackend).init(
     lng: "en",
     fallbackLng: "en",
     preload: ["en", "es"],
-    ns: ["common", "validation", "glossary", "items"],
+    ns: ["common", "validation", "glossary", "items", "problem"],
     defaultNS: "common",
     fallbackNS: "glossary",
     backend: {
@@ -126,7 +126,7 @@ for (const file of eventFiles) {
 }
 
 process.on("unhandledRejection", (error) => {
-  logger.error("Unhandled promise rejection: ", error);
+  console.error("Unhandled promise rejection: ", error);
 });
 
 // Connect to MongoDB

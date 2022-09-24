@@ -1,3 +1,6 @@
+const { REGISTER } = require("../constants/command");
+const { forHumans } = require("../util/time");
+
 /** @module interactionCreate */
 const Profile = require("../models/profileSchema"),
   { translate, iTranslate } = require("../handlers/language"),
@@ -20,7 +23,7 @@ module.exports = {
 
     // Get guild.
     const { guild } = interaction;
-    // Get user from db.
+    // #region Get user from db.
     let profileData;
     try {
       profileData = await getUser({
@@ -32,10 +35,11 @@ module.exports = {
       interaction.reply({ content: iTranslate(guild, "error") });
       return;
     }
+    // #endregion
 
     // Command Handling
 
-    if (interaction.commandName !== "register" && profileData) {
+    if (interaction.commandName !== REGISTER && profileData) {
       profileData = await updateUserStatus({
         profileData,
         interaction,
@@ -58,43 +62,6 @@ module.exports = {
   },
 };
 
-// TODO: Add time formatting with interpolation and plurals (i18next)
-/**
- * Translates time into a human readable format.
- * @param {Number} seconds Seconds to translate
- * @param {*} trGuild Guild with specific language
- * @returns {String}
- */
-function forHumans(seconds, trGuild) {
-  const levels = [
-    [
-      Math.floor(((seconds % 31536000) % 86400) / 3600),
-      iTranslate(trGuild, "hours"),
-    ],
-    [
-      Math.floor((((seconds % 31536000) % 86400) % 3600) / 60),
-      iTranslate(trGuild, "minutes"),
-    ],
-    [
-      (((seconds % 31536000) % 86400) % 3600) % 60,
-      iTranslate(trGuild, "seconds"),
-    ],
-  ];
-  let returntext = "";
-
-  for (let i = 0, max = levels.length; i < max; i++) {
-    if (levels[i][0] === 0) continue;
-    returntext +=
-      " " +
-      levels[i][0] +
-      " " +
-      // @ts-ignore
-      (levels[i][0] === 1
-        ? levels[i][1].substr(0, levels[i][1].length - 1)
-        : levels[i][1]);
-  }
-  return returntext.trim();
-}
 
 /**
  * Fetch user from database and, if not found, prompt user to register.
@@ -105,7 +72,7 @@ async function getUser({ interaction, guild }) {
   const user = await Profile.findOne({
     userID: interaction.user.id,
   });
-  if (!user && interaction.commandName !== "register") {
+  if (!user && interaction.commandName !== REGISTER) {
     await interaction.reply({
       content: iTranslate(guild, "CREATE_PROFILE"),
       ephemeral: false,

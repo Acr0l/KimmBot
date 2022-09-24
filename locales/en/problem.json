@@ -1,0 +1,28 @@
+{
+  "select": {
+    "alternative": "Select an alternative."
+  },
+  "hint": {
+    "request": "Use Hint"
+  },
+  "embed": {
+    "description": "Choose the correct answer.",
+    "footer": "You have {{category.time}} seconds to answer.\n{{category.type}} id: `{{id}}`"
+  },
+  "answer_embed": {
+    "correct": {
+      "title": "{{username}} has answered correctly",
+      "description": "Congratulations {{username}}! You won {{xp}} XP points.\nYou spent {{meSpent}} ME points.",
+      "description_warmup": "Congratulations {{username}}! You won {{xp}} XP points.\nYou spent {{meSpent}} ME points.",
+      "description_workout": "Congratulations {{username}}! You won {{xp}} XP points and Ɖ{{dons}}.\nYou spent {{meSpent}} ME points."
+    },
+    "incorrect": {
+      "title": "{{username}} has answered incorrectly",
+      "description": "That wasn't the correct answer...\nYou spent {{meSpent}} ME points."
+    }
+  },
+  "finish_embed": {
+    "title": "The question has been answered!",
+    "description": "Report and suggest changes using the id: `{{id}}`"
+  }
+}

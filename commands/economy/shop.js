@@ -1,8 +1,13 @@
 const { SlashCommandBuilder } = require("@discordjs/builders"),
-  { MessageEmbed, MessageActionRow, MessageSelectMenu } = require("discord.js"),
+  {
+    EmbedBuilder,
+    ComponentType,
+    SelectMenuBuilder,
+    ActionRowBuilder,
+  } = require("discord.js"),
   { getItemList } = require("../../handlers/itemInventory"),
   { iTranslate } = require("../../handlers/language"),
-  { SECONDARY } = require("../../constants/constants");
+  { SECONDARY } = require("../../constants/constants.js");
 // TODO: Dynamically generate select menu options (Remove chosen category from list)
 module.exports = {
   data: new SlashCommandBuilder()
@@ -19,7 +24,7 @@ module.exports = {
      * @typedef {import('discord.js').Guild} Guild
      */
     /**
-     * @type {Guild}
+     * @type {Guild | null}
      * @see {@link https://discord.js.org/#/docs/main/stable/class/Guild}
      */
     const guild = userInteraction.guild;
@@ -40,9 +45,9 @@ module.exports = {
       { title, description } = iTranslate(guild, "shop.embed.start_embed", {
         returnObjects: true,
       }),
-      embed = new MessageEmbed()
+      initialEmbed = new EmbedBuilder()
         .setTitle(title)
-        .setColor("#0099ff")
+        .setColor(SECONDARY)
         .setDescription(description);
     // #endregion
     const categories = Object.keys(langTypes).map((type, i) => {
@@ -77,8 +82,8 @@ module.exports = {
     });
     /** @param {Boolean} state */
     const components = (state) => [
-      new MessageActionRow().addComponents(
-        new MessageSelectMenu()
+      new ActionRowBuilder().addComponents(
+        new SelectMenuBuilder()
           .setCustomId("shop")
           .setPlaceholder(
             iTranslate(guild, "select_category", { ns: "common" })
@@ -89,7 +94,7 @@ module.exports = {
     ];
     // @ts-ignore
     await userInteraction.reply({
-      embeds: [embed],
+      embeds: [initialEmbed],
       components: components(false),
     });
     /** @param {import('discord.js').Interaction} i */
@@ -99,16 +104,17 @@ module.exports = {
     };
     const collector = userInteraction.channel.createMessageComponentCollector({
       filter,
-      componentType: "SELECT_MENU",
+      componentType: ComponentType.SelectMenu,
       time: 120000,
     });
 
     collector.on("collect", async (collectorInteraction) => {
       const [selectedCategory] = collectorInteraction.values;
+      // TODO: #2 Error handler
       const cat2 = categories.find(
         (cat) => cat.source === selectedCategory.toLowerCase()
-      );
-      const embed2 = new MessageEmbed()
+      ) || { type: "Error", source: "error", items: [] };
+      const embed2 = new EmbedBuilder()
         .setTitle(cat2.type)
         .setColor(SECONDARY)
         .setDescription(
@@ -135,7 +141,7 @@ module.exports = {
     collector.on("end", () => {
       // @ts-ignore
       userInteraction.editReply({
-        embeds: [embed],
+        embeds: [initialEmbed],
         components: components(true),
       });
     });
