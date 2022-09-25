@@ -36,6 +36,7 @@
     }
   },
   "command_descriptions": {
+    "not_found": "Whoops, seems like this command does not have a description yet!",
     "balance": "Check your balance.",
     "challenge": "Take the Challenge.",
     "help": "Show the help menu.",
@@ -44,7 +45,7 @@
     "profile": "Check your profile.",
     "register": "Create your Kimm account.",
     "set_lang": "Set the language of the bot.",
-    "stats": "Check your subject stats.",
+    "stats": "Shows the user specific stats in different subjects.",
     "suggest": "Suggest new features/questions/items!",
     "warmup": "Take a quick question to warm up your brain.",
     "workout": "Test your knowledge and gain experience.",
@@ -53,6 +54,7 @@
   "cooldown": "You are on cooldown for this command, please wait {{time}}.",
   "descriptions": {
     "categories": {
+      "not_found": "Whoops, seems like this category does not have a description yet!",
       "economy": "Commands used to interact with the shop and currency system."
     }
   },

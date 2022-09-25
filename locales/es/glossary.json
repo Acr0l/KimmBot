@@ -1,19 +1,44 @@
 {
-    "buy": {
-        "reject": {
-            "item_unique": "Ya tienes ese objecto."
-        }
-    },
-    "shop": {
-        "item_types": {
-            "equipment": "Equipamiento",
-            "consumable": "Consumibles",
-            "special_consumable": "Consumibles especiales",
-            "quest": "Misiones"
-        },
-        "embed": {
-            "title": "Tienda",
-            "description": "Compra y vende tus objetos aquí."
-        }
+  "buy": {
+    "reject": {
+      "item_unique": "Ya tienes ese objecto."
     }
+  },
+  "shop": {
+    "item_types": {
+      "equipment": "Equipamiento",
+      "consumable": "Consumibles",
+      "special_consumable": "Consumibles especiales",
+      "quest": "Misiones"
+    },
+    "embed": {
+      "title": "Tienda",
+      "description": "Compra y vende tus objetos aquí."
+    }
+  },
+  "help": {
+    "start_embed": {
+      "title": "Menú de Ayuda",
+      "description": "Selecciona la categoría de la cual quieres saber más en el menú desplegable de abajo."
+    },
+    "category_embed": {
+      "title": "Comandos de {{category}}",
+      "descriptions": {
+        "economy": "Comandos para administrar tus recursos.",
+        "guild": "Comandos para administrar el servidor.",
+        "info": "Comandos para obtener información del bot."
+      }
+    },
+    "row": {
+      "placeholder": "Selecciona una categoría para ver los comandos.",
+      "directories": {
+        "info": "Información",
+        "statistics": "Estadísticas",
+        "problems": "Problemas",
+        "economy": "Economía",
+        "guild": "Servidor",
+        "tmp": "TEMPORAL"
+      }
+    }
+  }
 }

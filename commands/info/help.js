@@ -1,141 +1,125 @@
-const { SlashCommandBuilder } = require('@discordjs/builders'),
-	{
-		MessageEmbed,
-		MessageActionRow,
-		MessageSelectMenu,
-	} = require('discord.js'),
-	{ readdirSync } = require('fs'),
-	{ translate } = require('../../handlers/language'),
-	mustache = require('mustache'),
-	{ iTranslate } = require('../../handlers/language');
+const { SlashCommandBuilder } = require("@discordjs/builders"),
+  {
+    EmbedBuilder,
+    ActionRowBuilder,
+    SelectMenuBuilder,
+    ComponentType,
+  } = require("discord.js"),
+  { iTranslate } = require("../../handlers/language"),
+  { HELP_START_COMPONENT_ID } = require("../../constants/componentIds"),
+  { INFO, SECONDARY } = require("../../constants/constants");
+
+const NS = "glossary";
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('help')
-		.setDescription('Short description about the available commands.'),
+  data: new SlashCommandBuilder()
+    .setName("help")
+    .setDescription("Short description about the available commands."),
 
-	async execute(interaction, profileData, client) {
-		// const {info, statistics } =
-		//     i18next.t('help.category_embed.descriptions', {
-		//         ns: 'glossary',
-		//         returnObjects: true,
-		//     });
-		// Get guild.
-		const { guild } = interaction,
-			ns = 'glossary',
-			// Get the language.
-			langDirectories = translate(guild, 'HELP_DIRECTORIES').split(':'),
-			// Get the commands
-			directories = readdirSync('./commands', { withFileTypes: true })
-				.filter((dirent) => dirent.isDirectory())
-				.map((dirent) => dirent.name);
+  async execute(interaction, profileData, client) {
+    // Get guild.
+    const { guild } = interaction,
+      categoryNames = iTranslate(guild, "help.row.directories", {
+        returnObjects: true,
+        ns: NS,
+      });
+    const dirCategories = Object.keys(categoryNames).map((key) => {
+      const commandsInCat = client.commands
+        .filter((cmd) => cmd.directory == key)
+        .map((cmd) => {
+          return { name: cmd.data.name, description: cmd.data.description };
+        });
+      return { dir: key, commands: commandsInCat };
+    });
+    const startEmbed = new EmbedBuilder()
+      .setTitle(iTranslate(guild, "help.start_embed.title", { ns: NS }))
+      .setDescription(
+        iTranslate(guild, "help.start_embed.description", { ns: NS })
+      )
+      .setColor(INFO);
+    const categoriesComponent = (state) => [
+      new ActionRowBuilder().addComponents(
+        new SelectMenuBuilder()
+          .setCustomId(HELP_START_COMPONENT_ID)
+          .setPlaceholder(iTranslate(guild, "help.row.placeholder", { ns: NS }))
+          .setDisabled(state)
+          .addOptions(
+            dirCategories.map((dir) => {
+              const { emoji } = require(`../${dir.dir}/desc.json`) || null;
+              return {
+                /** @type {String} */ label: categoryNames[dir.dir],
+                /** @type {String} */ value: dir.dir,
+                /** @type {String} */ description: iTranslate(
+                  guild,
+                  "help.row.description",
+                  { ns: NS, category: dir.dir }
+                ),
+                /** @type {String} */ emoji: emoji,
+              };
+            })
+          )
+      ),
+    ];
+    await interaction.reply({
+      embeds: [startEmbed],
+      components: categoriesComponent(false),
+    });
+    /**
+     *  @param { Object } i - Triggered by component
+     *  @param { String } i.customId - Triggered by component
+     */
+    const filter = (i) => i.customId === HELP_START_COMPONENT_ID;
+    const collector = interaction.channel.createMessageComponentCollector({
+      filter,
+      componentType: ComponentType.SelectMenu,
+      time: 40000,
+    });
 
+    collector.on("collect", (i) => {
+      const [directory] = i.values;
+      const chosenCategory =
+        dirCategories.find((cat) => cat.dir == directory) || undefined;
 
-		const langMap = new Map();
-		for (let i = 0; i < langDirectories.length; i++) {
-			langMap.set(directories[i], langDirectories[i]);
-		}
+      const categoryEmbed = new EmbedBuilder()
+        .setTitle(
+          iTranslate(guild, "help.category_embed.title", {
+            ns: NS,
+            category: categoryNames[directory],
+          })
+        )
+        .setDescription(
+          iTranslate(
+            guild,
+            [`${NS}:descriptions.categories.${directory}`, "common:not_found"],
+            { resource: "category", context: "female", target: "description" }
+          )
+        )
+        .setColor(SECONDARY)
+        .setFields(
+          chosenCategory?.commands.map((cmd) => {
+            return {
+              name: `\`${cmd.name}\``,
+              value: iTranslate(
+                guild,
+                [
+                  `command_descriptions.${cmd.name.toLowerCase()}`,
+                  "common:not_found",
+                ],
+                { resource: "command", target: "description" }
+              ),
+              inline: true,
+            };
+          })
+        );
 
-		const formatString = (str) =>
-			`${str[0].toUpperCase()}${str.slice(1).toLowerCase()}`;
-		const categories = directories.map((dir) => {
-			const getCommands = client.commands
-				.filter((cmd) => cmd.directory == dir)
-				.map((cmd) => {
-					return {
-						name: cmd.data.name,
-						description: cmd.data.description,
-					};
-				});
-			return {
-				directory: formatString(dir),
-				commands: getCommands,
-			};
-		});
-		// const embed = new MessageEmbed()
-		//     .setTitle(translate(guild, 'HELP_TITLE_CHOOSE'))
-		//     .setDescription(translate(guild, 'HELP_CHOOSE_CAT'));
-		const startEmbed = new MessageEmbed()
-			.setTitle(iTranslate(guild, 'help.start_embed.title', { ns }))
-			.setDescription(
-				iTranslate(guild, 'help.start_embed.description', { ns }),
-			)
-			.setColor('#C7F8CB');
+      i.update({ embeds: [categoryEmbed] });
+    });
 
-		const components = (state) => [
-			new MessageActionRow().addComponents(
-				new MessageSelectMenu()
-					.setCustomId('help-menu')
-					.setPlaceholder(iTranslate(guild, 'help.row.placeholder', { ns }))
-					.setDisabled(state)
-					.addOptions(
-						categories.map((cmd) => {
-							const { emoji } =
-                                require(`../${cmd.directory.toLowerCase()}/desc.json`) ||
-                                null;
-							return {
-								label: langMap.get(cmd.directory.toLowerCase()),
-								value: cmd.directory.toLowerCase(),
-								description: mustache.render(
-									translate(guild, 'HELP_ROW_DESC'),
-									{ category: cmd.directory },
-								),
-								emoji: emoji,
-							};
-						}),
-					),
-			),
-		];
-
-		await interaction.reply({
-			embeds: [startEmbed],
-			components: components(false),
-		});
-		// const followUp = await interaction.followUp({ embeds: [startEmbed] });
-		const filter = (i) => i.customId == 'help-menu';
-		const collector = interaction.channel.createMessageComponentCollector({
-			filter,
-			componentType: 'SELECT_MENU',
-			time: 40000,
-		});
-
-		collector.on('collect', (i) => {
-			const [directory] = i.values;
-			const category = categories.find(
-				(cat) => cat.directory.toLowerCase() == directory.toLowerCase(),
-			);
-			const { description } =
-                require(`../${directory}/desc.json`) || 'No description yet';
-
-			const categoryEmbed = new MessageEmbed()
-				.setTitle(
-					mustache.render(translate(guild, 'HELP_CAT_EMBED_TITLE'), {
-						category: langMap.get(directory),
-					}),
-				)
-				.setDescription(translate(guild, description))
-				.setColor('#80EA98')
-				.setFields(
-					category.commands.map((cmd) => {
-						return {
-							name: `\`${cmd.name}\``,
-							value: translate(
-								guild,
-								`CMD_${cmd.name.toUpperCase()}`,
-							),
-							inline: true,
-						};
-					}),
-				);
-
-			i.update({ embeds: [categoryEmbed] });
-		});
-
-		collector.on('end', () => {
-			interaction.editReply({
-				embeds: [startEmbed],
-				components: components(true),
-			});
-		});
-	},
+    collector.on("end", () => {
+      interaction.editReply({
+        embeds: [startEmbed],
+        components: categoriesComponent(true),
+      });
+    });
+  },
 };

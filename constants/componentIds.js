@@ -1,0 +1,1 @@
+exports.HELP_START_COMPONENT_ID = "Kimm-help-menu";
