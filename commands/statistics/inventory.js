@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js'),
+const { EmbedBuilder } = require('discord.js'),
 	{ SlashCommandBuilder } = require('@discordjs/builders'),
 	mustache = require('mustache'),
 	{ translate } = require('../../handlers/language'),
@@ -25,7 +25,7 @@ module.exports = {
 				quantity: itemQuantity,
 			})
 			.split(':')[n];
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setTitle(
 				mustache.render(translate(guild, 'INVENTORY_TITLE'), {
 					user: interaction.user.username,
@@ -35,7 +35,7 @@ module.exports = {
 			.setDescription(`${itemNum}.`);
 		for (const item of inventory) {
 			const itemData = await getItem(item._id);
-			embed.addField(`${itemData.name} ${item.quantity != 1 ? `\`[${item.quantity}]\`` : ''}`, translate(guild, itemData.description));
+			embed.addFields([ { name: `${itemData.name} ${item.quantity != 1 ? `\`[${item.quantity}]\`` : ''}`, value: translate(guild, itemData.description) }]);
 		}
 		interaction.reply({ embeds: [embed] });
 	},
