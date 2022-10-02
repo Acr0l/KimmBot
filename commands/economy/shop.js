@@ -15,7 +15,7 @@ module.exports = {
     .setDescription("Display available items."),
   /**
    * Display shop and current available items.
-   * @param {import('discord.js').Interaction} userInteraction
+   * @param {import('discord.js').BaseInteraction} userInteraction
    * @see {@link https://discord.js.org/#/docs/main/stable/class/Interaction}
    */
   async execute(userInteraction) {
@@ -89,6 +89,7 @@ module.exports = {
             iTranslate(guild, "select_category", { ns: "common" })
           )
           .setDisabled(state)
+          // @ts-ignore
           .addOptions(componentOptions)
       ),
     ];
@@ -102,11 +103,13 @@ module.exports = {
       // @ts-ignore
       return i.user.id === userInteraction.user.id && i.customId === "shop";
     };
-    const collector = userInteraction.channel.createMessageComponentCollector({
+    const collector = userInteraction?.channel?.createMessageComponentCollector({
       filter,
       componentType: ComponentType.SelectMenu,
       time: 120000,
     });
+    // @ts-ignore
+    if (!collector) return await userInteraction.followUp(iTranslate(guild, "error"));
 
     collector.on("collect", async (collectorInteraction) => {
       const [selectedCategory] = collectorInteraction.values;
