@@ -50,7 +50,7 @@
       "item_not_available": "No es posible vender este item.",
       "invalid_quantity": "Cantidad inválida.",
       "item_not_owned": "Necesitas un(a) {{currentItem.name}} para venderlo(a).",
-      "item_equipped": "Necesitas desequipar el item antes de poder venderlo.",
+      "item_equipped": "Necesitas desequipar el item antes de poder ocuparlo en otra acción.",
       "item_not_equipped": "¡Necesitas equipar el item antes de poder hacer eso!",
       "invalid_action": "La acción no es válida para el item solicitado.",
       "item_unique": "Este item es único, no puedes tener más de uno.",
