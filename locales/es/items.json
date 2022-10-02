@@ -1,4 +1,5 @@
 {
+  "names": {
     "Water_one": "Botella de Agua",
     "Water_other": "{{count}} Botellas de Agua",
     "Gatorade_one": "Gatorade",
@@ -6,4 +7,5 @@
     "Challenge-key": "Llave de Desafío",
     "Hint_one": "Pista",
     "Hint_other": "{{count}} Pistas"
+  }
 }

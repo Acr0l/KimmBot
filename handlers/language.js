@@ -25,14 +25,15 @@ const setLanguage = async (guildId, language) => {
 
 /**
  * Function that allows the bot to communicate with i18next.
- * @param { Object | null } guild Guild to get the language for
+ * @param { import('discord.js').Guild | null } guild Guild to get the language for
  * @param { String | String[] } key Key withing the language map
  * @param {*} [options] Options to pass to the language map
  * @returns {String|Object} Translated string or object
  */
 const iTranslate = (guild, key, options = {}) => {
+	const language = guildLanguages[guild?.id] || 'en';
 	return i18next.t(key, {
-		lng: guildLanguages[guild.id] || 'en',
+		lng: language,
 		...options,
 	});
 };
@@ -47,23 +48,10 @@ const translate = (guild, textKey) => {
 const getLanguage = (guild) => {
 	return guildLanguages[guild.id] || 'en';
 };
-
-// TODO: Add a way to get the language map for a specific key
-const getLanguageMap = (guild, key, separator = ':') => {
-	if (!lang.translations[key]) {
-		throw new Error(`Language key ${key} does not exist.`);
-	}
-	const propertiesMap = new Map(),
-		text = lang.translations[key];
-	for (const langKey of Object.keys(text)) {
-		propertiesMap.set(langKey, text[langKey].split(separator));
-	}
-};
 module.exports = {
 	loadLanguages,
 	setLanguage,
 	translate,
 	getLanguage,
-	getLanguageMap,
 	iTranslate,
 };

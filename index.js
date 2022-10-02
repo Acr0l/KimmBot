@@ -2,6 +2,7 @@
 const {
   Collection,
   Client,
+  // @ts-ignore
   GatewayIntentBits,
   Partials,
 } = require("discord.js");
@@ -11,14 +12,14 @@ const { token, MONGODB_URI } = require("./config.json"),
   path = require("path"),
   logger = require("./logger"),
   i18next = require("i18next"),
-  i18nextBackend = require("i18next-fs-backend");
+  Backend = require("i18next-fs-backend");
 
 // @ts-ignore
-i18next.use(i18nextBackend).init(
+i18next.use(Backend).init(
   {
     initImmediate: false,
-    lng: "en",
     fallbackLng: "en",
+    supportedLngs: ["en", "es"],
     preload: ["en", "es"],
     ns: ["common", "validation", "glossary", "items", "problem"],
     defaultNS: "common",

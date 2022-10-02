@@ -1,14 +1,6 @@
 {
-  "buy": {
-    "reject": {
-      "item_unique": "You already have this item.",
-      "insufficient_funds": "You do not have enough money to buy this item.",
-      "item_not_found": "Item not found.",
-      "item_not_available": "This item is not available to purchase.",
-      "invalid_quantity": "Invalid quantity."
-    },
-    "success_one": "You have successfully purchased a {{currentItem.name}} for Ɖ{{currentItem.price}}.",
-    "success_other": "You have successfully purchased {{amount}} {{currentItem.name}} for Ɖ{{currentItem.price}}."
+  "setlang": {
+    "set": "Language set to English."
   },
   "challenge": {
     "reject": {
@@ -158,18 +150,29 @@
   },
   "subcommands": {
     "sell": {
-      "success_one": "You have successfully sold a $t(items:names.{{currentItem.name}}, {\"count\": 1}) for Ɖ{{currentItem.price}}.",
-      "success_other": "You have successfully sold $t(items:names.{{currentItem.name}}, {\"count\": {{count}}) for Ɖ{{currentItem.price}}."
+      "success_one": "<@{{user}}>, you has successfully sold a $t(items:names.{{currentItem.name}}, {\"count\": 1}) for Ɖ{{currentItem.price}}.",
+      "success_other": "<@{{user}}>, you have successfully sold $t(items:names.{{currentItem.name}}, {\"count\": {{count}}) for Ɖ{{currentItem.price}}."
     },
     "buy": {
-      "success_one": "You have successfully bought a $t(items:names.{{currentItem.name}}, {\"count\": 1}) for Ɖ{{currentItem.price}}.",
-      "success_other": "You have successfully bought $t(items:names.{{currentItem.name}}, {\"count\": {{count}}) for Ɖ{{currentItem.price}}."
+      "success_one": "<@{{user}}>, you have successfully bought a $t(items:names.{{currentItem.name}}, {\"count\": 1}) for Ɖ{{currentItem.price}}.",
+      "success_other": "<@{{user}}>, you have successfully bought $t(items:names.{{currentItem.name}}, {\"count\": {{count}}) for Ɖ{{currentItem.price}}."
     },
     "equip": {
-      "success": "You have successfully equipped a **$t(items:names.{{currentItem.name}}, {\"count\": 1})**."
+      "success": "<@{{user}}>, you have successfully equipped a **$t(items:names.{{currentItem.name}}, {\"count\": 1})**."
     },
     "unequip": {
-      "success": "You have successfully unequipped a **$t(items:names.{{currentItem.name}}, {\"count\": 1})**."
+      "success": "<@{{user}}>, you have successfully unequipped a **$t(items:names.{{currentItem.name}}, {\"count\": 1})**."
+    }
+  },
+  "inventory": {
+    "embed": {
+      "title": "{{username}}'s inventory",
+      "description_zero": "Your inventory is empty.",
+      "description_one": "{{count}} item",
+      "description_other": "{{count}} items"
+    },
+    "errors": {
+      "empty": "Your inventory is empty."
     }
   }
 }

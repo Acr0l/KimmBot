@@ -1,4 +1,7 @@
 {
+  "setlang": {
+    "set": "Lenguaje cambiado a español."
+  },
   "buy": {
     "reject": {
       "item_unique": "Ya tienes ese objecto."
@@ -39,6 +42,35 @@
         "guild": "Servidor",
         "tmp": "TEMPORAL"
       }
+    }
+  },
+  "rejection": {
+    "items": {
+      "item_not_found": "Item not found.",
+      "item_not_available": "This item is not available to sell.",
+      "invalid_quantity": "Invalid quantity.",
+      "item_not_owned": "You need a {{currentItem.name}} to sell it.",
+      "item_equipped": "You need to unequip this item before performing an action on it.",
+      "item_not_equipped": "You need to equip the item before doing that!",
+      "invalid_action": "You cannot perform this action on the item.",
+      "item_unique": "This item is unique, you cannot have more than one.",
+      "insufficient_funds": "You don't have enough funds to buy this item."
+    }
+  },
+  "subcommands": {
+    "sell": {
+      "success_one": "<@{{user}}>, vendiste $t(items:names.{{currentItem.name}}, {\"lng\": \"es\", \"count\": 1}) a Ɖ{{currentItem.price}}.",
+      "success_other": "<@{{user}}>, vendiste $t(items:names.{{currentItem.name}}, {\"lng\": \"es\", \"count\": {{count}}) a Ɖ{{currentItem.price}}."
+    },
+    "buy": {
+      "success_one": "<@{{user}}>, has comprado una $t(items:names.{{currentItem.name}}, {\"lng\": \"es\", \"count\": 1}) a Ɖ{{currentItem.price}}.",
+      "success_other": "<@{{user}}>, has comprado $t(items:names.{{currentItem.name}}, {\"lng\": \"es\", \"count\": {{count}}) a Ɖ{{currentItem.price}}."
+    },
+    "equip": {
+      "success": "<@{{user}}>, you have successfully equipped a **$t(items:names.{{currentItem.name}}, {\"lng\": \"es\", \"count\": 1})**."
+    },
+    "unequip": {
+      "success": "<@{{user}}>, you have successfully unequipped a **$t(items:names.{{currentItem.name}}, {\"lng\": \"es\", \"count\": 1})**."
     }
   }
 }
