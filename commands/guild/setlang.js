@@ -1,7 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { languages } = require('../../resources/lang.json');
 const langModel = require('../../models/languageSchema');
-const { setLanguage, translate } = require('../../handlers/language');
+const { setLanguage, iTranslate } = require('../../handlers/language');
+
+const TRANSLATION_PATH = 'setlang';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -41,9 +43,8 @@ module.exports = {
 				},
 			);
 
-			return interaction.reply({ content: translate(guild, 'SETLANG_REPLY') });
-		}
-		catch (err) {
+			return interaction.reply({ content: iTranslate(guild, `${TRANSLATION_PATH}.set`) });
+		} catch (err) {
 			return interaction.reply({
 				content:
 				'An error occurred while setting the language.',
