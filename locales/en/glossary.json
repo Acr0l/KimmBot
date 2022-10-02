@@ -138,6 +138,7 @@
   "rejection": {
     "items": {
       "item_not_found": "Item not found.",
+      "item_not_usable": "The item can't be `used`.",
       "item_not_available": "This item is not available to sell.",
       "invalid_quantity": "Invalid quantity.",
       "item_not_owned": "You need a {{currentItem.name}} to sell it.",

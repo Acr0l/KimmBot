@@ -42,12 +42,10 @@ module.exports = {
         throw "item_not_found";
       } else if (ownedIndex === -1) {
         throw "item_not_owned";
-      } else if (currentItem.type === 0) {
+      } else if (currentItem.type !== 1 && currentItem.type !== 2) {
         throw "item_not_usable";
       } else if (amount > profileData.inventory[ownedIndex].quantity) {
         throw "item_not_enough";
-      } else if (currentItem.type !== 1 || currentItem.type !== 2) {
-        throw "item_not_usable";
       } else {
         const finalAmount = profileData.inventory[ownedIndex].quantity - amount;
         // @ts-ignore
