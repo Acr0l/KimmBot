@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require('discord.js'),
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js'),
 	{ SlashCommandBuilder } = require('@discordjs/builders'),
 	profileModel = require('../../models/profileSchema'),
 	{ translate } = require('../../handlers/language'),
@@ -23,11 +23,11 @@ module.exports = {
 					dons: 0,
 				});
 				profile.save();
-				const row = new MessageActionRow().addComponents(
-					new MessageButton()
-						.setCustomId('tutorial')
+				const row = new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setURL('https://sebastianlorca.com')
 						.setLabel('Tutorial')
-						.setStyle('SUCCESS')
+						.setStyle(ButtonStyle.Link)
 						.setEmoji('📖'),
 				);
 				await interaction.reply({
@@ -40,8 +40,7 @@ module.exports = {
 					components: [row],
 				});
 				return;
-			}
-			else {
+			} else {
 				await interaction.reply(
 					mustache.render(translate(guild, 'UNSUCCESSFUL_REGISTER'), {
 						user: interaction.user.username,
@@ -49,8 +48,7 @@ module.exports = {
 				);
 				return;
 			}
-		}
-		catch (err) {
+		} catch (err) {
 			logger.info(err);
 		}
 
