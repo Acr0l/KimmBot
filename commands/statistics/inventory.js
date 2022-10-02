@@ -1,8 +1,10 @@
 const { EmbedBuilder } = require('discord.js'),
 	{ SlashCommandBuilder } = require('@discordjs/builders'),
-	mustache = require('mustache'),
-	{ translate } = require('../../handlers/language'),
+	{ translate, iTranslate } = require('../../handlers/language'),
 	{ getItem } = require('../../handlers/itemInventory');
+const { SECONDARY } = require('../../constants/constants');
+
+const NS = "glossary";
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -11,32 +13,25 @@ module.exports = {
 	async execute(interaction, profileData) {
 		const { guild } = interaction;
 		const inventory = profileData.inventory;
-		let itemQuantity = 0;
+		let totalItems = 0;
 		if (inventory.length === 0) {
-			interaction.reply(translate(guild, 'INVENTORY_EMPTY'));
+			interaction.reply(iTranslate(guild, `${NS}:inventory.embed.description`, { count: 0 }));
 			return;
 		}
 		inventory.forEach((item) => {
-			itemQuantity += item.quantity;
+			totalItems += item.quantity;
 		});
-		const n = itemQuantity != 1 ? 0 : 1;
-		const itemNum = mustache
-			.render(translate(guild, 'INVENTORY_QUANTITY'), {
-				quantity: itemQuantity,
-			})
-			.split(':')[n];
-		const embed = new EmbedBuilder()
+		const inventoryEmbedDescription = iTranslate(guild, `${NS}:inventory.embed.description`, { count: totalItems });
+		const inventoryEmbed = new EmbedBuilder()
 			.setTitle(
-				mustache.render(translate(guild, 'INVENTORY_TITLE'), {
-					user: interaction.user.username,
-				}),
+				iTranslate(guild, `${NS}:inventory.embed.title`, { username: interaction.user.username })
 			)
-			.setColor(0x00ae86)
-			.setDescription(`${itemNum}.`);
+			.setColor(SECONDARY)
+			.setDescription(inventoryEmbedDescription);
 		for (const item of inventory) {
 			const itemData = await getItem(item._id);
-			embed.addFields([ { name: `${itemData.name} ${item.quantity != 1 ? `\`[${item.quantity}]\`` : ''}`, value: translate(guild, itemData.description) }]);
+			inventoryEmbed.addFields([ { name: `${itemData.name} ${item.quantity != 1 ? `\`[${item.quantity}]\`` : ''}`, value: translate(guild, itemData.description) }]);
 		}
-		interaction.reply({ embeds: [embed] });
+		interaction.reply({ embeds: [inventoryEmbed] });
 	},
 };
