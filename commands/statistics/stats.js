@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders'),
-	{ MessageEmbed } = require('discord.js'),
+	{ EmbedBuilder } = require('discord.js'),
 	{ translate } = require('../../handlers/language'),
 	mustache = require('mustache');
 
@@ -10,11 +10,11 @@ module.exports = {
 	async execute(interaction, profileData) {
 		const { guild } = interaction;
 
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setColor('#0099ff')
 			.setTitle(`${translate(guild, 'STATS_TITLE')}`)
 			.setDescription(`${translate(guild, 'STATS_DESCRIPTION')}`)
-			.setFields(
+			.addFields(
 				profileData.stats.sort((a, b) => a.tier - b.tier).map(stat => {
 					return {
 						name: stat.subject,
