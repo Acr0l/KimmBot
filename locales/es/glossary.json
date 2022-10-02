@@ -46,20 +46,20 @@
   },
   "rejection": {
     "items": {
-      "item_not_found": "Item not found.",
-      "item_not_available": "This item is not available to sell.",
-      "invalid_quantity": "Invalid quantity.",
-      "item_not_owned": "You need a {{currentItem.name}} to sell it.",
-      "item_equipped": "You need to unequip this item before performing an action on it.",
-      "item_not_equipped": "You need to equip the item before doing that!",
-      "invalid_action": "You cannot perform this action on the item.",
-      "item_unique": "This item is unique, you cannot have more than one.",
-      "insufficient_funds": "You don't have enough funds to buy this item."
+      "item_not_found": "No se ha encontrado el item.",
+      "item_not_available": "No es posible vender este item.",
+      "invalid_quantity": "Cantidad inválida.",
+      "item_not_owned": "Necesitas un(a) {{currentItem.name}} para venderlo(a).",
+      "item_equipped": "Necesitas desequipar el item antes de poder venderlo.",
+      "item_not_equipped": "¡Necesitas equipar el item antes de poder hacer eso!",
+      "invalid_action": "La acción no es válida para el item solicitado.",
+      "item_unique": "Este item es único, no puedes tener más de uno.",
+      "insufficient_funds": "No tienes dinero suficiente para hacer eso."
     }
   },
   "subcommands": {
     "sell": {
-      "success_one": "<@{{user}}>, vendiste $t(items:names.{{currentItem.name}}, {\"lng\": \"es\", \"count\": 1}) a Ɖ{{currentItem.price}}.",
+      "success_one": "<@{{user}}>, vendiste una $t(items:names.{{currentItem.name}}, {\"lng\": \"es\", \"count\": 1}) a Ɖ{{currentItem.price}}.",
       "success_other": "<@{{user}}>, vendiste $t(items:names.{{currentItem.name}}, {\"lng\": \"es\", \"count\": {{count}}) a Ɖ{{currentItem.price}}."
     },
     "buy": {
