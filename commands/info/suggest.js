@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders'),
-	{ MessageEmbed } = require('discord.js'),
+	{ EmbedBuilder } = require('discord.js'),
 	{ subjects } = require('../../util/subjects.json');
+const { getLanguage } = require('../../handlers/language');
 // { translate } = require('../../handlers/language');
 
 const subjectsArr = [];
@@ -57,13 +58,15 @@ module.exports = {
 			.getString('incorrectans')
 			.split(',');
 
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setTitle(`Suggestion from ${interaction.user.username}`)
 			.setDescription(`Subject: ${suggestionSubject}`)
-			.addField('Suggestion', suggestion)
-			.addField('Correct answer', correctAnswer)
-			.addField('Incorrect answers', incorrectAnswers.join(', '))
-			.setFooter({ text: `User ID: ${interaction.user.id}` })
+			.addFields(
+				{ name: 'Suggestion', value: suggestion },
+				{ name: 'Correct answer', value: correctAnswer },
+				{ name: 'Incorrect answers', value: incorrectAnswers.join(', ') },
+				)
+			.setFooter({ text: `User ID: ${interaction.user.id}, Language: ${getLanguage(interaction.guild)}` })
 			.setTimestamp()
 			.setColor('#0099ff');
 
