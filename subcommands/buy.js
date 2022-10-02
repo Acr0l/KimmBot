@@ -3,8 +3,8 @@ const { SlashCommandBuilder } = require('@discordjs/builders'),
 	{ getItemList } = require('../handlers/itemInventory'),
 	logger = require('../logger');
 
-const TRANSLATION_PATH = 'subcommands.buy';
-const REJECTION_PATH = 'rejection.items';
+const TRANSLATION_PATH = 'glossary:subcommands.buy';
+const REJECTION_PATH = 'glossary:rejection.items';
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('buy')
@@ -18,7 +18,7 @@ module.exports = {
 	async execute(interaction, profileData) {
 		// #region Constants
 		/**
-		 * @type {import('discord.js').Guild}
+		 * @type {import('discord.js').Guild | null}
 		 */
 		const guild = interaction.guild,
 			/** @type {String} */
@@ -49,8 +49,7 @@ module.exports = {
 					_id: currentItem.id,
 					quantity: amount,
 				});
-			}
-			else {
+			} else {
 				// @ts-ignore
 				profileData.inventory.find(
 					/** @param {{_id: String, quantity: Number}} e */
@@ -62,10 +61,9 @@ module.exports = {
 			await profileData.save();
 			// @ts-ignore
 			await interaction.reply({
-				content: iTranslate(guild, `${TRANSLATION_PATH}.success`, { count: amount, currentItem }),
+				content: iTranslate(guild, `${TRANSLATION_PATH}.success`, { count: amount, currentItem, user: interaction.user }),
 			});
-		}
-		catch (error) {
+		} catch (error) {
 			if (typeof error !== 'string') {
 				logger.error(error);
 				// @ts-ignore
