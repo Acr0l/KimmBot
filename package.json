@@ -6,7 +6,9 @@
     "start": "node index.js",
     "devStart": "nodemon index.js --ignore ./log.json | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "lint": "eslint --ext .js",
-    "doc": "jsdoc -c jsdoc.json"
+    "doc": "jsdoc -c jsdoc.json",
+    "deploy": "node ./deploy-commands",
+    "g-deploy": "node ./deploy-commands --global"
   },
   "keywords": [
     "discord",

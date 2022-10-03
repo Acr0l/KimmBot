@@ -1,8 +1,10 @@
+// @ts-nocheck
+/* eslint-disable no-undef */
 const { SlashCommandBuilder } = require('@discordjs/builders'),
 	{ readyToAdvance } = require('../../util/tierFunctions'),
 	{ translate, getLanguage } = require('../../handlers/language'),
 	quizDatabase = require('../../models/quizSchema'),
-	{ MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js'),
+	{ EmbedBuilder, ActionRowBuilder, ButtonBuilder, SelectMenuBuilder, ButtonStyle } = require('discord.js'),
 	{
 		setActivity,
 		hasActivity,
@@ -16,9 +18,11 @@ module.exports = {
 	cooldown: 10,
 	data: new SlashCommandBuilder()
 		.setName('challenge')
+		.setDefaultMemberPermissions(0)
 		.setDescription('The ultimate test'),
 	async execute(interaction, profileData) {
 		// Defer reply
+		return await interaction.reply({ ephemeral: true, content: "This command is not ready, we are sorry!" });
 		await interaction.deferReply({ ephemeral: true });
 
 		// Constants
@@ -28,7 +32,7 @@ module.exports = {
 		if (!meetsChallengeRequirements({ profileData, interaction, guild })) {return;}
 
 		// Get parameters of the challenge (time limit and number of questions)
-		const propertiesObject = quizCategories[type].questionsTimeAndQuantity(profileData.tier);
+		const propertiesObject = quizCategories[type]?.questionsTimeAndQuantity(profileData.tier);
 
 		// TODO: Optimize this (embedFields may have easier ways).
 		const embedFields = translate(guild, 'CHALLENGE_START_FIELDS').split(':'),
@@ -37,17 +41,17 @@ module.exports = {
 				'CHALLENGE_START_FIELDS',
 			).split(':'),
 			row = (state) => [
-				new MessageActionRow().addComponents([
-					new MessageButton()
+				new ActionRowBuilder().addComponents([
+					new ButtonBuilder()
 						.setCustomId('challengeConfirm')
 						.setLabel(translate(guild, 'YES'))
-						.setStyle('DANGER')
+						.setStyle(ButtonStyle.Danger)
 						.setEmoji('✔')
 						.setDisabled(state),
-					new MessageButton()
+					new ButtonBuilder()
 						.setCustomId('challengeReject')
 						.setLabel('No')
-						.setStyle('DANGER')
+						.setStyle(ButtonStyle.Danger)
 						.setEmoji('❌')
 						.setDisabled(state),
 				]),
@@ -60,7 +64,7 @@ module.exports = {
 		// 	secondsPerQuestion * propertiesObject.Questions.number,
 		// 	guild,
 		// );
-		const embed = new MessageEmbed()
+		const embed = new EmbedBuilder()
 			.setTitle(translate(guild, 'CHALLENGE_START_TITLE'))
 			.setDescription(translate(guild, 'CHALLENGE_START_DESC'))
 			.addFields(
@@ -113,8 +117,7 @@ module.exports = {
 					const tmp = orderByTier.get(subject.tier);
 					tmp.push(subject.subject);
 					orderByTier.set(subject.tier, tmp);
-				}
-				else {
+				} else {
 					orderByTier.set(subject.tier, [subject.subject]);
 				}
 			}
@@ -192,7 +195,7 @@ async function makeQuestion({
 	guild,
 }) {
 	setActivity(interaction.user.id, question._id);
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 		.setTitle(question.question)
 		.setDescription(translate(guild, 'PROBLEM_DESCRIPTION'))
 		.setFooter(
@@ -226,8 +229,7 @@ async function makeQuestion({
 						embeds: [embed],
 					});
 					return true;
-				}
-				else {
+				} else {
 					interaction.editReply({
 						content: translate(guild, 'INCORRECT'),
 						components: [],
@@ -244,8 +246,7 @@ async function makeQuestion({
 				});
 				return false;
 			});
-	}
-	else {
+	} else {
 		// Sequence
 		let counter = 0;
 		const scoreWithEmojis = [],
@@ -253,7 +254,7 @@ async function makeQuestion({
 		for (let i = 0; i < question.correct_answer.length; i++) {
 			scoreWithEmojis.push('⚫');
 		}
-		row = new MessageSelectMenu()
+		row = new SelectMenuBuilder()
 			.setCustomId('challengeAnswer')
 			.setPlaceholder(translate(guild, 'PROBLEM_SELECT_PLACEHOLDER'))
 			.setMinValues(1)
@@ -274,8 +275,7 @@ async function makeQuestion({
 			const [answer] = i.values;
 			if (answer == answers[counter]) {
 				scoreWithEmojis[counter] = '🟢';
-			}
-			else {
+			} else {
 				scoreWithEmojis[counter] = '🔴';
 				i.update({
 					content: scoreWithEmojis.join(' '),
@@ -303,8 +303,7 @@ async function makeQuestion({
 					components: [],
 					embeds: [],
 				});
-			}
-			else if (scoreWithEmojis.includes('🔴')) {
+			} else if (scoreWithEmojis.includes('🔴')) {
 				interaction.editReply({
 					content: translate(
 						guild,
@@ -314,8 +313,7 @@ async function makeQuestion({
 					embeds: [],
 				});
 				return false;
-			}
-			else {
+			} else {
 				interaction.editReply({
 					content: translate(
 						guild,
@@ -336,8 +334,7 @@ function getRow(question) {
 	if (question.type == 'INP') {
 		// Create message collector.
 		return false;
-	}
-	else if (question.type == 'SEQ') {
+	} else if (question.type == 'SEQ') {
 		// Create sequence.
 		return shuffle(question.correct_answer.split(':')).map((answer) => {
 			return {
