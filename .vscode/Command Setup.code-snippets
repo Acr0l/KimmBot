@@ -1,41 +1,41 @@
 {
-	// Place your KimmBot workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
-	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
-	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
-	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
-	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
-	// Placeholders with the same ids are connected.
-	// Example:
-	// "Print to console": {
-	// 	"scope": "javascript,typescript",
-	// 	"prefix": "log",
-	// 	"body": [
-	// 		"console.log('$1');",
-	// 		"$2"
-	// 	],
-	// 	"description": "Log output to console"
-	// }
-	"Setup basic djs command": {
-		"scope": "javascript",
-		"prefix": "?cmd",
-		"body": [
-		  "const { SlashCommandBuilder } = require('@discordjs/builders');",
-		  "",
-		  "module.exports = {",
-		  "    data: new SlashCommandBuilder()",
-		  "        .setName(`${1:name}`)",
-		  "        .setDescription(`${2:description}`),",
-		  "  /**",
-		  "    * @param { Object } interaction - Object with the interaction data sent by the user.",
-		  "    * @param { Object } profileData - Object from the database with the user profile data.",
-		  "    * @param { Object } client - The discord.js client object.",
-		  "    */",
-		  "    async execute(interaction, profileData, client) {",
-		  "        ",
-		  "    }",
-		  "}",
-		  ""
-		],
-		"description": "Setup basic djs command"
-	  }
+  // Place your KimmBot workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+  // description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+  // is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+  // used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+  // Placeholders with the same ids are connected.
+  // Example:
+  // "Print to console": {
+  // 	"scope": "javascript,typescript",
+  // 	"prefix": "log",
+  // 	"body": [
+  // 		"console.log('$1');",
+  // 		"$2"
+  // 	],
+  // 	"description": "Log output to console"
+  // }
+  "Setup basic djs command": {
+    "scope": "javascript",
+    "prefix": "?cmd",
+    "body": [
+      "const { SlashCommandBuilder } = require('@discordjs/builders');",
+      "",
+      "module.exports = {",
+      "    data: new SlashCommandBuilder()",
+      "        .setName(`${1:name}`)",
+      "        .setDescription(`${2:description}`),",
+      "  /**",
+      "    * @param { import('discord.js').BaseInteraction } interaction - Object with the interaction data sent by the user.",
+      "    * @param { Object } profileData - Object from the database with the user profile data.",
+      "    * @param { import('discord.js').Client } client - The discord.js client object.",
+      "    */",
+      "    async execute(interaction, profileData, client) {",
+      "        ",
+      "    }",
+      "}",
+      ""
+    ],
+    "description": "Setup basic djs command"
+  }
 }
