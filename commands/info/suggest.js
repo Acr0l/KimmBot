@@ -25,7 +25,7 @@ module.exports = {
 		)
 		.addStringOption((option) =>
 			option
-				.setName('suggestion')
+				.setName('question')
 				.setDescription(
 					'Write here the question you would like to suggest.',
 				)

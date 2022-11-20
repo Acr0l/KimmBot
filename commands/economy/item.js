@@ -87,8 +87,7 @@ module.exports = {
 		}
 		try {
 			await subcommand.execute(interaction, profileData, client);
-		}
-		catch (error) {
+		} catch (error) {
 			await interaction.reply({ content: iTranslate(guild, 'error'), ephemeral: true });
 			console.error(error);
 		}
