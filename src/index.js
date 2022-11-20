@@ -25,7 +25,7 @@ i18next.use(Backend).init(
     defaultNS: "common",
     fallbackNS: "glossary",
     backend: {
-      loadPath: "locales/{{lng}}/{{ns}}.json",
+      loadPath: "src/locales/{{lng}}/{{ns}}.json",
     },
   },
   (err, t) => {
@@ -114,7 +114,7 @@ for (const file of subcommandFiles) {
  * @type {String[]} eventFiles
  */
 const eventFiles = fs
-  .readdirSync("./events")
+  .readdirSync("./src/events")
   .filter((file) => file.endsWith(".js"));
 
 for (const file of eventFiles) {
