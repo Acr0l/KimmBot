@@ -1,8 +1,7 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js'),
 	{ SlashCommandBuilder } = require('@discordjs/builders'),
 	profileModel = require('../../models/profileSchema'),
-	{ translate } = require('../../handlers/language'),
-	mustache = require('mustache'),
+	{ iTranslate } = require('../../handlers/language'),
 	logger = require('../../logger');
 
 module.exports = {
@@ -12,6 +11,14 @@ module.exports = {
 	async execute(interaction) {
 		const { guild } = interaction;
 		let profileData;
+
+		const row = new ActionRowBuilder().addComponents(
+			new ButtonBuilder()
+				.setURL('https://sebastianlorca.com')
+				.setLabel('Tutorial')
+				.setStyle(ButtonStyle.Link)
+				.setEmoji('📖'),
+		);
 
 		try {
 			profileData = await profileModel.findOne({
@@ -23,28 +30,16 @@ module.exports = {
 					dons: 0,
 				});
 				profile.save();
-				const row = new ActionRowBuilder().addComponents(
-					new ButtonBuilder()
-						.setURL('https://sebastianlorca.com')
-						.setLabel('Tutorial')
-						.setStyle(ButtonStyle.Link)
-						.setEmoji('📖'),
-				);
 				await interaction.reply({
-					content: mustache.render(
-						translate(guild, 'SUCCESSFUL_REGISTER'),
-						{
-							user: interaction.user.username,
-						},
-					),
+					content: iTranslate(guild, 'glossary:register.success', { user: interaction.user.username }),
 					components: [row],
 				});
 				return;
 			} else {
-				await interaction.reply(
-					mustache.render(translate(guild, 'UNSUCCESSFUL_REGISTER'), {
-						user: interaction.user.username,
-					}),
+				await interaction.reply({
+					content: iTranslate(guild, 'glossary:register.failure', { user: interaction.user.username }),
+					components: [row],
+				}
 				);
 				return;
 			}
