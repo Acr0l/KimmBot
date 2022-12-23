@@ -6,21 +6,18 @@ const fs = require("fs"),
   logger = require("./logger");
 
 const commands = [];
-
 const commandFiles = [];
 function throughDirectory(dir) {
   fs.readdirSync(dir).forEach((file) => {
     const absolute = path.join(dir, file);
-    if (fs.statSync(absolute).isDirectory()) {
-      return throughDirectory(absolute);
-    } else if (absolute.endsWith("js")) {
-      return commandFiles.push(absolute);
-    }
+    if (fs.statSync(absolute).isDirectory()) return throughDirectory(absolute);
+    else if (absolute.endsWith("js")) return commandFiles.push(absolute);
   });
 }
-throughDirectory("./commands");
+throughDirectory(__dirname + "\\commands");
 for (const file of commandFiles) {
-  const command = require(`./${file}`);
+  if (process.argv.includes("--global") && /tmp/.test(file)) continue;
+  const command = require(`${file}`);
   if (command.data.name) commands.push(command.data.toJSON());
   else logger.info(`${file} has no name`);
 }
@@ -31,7 +28,10 @@ const rest = new REST({ version: "10" }).setToken(token);
   try {
     logger.info("Started refreshing application (/) commands.");
 
-    if (process.argv[2] === "--global") {
+    if (
+      process.argv.includes("--global") &&
+      !process.argv.includes("--delete")
+    ) {
       rest
         .put(Routes.applicationCommands(clientId), { body: commands })
         .then(() => {
@@ -43,6 +43,17 @@ const rest = new REST({ version: "10" }).setToken(token);
             err
           );
         });
+    } else if (process.argv.includes("--delete")) {
+      // Example: node src/deploy-commands.js --global --delete 970099038865227812
+      logger.info("Deleting...");
+      rest
+        .delete(
+          process.argv.includes("--global")
+            ? Routes.applicationCommand(clientId, process.argv[4])
+            : Routes.applicationGuildCommand(clientId, guildId, process.argv[3])
+        )
+        .then(() => logger.info("Successfully deleted"))
+        .catch((err) => logger.error(err));
     } else {
       rest
         .put(Routes.applicationGuildCommands(clientId, guildId), {
