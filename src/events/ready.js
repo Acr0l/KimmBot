@@ -1,3 +1,4 @@
+const { ActivityType } = require("discord.js");
 const { loadLanguages } = require("../handlers/language"),
   { loadDifficulties } = require("../handlers/difficulty"),
   { loadItems } = require("../handlers/itemInventory"),
@@ -16,8 +17,11 @@ module.exports = {
     // Load saved items
     loadItems();
 
-    client.user.setActivity("anime (educational purposes).", {
-      type: "WATCHING",
+    client.user.setPresence({
+      activities: [
+        { name: "anime (for science!)", type: ActivityType.Watching },
+      ],
+      status: "online",
     });
   },
 };

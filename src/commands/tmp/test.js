@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders"),
-  { MessageEmbed, MessageActionRow, MessageSelectMenu } = require("discord.js");
+  { EmbedBuilder, ActionRowBuilder, SelectMenuBuilder } = require("discord.js");
 // { getLanguageMap } = require('../../handlers/language');
 
 const question = {
@@ -19,19 +19,17 @@ module.exports = {
     .setName("test")
     .setDescription("Test different commands"),
   /**
-   * @param { Message } interaction
-   * @param { Object } profileData
-   * @param { Client } client
+   * @param { * } interaction
    */
   async execute(interaction) {
     await interaction.deferReply();
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
         .setTitle(`${question.subject} - ${question.difficulty}`)
         .setDescription(question.question)
         .setFooter({ text: `${question.type} - ${question.category}` })
         .setImage(question.image),
-      row = new MessageActionRow().addComponents(
-        new MessageSelectMenu()
+      row = new ActionRowBuilder().addComponents(
+        new SelectMenuBuilder()
           .setCustomId("challengeAnswer")
           .setPlaceholder("Selecciona una alternativa")
           .setOptions(
@@ -46,13 +44,12 @@ module.exports = {
     let counter = 0;
     if (Math.sqrt(question.correct_answer.length) % 1 === 0) {
       // Make a 2D array
-      for (let j = 0; j < Math.sqrt(question.correct_answer.length); j++) {
+      for (let j = 0; j < Math.sqrt(question.correct_answer.length); j++)
         scoreWithEmojis.push([]);
-      }
+
       // Fill the 2D array
-      for (let i = 0; i < question.correct_answer.length; i++) {
+      for (let i = 0; i < question.correct_answer.length; i++)
         scoreWithEmojis[i % scoreWithEmojis.length].push("🔳");
-      }
     }
     let [rowIndex, columnIndex] = getByIndex(scoreWithEmojis, counter);
     scoreWithEmojis[rowIndex][columnIndex] = "⚪";
@@ -94,9 +91,8 @@ module.exports = {
         content: scoreWithEmojis.map((e) => e.join(" ")).join("\n"),
         components: [row],
       });
-      if (counter == question.correct_answer.length) {
+      if (counter == question.correct_answer.length)
         collector.stop("completed");
-      }
     });
     collector.on("end", async (collected, reason) => {
       if (reason === "completed" || collected.size !== 0) {
@@ -129,11 +125,8 @@ const getByIndex = (array, index) => {
 const numOfOccurrences = (array, value) => {
   let counter = 0;
   for (let i = 0; i < array.length; i++) {
-    if (Array.isArray(array[i])) {
-      counter += numOfOccurrences(array[i], value);
-    } else if (array[i] === value) {
-      counter++;
-    }
+    if (Array.isArray(array[i])) counter += numOfOccurrences(array[i], value);
+    else if (array[i] === value) counter++;
   }
 
   return counter;

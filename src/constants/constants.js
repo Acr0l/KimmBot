@@ -15,3 +15,7 @@ exports.COMMAND_DIRECTORIES = [
   "Guild",
   "Tmp",
 ];
+exports.CHALLENGE = {
+  idChallengeConfirm: "challengeConfirm",
+  idChallengeReject: "challengeReject"
+};

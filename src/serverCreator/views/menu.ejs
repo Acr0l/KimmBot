@@ -1,35 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Kimm Developer Menu</title>
-        <link href="/css/styles.css" rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-        <%- include('partials/navbar') %>
-        <main class="menu">
-            <div class="container">
-                <div class="center">
-                    <form class="form-group" action="/item" method="get">
-                        <button type="submit" value="item">
-                            <h2>Create item</h2>
-                        </button>
-                    </form>
-                    <form class="form-group" action="/quiz" method="get">
-                        <button type="submit" value="quiz">
-                            <h2>Create quiz</h2>
-                        </button>
-                    </form>
-                    <form class="form-group" action="/import" method="get">
-                        <button type="submit" value="quiz">
-                            <h2>Import quiz (CSV File)</h2>
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <%- include('partials/footer') %>
-        </main>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kimm Developer Menu</title>
+    <link href="/css/styles.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <%- include('partials/navbar') %>
+    <main class="menu">
+      <div class="container">
+        <div class="center">
+          <form class="form-group" action="/item" method="get">
+            <button type="submit" value="item">
+              <h2>Create item</h2>
+            </button>
+          </form>
+          <form class="form-group" action="/challenge" method="get">
+            <button type="submit" value="challenge">
+              <h2>Create Challenge</h2>
+            </button>
+          </form>
+          <form class="form-group" action="/quiz" method="get">
+            <button type="submit" value="quiz">
+              <h2>Create quiz</h2>
+            </button>
+          </form>
+          <form class="form-group" action="/import" method="get">
+            <button type="submit" value="quiz">
+              <h2>Import quiz (CSV File)</h2>
+            </button>
+          </form>
+        </div>
+      </div>
+      <%- include('partials/footer') %>
+    </main>
+  </body>
 </html>

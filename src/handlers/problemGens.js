@@ -6,7 +6,10 @@ const {
   ComponentType,
 } = require("discord.js");
 const { iTranslate } = require("./language");
-const { numberOfAlternatives, shuffleAlternatives } = require("../util/shufflers");
+const {
+  numberOfAlternatives,
+  shuffleAlternatives,
+} = require("../util/shufflers");
 const { ButtonTypes } = require("../constants/problem");
 
 const idRegEx = /^problemButton[1-9]/;
@@ -71,22 +74,19 @@ const createAlternativeButtons = (guild, options) => {
 
 /**
  *
- * @param {{question: String, subject, String, type: String, difficulty: Number, correct_answer: String, incorrect_answers: string[], category: String}} question - The question to solve.
- * @param {import('discord.js').Interaction} interaction - Interaction that triggered command
+ * @param {{question: String, subject: String, type: String, difficulty: Number, correct_answer: String, incorrect_answers: string[], category: String}} question - The question to solve.
+ * @param {import('discord.js').CommandInteraction} interaction - Interaction that triggered command
  * @param {import('discord.js').Guild | Null} guild - Server from where the interaction was sent
- * @param {*} options - Options idk
+ * @param { Object } options - Options idk
  * @returns {{cType: import('discord.js').ComponentType, filter: Function, row: import('discord.js').ActionRowBuilder}}
  */
 const rowConstructor = (question, interaction, guild, options) => {
   return {
     cType:
       question.type === "T/F" ? ComponentType.Button : ComponentType.SelectMenu,
-    filter: function(/** @type {{ customId: string; user: { id: any; }; }} */ i) {
-      return (
-        (i.customId === `K${question.type}` || idRegEx.test(i.customId)) &&
-        i.user.id === interaction.user.id
-      );
-    },
+    filter: (/** @type { import('discord.js').SelectMenuInteraction } */ i) =>
+      (i.customId === `K${question.type}` || idRegEx.test(i.customId)) &&
+      i.user.id === interaction.user.id,
     row: new ActionRowBuilder().addComponents(
       question.type == "T/F"
         ? createAlternativeButtons(guild, options)

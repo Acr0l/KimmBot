@@ -21,7 +21,7 @@ i18next.use(Backend).init(
     fallbackLng: "en",
     supportedLngs: ["en", "es"],
     preload: ["en", "es"],
-    ns: ["common", "validation", "glossary", "items", "problem"],
+    ns: ["common", "validation", "glossary", "items", "problem", "challenge"],
     defaultNS: "common",
     fallbackNS: "glossary",
     backend: {
@@ -60,11 +60,9 @@ client.subcommands = new Collection();
 const throughDirectory = (dir, arr = []) => {
   fs.readdirSync(dir).forEach((file) => {
     const absolute = path.join(dir, file);
-    if (fs.statSync(absolute).isDirectory()) {
+    if (fs.statSync(absolute).isDirectory())
       return throughDirectory(absolute, arr);
-    } else if (absolute.endsWith("js")) {
-      return arr.push(absolute);
-    }
+    else if (absolute.endsWith("js")) return arr.push(absolute);
   });
   return arr;
 };
@@ -104,9 +102,7 @@ for (const file of subcommandFiles) {
   if (subcommand.data.name) {
     // @ts-ignore
     client.subcommands.set(subcommand.data.name, subcommand);
-  } else {
-    logger.error(`${subcommand} not found`);
-  }
+  } else logger.error(`${subcommand} not found`);
 }
 
 // Create a collection for the events
@@ -119,11 +115,8 @@ const eventFiles = fs
 
 for (const file of eventFiles) {
   const event = require(`./events/${file}`);
-  if (event.once) {
-    client.once(event.name, (...args) => event.execute(...args));
-  } else {
-    client.on(event.name, (...args) => event.execute(...args));
-  }
+  if (event.once) client.once(event.name, (...args) => event.execute(...args));
+  else client.on(event.name, (...args) => event.execute(...args));
 }
 
 process.on("unhandledRejection", (error) => {

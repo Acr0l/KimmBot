@@ -6,6 +6,7 @@
     "start": "node src/index.js",
     "devStart": "nodemon src/index.js --ignore ./log.json | pino-pretty -i pid,hostname -t yyyy-mm-dd HH:MM:ss",
     "lint": "eslint --ext .js",
+    "server": "nodemon --watch src/serverCreator src/serverCreator/app",
     "doc": "jsdoc -c jsdoc.json",
     "deploy": "node ./src/deploy-commands",
     "g-deploy": "node ./src/deploy-commands --global"
@@ -18,11 +19,11 @@
   "author": "Acrol",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/rest": "^1.2.0",
+    "@discordjs/rest": "^1.5.0",
     "connect-busboy": "^1.0.0",
     "csvtojson": "^2.0.10",
-    "discord-api-types": "^0.37.11",
-    "discord.js": "^14.5.0",
+    "discord-api-types": "^0.37.35",
+    "discord.js": "^14.7.1",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
     "i18next": "^21.9.2",

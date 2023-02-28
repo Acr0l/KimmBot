@@ -1,5 +1,5 @@
 // Required variables:
-const { SnowflakeUtil } = require("discord.js"),
+const { SnowflakeUtil, ComponentType } = require("discord.js"),
   { applyXp } = require("./levelFunctions"),
   quizDatabase = require("../models/quizSchema"),
   {
@@ -12,35 +12,47 @@ const { SnowflakeUtil } = require("discord.js"),
   { translate, getLanguage } = require("../handlers/language"),
   quizCategories = require("../util/quizCategories");
 const { hintHandler } = require("../handlers/hint");
-const { shuffleAlternatives, numberOfAlternatives } = require("../util/shufflers");
-const logger = require("../logger");
 const {
-  createHintButton,
-  rowConstructor,
-} = require("../handlers/problemGens");
+  shuffleAlternatives,
+  numberOfAlternatives,
+} = require("../util/shufflers");
+const logger = require("../logger");
+const { createHintButton, rowConstructor } = require("../handlers/problemGens");
 const {
   questionEmbedConstructor,
   answerEmbedConstructor,
   finishEmbedConstructor,
 } = require("./embeds");
 
+/**
+ * Kimm bot command
+ * @param { import('discord.js').CommandInteraction} interaction - The interaction that triggered the command
+ * @param { import('../models/profileSchema').User} profileData - User info that is stored in the database.
+ * @param { Number } type
+ * @param { import('discord.js').Client} client - Client, mostly used by help cmd.
+ * @returns { Promise<Boolean> } Whether the problem was generated and completed successfully.
+ */
 async function generateQuiz(interaction, profileData, type, client) {
   // Defer response
   await interaction.deferReply({ ephemeral: true });
   const { guild } = interaction;
-
+  if (!guild) {
+    interaction.reply("The bot only works in servers!");
+    return true;
+  }
   // Check if the user can take the quiz
   if (!(await checkUser({ interaction, profileData, guild }))) return true;
 
+  // @ts-ignore
   // Variables
   const subject = interaction.options.getString("subject");
   // REMOVE: Not needed, but keeping for now.
   let answerTime = 0;
 
   // Check if the subject is valid
-  if (!(await checkValidSubject({ interaction, subject, guild }))) {
+  if (!(await checkValidSubject({ interaction, subject, guild })))
     return true;
-  }
+
 
   // Get the quiz question
   // [var] is to get the first element
@@ -67,29 +79,24 @@ async function generateQuiz(interaction, profileData, type, client) {
     },
     embed = questionEmbedConstructor(guild, question, type),
     hintButton = createHintButton(guild),
-    componentInfo = rowConstructor(
-      question,
-      interaction,
-      guild,
-      options,
-    );
+    componentInfo = rowConstructor(question, interaction, guild, options);
 
   // Reply
   await interaction.editReply({
     embeds: [embed],
-    ephemeral: true,
     components: [componentInfo.row, hintButton(false)],
   });
 
   // Create message component collectors
-  const collector = interaction.channel.createMessageComponentCollector({
+  const collector = interaction.channel?.createMessageComponentCollector({
       filter: componentInfo.filter,
+      // @ts-ignore
       componentType: componentInfo.cType,
       time: quizCategories[type].time * 1000,
     }),
     hintCollector = interaction.channel.createMessageComponentCollector({
       filter: (i) => i.customId == "getHint",
-      componentType: "BUTTON",
+      componentType: ComponentType.Button,
       time: (quizCategories[type].time - 3) * 1000,
       max: 1,
     });
@@ -136,7 +143,7 @@ async function generateQuiz(interaction, profileData, type, client) {
     const meSpent = quizCategories[type].meFormula(
         answerTime,
         question.difficulty
-        ),
+      ),
       collectorEmbed = answerEmbedConstructor(
         guild,
         isCorrect,
@@ -176,10 +183,7 @@ async function generateQuiz(interaction, profileData, type, client) {
   });
 
   collector.on("end", async (collected) => {
-    const endEmbed = finishEmbedConstructor(
-      guild,
-      question,
-    );
+    const endEmbed = finishEmbedConstructor(guild, question);
 
     await interaction.editReply({ embeds: [endEmbed], components: [] });
     // Delete activity
@@ -204,6 +208,7 @@ async function generateQuiz(interaction, profileData, type, client) {
     await profileData.save();
     hintCollector.stop();
   });
+  return true;
 }
 
 async function checkUser({ interaction, profileData, guild }) {
@@ -229,9 +234,9 @@ async function checkUser({ interaction, profileData, guild }) {
 function rewards(type = "Warmup", answerTime, question) {
   const ans = [0];
   ans.push(quizCategories[type].xpFormula(question.difficulty));
-  if (quizCategories[type].type === "Workout") {
+  if (quizCategories[type].type === "Workout")
     ans.push(quizCategories[type].donsFormula(question.difficulty, answerTime));
-  }
+
 
   return [...ans];
 }

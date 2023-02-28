@@ -1,18 +1,24 @@
 const Types = {
-    MC: "MC",
+  MC: "MC",
+  SEQUENCE: "Sequence",
+  SEQINP: "SeqInp",
+  INPUT: "Input",
+  INPUTS: ["SeqInp", "Input"],
 };
 
 /**
  * @type {{ Base: Number }} - Number of alternatives for a basic question.
  */
 const Alternatives = {
-    Base: 5
+  Base: 5,
 };
 
 const ButtonTypes = {
-    GET_HINT: "getHint"
+  GET_HINT: "getHint",
 };
 
 module.exports = {
-    Types, Alternatives, ButtonTypes
+  Types,
+  Alternatives,
+  ButtonTypes,
 };
