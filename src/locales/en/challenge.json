@@ -1,0 +1,14 @@
+{
+  "initiation": {
+    "title": "Challenging yourself...",
+    "description": "Brave warrior, beware of the dangers of The Challenge because even though you might break through your tier, the consequences will be harsh if you fail.",
+    "fields": {
+      "questions": "You will be facing **{{questionAmount}} $t(question, {\"ns\": \"common\", \"count\": {{questionAmount}})**, ranging from your most accomplished subject to the subjects you might have neglected...",
+      "difficulty": "Is it hard? Well, you will face difficulties during the road, but you must persevere and get **80%** of the questions correct (Perfect scores will be rewarded).",
+      "time": "You have {{time}} to answer each question, for a total of **{{totalTime}}** to complete the test."
+    }
+  },
+  "failure": {
+    "notEnoughQuestions": "Sorry, there are not enough problems for you to solve. This can be caused because your language is still on development or because you are at the forefront of the Kimm Community."
+  }
+}

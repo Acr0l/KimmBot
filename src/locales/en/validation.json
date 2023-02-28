@@ -1,8 +1,9 @@
 {
-    "unsuccessful_register": {
-        "already_registered": "You have already registered!",
-        "error": "Something went wrong when registering you!"
-    },
-    "successful_register": "Welcome {{interaction.user.username}}!, you have registered successfully.\n Click the button to start the tutorial.",
-    "invalid_field": "I'm sorry {{interaction.user.username}}, the parameter **{{field}}** is invalid."
+  "unsuccessful_register": {
+    "already_registered": "You have already registered!",
+    "error": "Something went wrong when registering you!"
+  },
+  "successful_register": "Welcome {{interaction.user.username}}!, you have registered successfully.\n Click the button to start the tutorial.",
+  "invalid_field": "I'm sorry {{interaction.user.username}}, the parameter **{{field}}** is invalid.",
+  "tutorial": "WIP"
 }

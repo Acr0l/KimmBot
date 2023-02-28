@@ -24,5 +24,14 @@
   "finish_embed": {
     "title": "The question has been answered!",
     "description": "Report and suggest changes using the id: `{{id}}`"
+  },
+  "challenge": {
+    "modal": {
+      "label": "Enter the value for `{{value}}`"
+    },
+    "seq": {
+      "description": "Be sure to check your answers before clicking!",
+      "placeholder": "Choose the values in the requested order."
+    }
   }
 }

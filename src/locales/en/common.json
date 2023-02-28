@@ -27,5 +27,12 @@
   "category": "category",
   "command": "command",
   "target": "target",
-  "description": "description"
+  "description": "description",
+  "time": "time",
+  "difficulty": "difficulty",
+  "questions": "questions",
+  "question_one": "question",
+  "question_other": "questions",
+  "proceed": "proceed",
+  "goBack": "go back"
 }

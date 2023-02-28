@@ -2,6 +2,63 @@
   "setlang": {
     "set": "Lenguaje cambiado a español."
   },
+  "challenge": {
+    "reject": {
+      "item_unowned": "Necesitas una {{currentItem.name}} para The Challenge.",
+      "low_tier": "Tu rango no cumple los requisitos para The Challenge."
+    }
+  },
+  "command_descriptions": {
+    "not_found": "Uuups, al parecer este comando aún no tiene descripción.",
+    "balance": "Revisa tu saldo.",
+    "challenge": "Haz The Challenge.",
+    "help": "Muestra el menú de ayuda.",
+    "inventory": "Revisa tu inventario.",
+    "item": "Grupo de comandos para interactuar con items.",
+    "profile": "Revisa tu perfil.",
+    "register": "Crea tu cuenta Kimm.",
+    "set_lang": "Coloca el idioma del bot (admin).",
+    "stats": "Muestra estadísticas específicas del usuario en diferentes materias.",
+    "suggest": "Sugiere nuevas funciones/preguntas/items.",
+    "warmup": "Toma una pregunta rápida para calentar tus neuronas.",
+    "workout": "Pon a prueba tu conocimiento y gana experiencia.",
+    "xp_add": "TEMPORAL COMMAND"
+  },  
+  "cooldown": "Este comando está en enfrieamiento, por favor espera {{time}}.", 
+  "descriptions": {
+    "categories": {
+      "not_found": "¡Uuups!, al parecer esta categoría no tiene una descripción aún.",
+      "economy": "Comandos que interactúan con la tienda y el sistema de moneda."
+    }
+  },
+  "help": {
+    "start_embed": {
+      "title": "Menú de Ayuda",
+      "description": "Selecciona la categoría de la cual quieres saber más en el menú desplegable de abajo."
+    },
+    "category_embed": {
+      "title": "Comandos de {{category}}",
+      "descriptions": {
+        "economy": "Comandos para administrar tus recursos.",
+        "guild": "Comandos para administrar el servidor.",
+        "info": "Comandos para obtener información del bot.",
+        "problems": "Comandos para ponerte a prueba y probar tu conocimientos.",
+        "statistics": "Comandos que te dan información de tus materias, nivel, rango y más.",
+        "no_description": "No hay una descripción aún, ¡pero estamos trabajando en ello!"
+      }
+    },
+    "row": {
+      "placeholder": "Selecciona una categoría para ver los comandos.",
+      "directories": {
+        "info": "Información",
+        "statistics": "Estadísticas",
+        "problems": "Problemas",
+        "economy": "Economía",
+        "guild": "Servidor",
+        "tmp": "TEMPORAL"
+      }
+    }
+  },
   "buy": {
     "reject": {
       "item_unique": "Ya tienes ese objecto."
@@ -17,31 +74,6 @@
     "embed": {
       "title": "Tienda",
       "description": "Compra y vende tus objetos aquí."
-    }
-  },
-  "help": {
-    "start_embed": {
-      "title": "Menú de Ayuda",
-      "description": "Selecciona la categoría de la cual quieres saber más en el menú desplegable de abajo."
-    },
-    "category_embed": {
-      "title": "Comandos de {{category}}",
-      "descriptions": {
-        "economy": "Comandos para administrar tus recursos.",
-        "guild": "Comandos para administrar el servidor.",
-        "info": "Comandos para obtener información del bot."
-      }
-    },
-    "row": {
-      "placeholder": "Selecciona una categoría para ver los comandos.",
-      "directories": {
-        "info": "Información",
-        "statistics": "Estadísticas",
-        "problems": "Problemas",
-        "economy": "Economía",
-        "guild": "Servidor",
-        "tmp": "TEMPORAL"
-      }
     }
   },
   "rejection": {

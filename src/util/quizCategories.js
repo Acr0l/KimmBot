@@ -1,12 +1,14 @@
+const { forHumans } = require("./time");
+
 const quizCategories = [
   {
     type: "Warmup",
     time: 60,
     meConsumption: 2,
-    meFormula: function(answerTime, difficulty) {
+    meFormula: function (answerTime, difficulty) {
       return Math.max(Math.ceil(Math.log(answerTime)) * (difficulty + 2), 4);
     },
-    xpFormula: function(difficulty) {
+    xpFormula: function (difficulty) {
       return Math.floor(Math.random() * (difficulty * 2)) + 3 * difficulty + 3;
     },
     image: {
@@ -20,17 +22,17 @@ const quizCategories = [
     type: "Workout",
     time: 180,
     meConsumption: 3,
-    meFormula: function(answerTime, difficulty) {
+    meFormula: function (answerTime, difficulty) {
       return Math.ceil(answerTime / 2 + 10) * (difficulty + 2);
     },
-    xpFormula: function(difficulty) {
+    xpFormula: function (difficulty) {
       return (
         Math.floor(Math.random() * (difficulty * difficulty * 5 + 15)) +
         10 * difficulty +
         5
       );
     },
-    donsFormula: function(difficulty, answerTime) {
+    donsFormula: function (difficulty, answerTime) {
       return Math.min(
         Math.ceil(100 / (3 * answerTime)) * (difficulty + 1),
         difficulty * 15
@@ -47,26 +49,33 @@ const quizCategories = [
     type: "Challenge",
     time: 300,
     meConsumption: 4,
-    questionsTimeAndQuantity: function(tier, dhmsFunction, language) {
-      return {
-        Questions: {
-          totalTime: dhmsFunction(
-            this.Questions?.number * this.Time.seconds,
-            language
-          ),
-          number: Math.ceil((tier + 1) * 1.5) + 2,
-        },
-        Difficulty: {},
-        Time: {
-          seconds: (tier + 1) * 20 + 30,
-        },
-        time: dhmsFunction(this.Time.seconds, language),
-      };
-    },
-    meFormula: function() {
+    questionsTimeAndQuantity:
+      /**
+       *
+       * @param {*} tier
+       * @param { import('discord.js').Guild } language - The language of the guild
+       * @returns { Object }
+       */
+      function (tier, language) {
+        return {
+          Questions: {
+            totalTime: forHumans(
+              (this.Questions?.number ?? 0) * this.time,
+              language
+            ),
+            number: Math.ceil((tier + 1) * 1.5) + 2,
+          },
+          Difficulty: {},
+          Time: {
+            seconds: (tier + 1) * 20 + 30,
+          },
+          time: forHumans(this.time, language),
+        };
+      },
+    meFormula: function () {
       return 0;
     },
-    xpFormula: function(difficulty) {
+    xpFormula: function (difficulty) {
       return (
         Math.floor(
           getRandomArbitrary(0.8, 1) * (Math.pow(difficulty, 3) * 7 + 15)

@@ -23,8 +23,11 @@
           "title": "Difficulty",
           "value": "Is it hard? Well, you will face difficulties during the road, but you must persevere and overcome them.\n\nThe difficulty of the questions will be based on the tier of the challenge, and to get the rewards you need 80% of the questions to be answered correctly (Perfect scores will be rewarded)."
         }
-      },
-      "footer": "Dear past, thank you for the lessons. Dear future, I am ready."
+      }
+    },
+    "answer": {
+      "accepted": "Dear past, thank you for the lessons. Dear future, I am ready.",
+      "rejected": "The two most powerful warriors are patience and time."
     }
   },
   "command_descriptions": {
@@ -147,6 +150,9 @@
       "invalid_action": "You cannot perform this action on the item.",
       "item_unique": "This item is unique, you cannot have more than one.",
       "insufficient_funds": "You don't have enough funds to buy this item."
+    },
+    "time": {
+      "expired": "Time expired."
     }
   },
   "subcommands": {
@@ -175,5 +181,9 @@
     "errors": {
       "empty": "Your inventory is empty."
     }
+  },
+  "register": {
+    "success": "Welcome {{user}}, you have successfully registered, click the button to begin the tutorial!",
+    "failure": "Don't worry {{user}}, you already have a Kimm account!\n If you want, you can still use the tutorial by clicking the button below."
   }
 }
